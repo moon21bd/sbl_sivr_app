@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
     {{-- Script start from here --}}
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/ui.js') }}"></script>
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
     {{-- Script ends from here --}}
 

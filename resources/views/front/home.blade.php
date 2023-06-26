@@ -38,9 +38,7 @@
 <main>
 
     <div class="container px-4 mx-auto pt-24 pb-24">
-
         <div class="grid grid-cols-12 gap-4">
-
             <div class="col-span-4 z-10">
                 <a href="#"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
@@ -177,8 +175,6 @@
 <!-- Main Araea End -->
 
 @include('front.popup-container');
-
 <script src="{{ asset('js/home.js') }}"></script>
-
 @include('partials.footer-menu')
 @include('partials.footer')

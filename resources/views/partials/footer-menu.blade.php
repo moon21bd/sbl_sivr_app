@@ -13,10 +13,6 @@
                 </a>
             </div>
 
-            {{--<div class="flex justify-between items-center">
-                <button id="toggleAudio" class="play audioBtn cursor-pointer z-50"></button>
-            </div>--}}
-
             <div class="flex justify-between items-center">
                 <button id="toggleAudio" class="play audioBtn cursor-pointer z-50" onclick="toggleAudio()"></button>
             </div>
@@ -48,58 +44,6 @@
 <!-- Footer Araea End -->
 
 <script type="application/javascript">
-
-    /*function toggleAudio() {
-        const audioElement = document.getElementById('playMedia');
-        const toggleButton = document.getElementById('toggleAudio');
-
-        if (audioElement.paused) {
-            playAudio();
-            toggleButton.classList.remove('play');
-            toggleButton.classList.add('pause');
-        } else {
-            pauseAudio();
-            toggleButton.classList.remove('pause');
-            toggleButton.classList.add('play');
-        }
-    }
-
-    function playAudio() {
-        const audioElement = document.getElementById('playMedia');
-        const playPromise = audioElement.play();
-
-        if (playPromise !== undefined) {
-            playPromise
-                .then(_ => {
-                    // Autoplay started successfully
-                })
-                .catch(error => {
-                    // Autoplay was prevented, handle the error
-                    console.error('Autoplay was prevented:', error);
-                });
-        }
-    }
-
-    function pauseAudio() {
-        const audioElement = document.getElementById('playMedia');
-        audioElement.pause();
-    }
-
-    // Auto play audio on page load if ?autoplay=true is present in the URL
-    function checkAutoplay() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const autoplayParam = urlParams.get('autoplay');
-
-        if (autoplayParam === 'true') {
-            playAudio();
-        }
-    }
-
-    // Wait for the DOM to load before initializing
-    document.addEventListener('DOMContentLoaded', function () {
-        // Check autoplay on page load
-        checkAutoplay();
-    });*/
 
     function toggleAudio() {
         const audioElement = document.getElementById('playMedia');

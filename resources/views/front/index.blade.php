@@ -37,8 +37,6 @@
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
-        let playerState = 0;
-
         // Check if the unique identifier exists in localStorage
         const getStartedButton = document.getElementById("getStartedBtn"),
             redirectTo = "{{ route('home') }}" + "?autoplay=true";
@@ -50,7 +48,6 @@
         } else {
             // Add event listener to the "Get Started" button
             getStartedButton.addEventListener("click", function () {
-                // toggleSound();
                 // Generate a unique identifier for the user
                 userId = generateUniqueId(); // Replace with your own function to generate a unique identifier
 

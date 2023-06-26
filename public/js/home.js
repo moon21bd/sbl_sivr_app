@@ -1,3 +1,11 @@
+/**
+ * File: home.js
+ * Author: Raqibul Hasan Moon
+ * Created: 2023-06-25
+ * Description: This file contains home file related JavaScripts codes for the project.
+ */
+
+
 $(document).ready(function () {
 
     // Check for the saved locale in cookie or localStorage
