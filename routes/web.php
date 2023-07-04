@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\App;
 |
 */
 
+Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
+
 // Route::get('/', [\App\Http\Controllers\MainController::class, 'index']);
 Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('home');
 
@@ -23,10 +25,6 @@ Route::get('/example', function () {
 });
 
 Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
-
-Route::group(['middleware' => 'web'], function () {
-
-});
 
 
 

@@ -102,8 +102,35 @@ function isEmpty(value) {
     return (value == null || value.length === 0 || value === '');
 }
 
-function resetForm(selector) {
-    $(selector).trigger("reset");
-}
 
+// user journey track
+function tUj(action, data) {
+    // Get the CSRF token from the page's meta tag
+    const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+    // Create an XMLHttpRequest object
+    let xhr = new XMLHttpRequest();
+
+    // Set the request URL and method
+    xhr.open('POST', '/tuj', true);
+
+    // Set the request headers, including the CSRF token
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+    // Handle the response
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            console.log('succeeded!');
+        } else {
+            console.error('error:', xhr.status);
+        }
+    };
+
+    // Convert the data to JSON string
+    const requestData = JSON.stringify({action: action, data: JSON.stringify(data)});
+
+    // Send the request
+    xhr.send(requestData);
+}
 

@@ -1,0 +1,844 @@
+{
+	"info": {
+		"_postman_id": "ea572cfb-d4b5-4991-be8c-7af80648461f",
+		"name": "Sonali Digicon API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24712090",
+		"_collection_link": "https://gold-moon-490870.postman.co/workspace/My-Workspace~db91b966-211a-4141-86be-c35d6a363932/collection/6907775-ea572cfb-d4b5-4991-be8c-7af80648461f?action=share&creator=24712090&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Account Number Fetch",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MobileNo\": \"01796667439\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/GetAccountList?MobileNo=01749195756",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"GetAccountList"
+					],
+					"query": [
+						{
+							"key": "MobileNo",
+							"value": "01749195756"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Account Full details",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ChannelId\": \"SPS\",\n  \"AccountNo\": \"0002677000001\"\n}"
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/GetCallCenterData",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"GetCallCenterData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SMS SEND",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\t\t\"MobileNo\": \"01770430605\",\n\t\t\t\t\"msg\": \"Hello Bangladesh\",\n\t\t\t\t\"Seckey\": \"SonaliBangladesh#034014\"\n\t\t\t} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/SendSMS",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"SendSMS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send OTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"strRefId\":\"017105635219\",\n    \"strMobileNo\":\"01710563521\",\n    \"isEncPwd\":true\n}  ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/SendSMS",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"SendSMS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VerifyOTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"strRequstId\":\"017105635219\",\n    \"strAcMobileNo\":\"01778200359\",\n    \"strReOTP\":\"253748\"\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/VerifyOTP",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"VerifyOTP"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getWalletDetails",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01796667439\",\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/getWalletDetails",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"getWalletDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendOtpWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"nid\":\"19843323001098564\",\n    \"dob\":\"2022-01-03\",\n    \"acno\":\"0002634313655\",\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/sendOtpWallet",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"sendOtpWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "activeWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"requestDetails\":\"for lost and reback customer\",\n   \n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/activeWallet",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"activeWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deviceBind",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\": \"01710563521\",\n    \"userId\": \"Agx01254\",\n    \"requestDetails\": \"get new phone\",\n  \n    \"refId\": \"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/deviceBind",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"deviceBind"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pinReset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"requestDetails\":\"get new phone\",\n   \n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/pinReset",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"pinReset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getServiceList",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/getServiceList",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"getServiceList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTransactionReqList",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"fromDate\":\"2021-01-01\",\n    \"toDate\":\"2022-06-20\",\n    \"serviceId\":\"00015\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/getTransactionReqList",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"getTransactionReqList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createIssue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"reason\":\"get new phone\",\n    \"OtpCode\":\"\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/createIssue",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"createIssue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "approveWalletRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"reason\":\"get new phone\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/approveWalletRequest",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"approveWalletRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lockWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"reason\":\"get new phone\",   \n    \"OtpCode\":\"\",\n    \"refId\":\"12232\"\n}"
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/lockWallet",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"lockWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTpDetails",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"OtpCode\":\"\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/getTpDetails",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"getTpDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sonali payment Gateway",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"TRANDATE\" : \"2022-11-26\",\n\"TRANID\" : \"\",\n\"CLIENTMSGTRX\" : \"\",\n\"REFTRANNO\" : \"\",\n\"REQAMOUNT\" : \"\",\n\"TRANAMOUNT\" : \"\",\n\"PAYMODE\" : \"A02\",\n\"STCODE\" : \"a2i\",\n\"TRANSTATUS\" : \"\",\n\"MOBILENO\" : \"\",\n\"BENEFICIARYNAME\" : \"\",\n\"NEXUSORROCKET\" : \"\",\n\"CARDNO\" : \"\",\n\"SBLAC\" : \"0002634313655\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/SearchTransactionCallCenter",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"SearchTransactionCallCenter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getWalletRequestDetails",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/getWalletRequestDetails",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"getWalletRequestDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rejectWalletRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mobileNo\":\"01728210619\",\r\n    \"userId\":\"Agx01254\",\r\n    \"reason\":\"Invalid customer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sblapi2022.sblesheba.com:8877/api/callcenter/rejectWalletRequest",
+					"protocol": "https",
+					"host": [
+						"sblapi2022",
+						"sblesheba",
+						"com"
+					],
+					"port": "8877",
+					"path": [
+						"api",
+						"callcenter",
+						"rejectWalletRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Beftn Transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ref_no\":\"01728210619\",\r\n    \"recv_acno\":\"0002601020861\",\r\n    \"from_date\":\"2022-01-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}SearchBeftnTransaction",
+					"host": [
+						"{{base_url}}SearchBeftnTransaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "closeWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\":\"Agx01254\",\r\n    \"mobileNo\":\"01710563521\",\r\n    \"requestDetails\":\"get new phone\", // 100 char max\r\n    \"OtpCode\": \"\",\r\n    \"refId\": \"2211220000000014\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}closeWallet",
+					"host": [
+						"{{base_url}}closeWallet"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://sblapi2022.sblesheba.com:8877/api/callcenter/",
+			"type": "string"
+		}
+	]
+}

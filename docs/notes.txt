@@ -1,0 +1,17 @@
+Question 1 :
+
+api: {{sblBaseUrl}}/api/callcenter/activeWallet
+
+payload:
+
+{
+    "mobileNo": "01710563521",
+    "userId": "Agx01254",
+    "requestDetails": "for lost and reback customer",
+    "refId": "12232"
+}
+
+
+---- where should i get the userId values ??
+
+

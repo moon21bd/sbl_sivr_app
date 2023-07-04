@@ -1,0 +1,783 @@
+{
+	"info": {
+		"_postman_id": "61e8eda2-26ee-4731-8813-3918a0780ee7",
+		"name": "SIVRSBLAPP-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "449341",
+		"_collection_link": "https://serviceteam.postman.co/workspace/Team-Workspace~e92a28c4-e481-43c1-841c-0753c3ef15a7/collection/449341-61e8eda2-26ee-4731-8813-3918a0780ee7?action=share&creator=449341&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Account Number Fetch",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MobileNo\": \"01710455990\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/GetAccountList?MobileNo=01749195756",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"GetAccountList"
+					],
+					"query": [
+						{
+							"key": "MobileNo",
+							"value": "01749195756"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Account Full details",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ChannelId\": \"SPS\",\n  \"AccountNo\": \"0002677000001\"\n}"
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/GetCallCenterData",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"GetCallCenterData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SMS SEND",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"MobileNo\": \"01770430605\",\n    \"msg\": \"Hello Bangladesh\",\n    \"Seckey\": \"SonaliBangladesh#034014\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/SendSMS",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"SendSMS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send OTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"strRefId\":\"017105635219\",\n    \"strMobileNo\":\"01710563521\",\n    \"isEncPwd\":true\n}  ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/SendSMS",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"SendSMS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VerifyOTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"strRequstId\":\"017105635219\",\n    \"strAcMobileNo\":\"01778200359\",\n    \"strReOTP\":\"253748\"\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/VerifyOTP",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"VerifyOTP"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getWalletDetails",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01796667439\",\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/getWalletDetails",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"getWalletDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendOtpWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"nid\":\"19843323001098564\",\n    \"dob\":\"2022-01-03\",\n    \"acno\":\"0002634313655\",\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/sendOtpWallet",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"sendOtpWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "activeWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"requestDetails\":\"for lost and reback customer\",\n   \n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/activeWallet",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"activeWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deviceBind",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\": \"01710563521\",\n    \"userId\": \"Agx01254\",\n    \"requestDetails\": \"get new phone\",\n  \n    \"refId\": \"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/deviceBind",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"deviceBind"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pinReset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"requestDetails\":\"get new phone\",\n   \n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/pinReset",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"pinReset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getServiceList",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/getServiceList",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"getServiceList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTransactionReqList",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"fromDate\":\"2021-01-01\",\n    \"toDate\":\"2022-06-20\",\n    \"serviceId\":\"00015\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/getTransactionReqList",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"getTransactionReqList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createIssue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"reason\":\"get new phone\",\n    \"OtpCode\":\"\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/createIssue",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"createIssue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "approveWalletRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"reason\":\"get new phone\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/approveWalletRequest",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"approveWalletRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lockWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"reason\":\"get new phone\",   \n    \"OtpCode\":\"\",\n    \"refId\":\"12232\"\n}"
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/lockWallet",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"lockWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTpDetails",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\",\n    \"OtpCode\":\"\",\n    \"refId\":\"12232\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/getTpDetails",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"getTpDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sonali payment Gateway",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"TRANDATE\" : \"2022-11-26\",\n\"TRANID\" : \"\",\n\"CLIENTMSGTRX\" : \"\",\n\"REFTRANNO\" : \"\",\n\"REQAMOUNT\" : \"\",\n\"TRANAMOUNT\" : \"\",\n\"PAYMODE\" : \"A02\",\n\"STCODE\" : \"a2i\",\n\"TRANSTATUS\" : \"\",\n\"MOBILENO\" : \"\",\n\"BENEFICIARYNAME\" : \"\",\n\"NEXUSORROCKET\" : \"\",\n\"CARDNO\" : \"\",\n\"SBLAC\" : \"0002634313655\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/SearchTransactionCallCenter",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"SearchTransactionCallCenter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getWalletRequestDetails",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mobileNo\":\"01710563521\",\n    \"userId\":\"Agx01254\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/getWalletRequestDetails",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"getWalletRequestDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rejectWalletRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mobileNo\":\"01728210619\",\r\n    \"userId\":\"Agx01254\",\r\n    \"reason\":\"Invalid customer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/rejectWalletRequest",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"rejectWalletRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Beftn Transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ref_no\":\"01728210619\",\r\n    \"recv_acno\":\"0002601020861\",\r\n    \"from_date\":\"2022-01-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/SearchBeftnTransaction",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"SearchBeftnTransaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "closeWallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"Agx01254\",\r\n    \"mobileNo\": \"01710563521\",\r\n    \"requestDetails\": \"get new phone\", // 100 char max\r\n    \"OtpCode\": \"\",\r\n    \"refId\": \"2211220000000014\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sblBaseUrl}}/api/callcenter/closeWallet",
+					"host": [
+						"{{sblBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"callcenter",
+						"closeWallet"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://sblapi2022.sblesheba.com:8877/api/callcenter/",
+			"type": "string"
+		},
+		{
+			"key": "sblBaseUrl",
+			"value": "https://sblapi2022.sblesheba.com:8877",
+			"type": "string"
+		}
+	]
+}

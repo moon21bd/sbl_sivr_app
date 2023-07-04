@@ -1,7 +1,7 @@
 @include('partials.header')
 
 <script src="{{ asset('js/axios.min.js') }}"></script>
-<!-- Header Araea Start bg-gradient-to-tr from-[color:var(--brand-color-yellow)] to-[color:var(--brand-color-blue)] -->
+<!-- Header Area Start bg-gradient-to-tr from-[color:var(--brand-color-yellow)] to-[color:var(--brand-color-blue)] -->
 <header class="py-3 bg-yellow-500 fixed top-0 right-0 left-0 rounded-b-lg z-40">
 
     <div class="container px-3 mx-auto">
@@ -30,11 +30,11 @@
     </div>
 
 </header>
-<!-- Header Araea End -->
+<!-- Header Area End -->
 
 @include('partials.mobile-menu')
 
-<!-- Main Araea Start -->
+<!-- Main Area Start -->
 <main>
 
     <div class="container px-4 mx-auto pt-24 pb-24">
@@ -47,12 +47,12 @@
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/active-card.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        {{ __('messages.card-activation') }}</h3>
+                        {{ __('messages.card-activate-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnSetPIN"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
 
                     <div
@@ -60,103 +60,91 @@
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/set-pin.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Set PIN</h3>
+                        {{ __('messages.set-pin-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnBalanceCheck"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/my-balance.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        My Balance</h3>
+                        {{ __('messages.my-balance-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnLockCard"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/lock-card.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Lock Card</h3>
+                        {{ __('messages.lock-card-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnResetPin"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/reset-pin.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Reset Pin</h3>
+                        {{ __('messages.reset-pin-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
-                   class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
-                    <div
-                        class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                        <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/e-commerce.svg') }}" alt="">
-                    </div>
-                    <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        E-commerce</h3>
-                </a>
-            </div>
-
-            <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnPaymentInfo"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/payment-info.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Payment Info</h3>
+                        {{ __('messages.payment-info-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnStatement"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/statement.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Statement</h3>
+                        {{ __('messages.statement-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnCardDetails"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/card-details.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Card Details</h3>
+                        {{ __('messages.card-details-btn') }}</h3>
                 </a>
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#"
+                <a href="#" id="btnAgentAssist"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
                         <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/agent-assist.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                        Agent Assist</h3>
+                        {{ __('messages.agent-assist-btn') }}</h3>
                 </a>
             </div>
 
@@ -164,7 +152,7 @@
 
         <div>
             <a class="fixed bottom-24 right-4 lg:right-14 bg-[color:var(--brand-color-blue)] z-50 flex justify-center items-center w-14 h-14 rounded-md border-2 border-white"
-               href="#">
+               href="tel:{{config('bank.customer-support')}}" id="btnCustSupp">
                 <img src="{{ asset('img/icon/headphone.svg') }}" alt="">
             </a>
         </div>
@@ -172,9 +160,9 @@
     </div>
 
 </main>
-<!-- Main Araea End -->
+<!-- Main Area End -->
 
-@include('front.popup-container');
+@include('front.popup-container')
 <script src="{{ asset('js/home.js') }}"></script>
 @include('partials.footer-menu')
 @include('partials.footer')

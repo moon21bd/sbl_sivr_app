@@ -1,0 +1,67 @@
+1. BEFTN Data Search:
+https://sblapi2022.sblesheba.com:8877/
+
+POST /api/callcenter/SearchBeftnTransaction
+Content-Type: application/json
+
+
+Request:
+{
+  "ref_no" : "",
+  "recv_acno" : "0002601020861",
+  "from_date" : "2022-01-28"
+}
+
+
+Response : 
+
+{
+    "status": "200",
+    "mesg": "Success",
+    "data": [
+        {
+            "recv_routing_no": "060130310",
+            "recv_ac_no": "0002601020861",
+            "recver_name": "Test Name",
+            "send_routing_no": "200273882",
+            "originator_ac_no": "114103101",
+            "originator_ac_name": "Wallet Mother Account",
+            "recv_amount": "1000",
+            "send_desc": "LR",
+            "trans_tatus": "05",--05=authorizer, 02=send, 06=create, 12=return
+            "payment_info": "CORP_IBANK156",
+            "currency": "BDT",
+            "beftn_status": "N",--N=waiting for BEFTN pull & Y=pull by BEFTN system
+            "reason_code": "00"
+        }
+    ]
+}
+
+
+
+
+
+2. BEFTN Data Search:
+
+
+POST /api/callcenter/closeWallet
+Content-Type: application/json
+
+
+Request:
+
+{
+	"mobileNo":"01710563521",
+	"userId":"Agx01254",
+	"requestDetails":"get new phone" // text max 100 char
+	"OtpCode":"", // CM- dirct / otp
+	"refId":"2211220000000014"
+}
+
+
+response: 
+
+	{
+        "status":"200",--200=success,203=fail,401=unauthorize,206=data error
+	"statsDetails":"Success",
+        }

@@ -44,14 +44,13 @@
                 </div>
 
                 <div class="bg-white rounded-md px-3 py-6 w-full mb-16 z-10">
-                    <p class="text-[color:var(--brand-color-gray)] text-lg">Welcome to Sonali Bank Smart IVR !
-                        Get in touch for better deals and 24/7 customer support.</p>
+                    <p class="text-[color:var(--brand-color-gray)] text-lg">{{ __('messages.get-started-text') }}</p>
                 </div>
 
                 <div class="w-full z-10">
                     <button type="submit" id="getStartedBtn"
                             class="get-started-btn text-[color:var(--brand-color-blue)] text-xl font-bold bg-white rounded-md h-12 w-full cursor-pointer">
-                        Get Started
+                        {{ __('messages.get-started-btn') }}
                     </button>
 
                 </div>
@@ -66,6 +65,9 @@
 <script type="application/javascript">
 
     document.addEventListener('DOMContentLoaded', function () {
+
+        // get started consent save start
+
         const getStartedButton = document.getElementById('getStartedBtn');
         const popupContainer = document.querySelector('.popup-container');
         let showGetStartedBtn = true;
@@ -103,11 +105,16 @@
             // Set the flag variable in sessionStorage to hide the "Get Started" button
             try {
                 sessionStorage.setItem('hideGetStartedBtn', 'show');
+                tUj('get-started', {'page': 'home', 'button': 'getStarted'});
             } catch (error) {
                 // Handle any errors related to saving data in sessionStorage
                 console.error('Error saving data in sessionStorage:', error);
             }
         }
+
+        // end of get started consent save
+
     });
+
 
 </script>

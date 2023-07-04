@@ -5,7 +5,7 @@
         <div class="flex gap-3 justify-between items-center">
 
             <div class="div">
-                <a href="#">
+                <a href="javascript:void(0)" id="btnBack">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="w-8 h-8 stroke-white">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="div">
-                <a href="#">
+                <a href="javascript:void(0)" id="btnHome">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="w-8 h-8 stroke-white">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -28,7 +28,7 @@
             </div>
 
             <div class="div">
-                <a href="#">
+                <a href="javascript:void(0)" id="btnExit">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="w-8 h-8 stroke-white rotate-90">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -69,5 +69,11 @@
         const audioElement = document.getElementById('playMedia');
         audioElement.pause();
     }
+
+    const backButton = document.getElementById('btnBack');
+    backButton.addEventListener('click', function () {
+        window.history.back();
+    });
+
 </script>
 
