@@ -1,7 +1,6 @@
 @include('partials.header')
 
-<script src="{{ asset('js/axios.min.js') }}"></script>
-<!-- Header Area Start bg-gradient-to-tr from-[color:var(--brand-color-yellow)] to-[color:var(--brand-color-blue)] -->
+<!-- Header Area Start -->
 <header class="py-3 bg-yellow-500 fixed top-0 right-0 left-0 rounded-b-lg z-40">
 
     <div class="container px-3 mx-auto">
@@ -16,7 +15,7 @@
 
             <div class="flex gap-3 justify-between items-center">
                 <div class="text-white text-xl font-bold">
-                    {{ __('messages.main-menu') }}
+                    {{ $name ?? __('messages.main-menu') }}
                 </div>
                 <div class="cursor-pointer p-3" onclick="openNav()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
