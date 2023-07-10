@@ -5,6 +5,9 @@
  * Description: This file contains commonly used JavaScripts code for the project.
  */
 
+const otpWrap = '/otp-wrap';
+const verifyWrap = '/verify-wrap';
+
 function makeHttpRequest(url, dataForGetPost, method = "GET", headers = null) {
     return new Promise(function (resolve, reject) {
         $.ajax({
@@ -134,3 +137,113 @@ function tUj(action, data) {
     xhr.send(requestData);
 }
 
+function showHideDiv(divName, isShowOrHide = 'show') {
+    let div = $('#' + divName + '_error_div');
+    if (isShowOrHide === 'show') {
+        div.show();
+    } else if (isShowOrHide === 'hide') {
+        div.hide();
+    }
+}
+
+function showEmptyErrorMsg(divName, message = '', isShowOrHide = 'show') {
+    let div = $('#' + divName + '_error');
+    if (isShowOrHide === 'show') {
+        div.text(message);
+    } else if (isShowOrHide === 'empty') {
+        div.empty();
+    }
+}
+
+function showHideButton(btnElem, isShowHide = 'show') {
+    if (isShowHide === 'show') {
+        $(btnElem).attr("disabled", false);
+    } else if (isShowHide === 'hide') {
+        $(btnElem).attr("disabled", true);
+    }
+}
+
+function buttonDisable(submitButton, decision = false) {
+    submitButton.disabled = decision;
+}
+
+function validatePhoneNumber(phoneNumber) {
+    const regex = /^01[3456789][0-9]{8}$/;
+    return regex.test(phoneNumber);
+}
+
+function displayErrorMessage(message, errorDisplay) {
+    // console.error(message);
+    errorDisplay.textContent = message;
+    errorDisplay.classList.remove('hidden');
+}
+
+function clearErrorMessage(errorDisplay) {
+    errorDisplay.textContent = '';
+    errorDisplay.classList.add('hidden');
+}
+
+function handlePhoneNumberInput(phoneInput, errorDisplay, submitButton) {
+    const phoneVal = phoneInput.value;
+
+    if (phoneVal === '') {
+        clearErrorMessage(errorDisplay);
+        buttonDisable(submitButton, true);
+    } else if (!validatePhoneNumber(phoneVal)) {
+        buttonDisable(submitButton, true);
+        displayErrorMessage('Mobile number is invalid.', errorDisplay);
+        phoneInput.focus();
+    } else if (phoneVal.length !== 11) {
+        buttonDisable(submitButton, true);
+        displayErrorMessage('Phone number must be 10 digits.', errorDisplay);
+        phoneInput.focus();
+    } else {
+        clearErrorMessage(errorDisplay);
+        buttonDisable(submitButton, false);
+    }
+}
+
+// Show the loader
+function showLoader() {
+    const loader = document.querySelector('.loader');
+    loader.classList.remove('hidden');
+}
+
+// Hide the loader
+function hideLoader() {
+    const loader = document.querySelector('.loader');
+    loader.classList.add('hidden');
+}
+
+function redirectTo(url) {
+    window.location.replace(url);
+    return false;
+}
+
+function storeData(key, value) {
+    if (typeof key !== 'string' || key.trim() === '') {
+        console.error('Invalid key. Key must be a non-empty string.');
+    }
+
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+        return true;
+    } catch (error) {
+        console.error('Error storing data:', error);
+        return false;
+    }
+}
+
+function getData(key) {
+    let data = localStorage.getItem(key);
+    if (data) {
+        try {
+            return JSON.parse(data);
+        } catch (error) {
+            // Parsing failed, return the original string value
+            return data;
+        }
+    }
+    // No data found for the given key
+    return null;
+}

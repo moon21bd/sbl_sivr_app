@@ -1,4 +1,5 @@
 import _ from 'lodash';
+
 window._ = _;
 
 /**
@@ -8,9 +9,12 @@ window._ = _;
  */
 
 import axios from 'axios';
+
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// Configure Axios to include the CSRF token in the headers of all requests
+window.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

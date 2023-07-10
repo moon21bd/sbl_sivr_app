@@ -43,6 +43,13 @@ return [
 
     'debug' => (bool)env('APP_DEBUG', false),
 
+    'encryption' => [
+        'key' => env('APP_KEY'),
+        'cipher' => 'AES-256-CBC',
+        'debug' => true, // Set this to true for debugging
+    ],
+
+
     /*
     |--------------------------------------------------------------------------
     | Application URL
