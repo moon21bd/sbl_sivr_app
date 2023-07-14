@@ -1,4 +1,14 @@
+@php($prompt = Session::get('api_calling')['prompt'] ?? $prompt)
 @include('partials.header')
+
+<script src="{{ asset('js/autoplay.js') }}"></script>
+
+<!-- Audio Icon -->
+<div class="absolute top-11 right-5 w-8 h-8">
+    <button id="toggleAudio" onclick="toggleAudio()"
+            class="play playAudioBtn cursor-pointer w-8 h-8 bg-no-repeat z-40"></button>
+</div>
+<!-- Audio Icon -->
 
 <!-- Main Area Start -->
 <main>
@@ -23,7 +33,7 @@
                                     class="z-10 text-[color:var(--text-black)] bg-[color:var(--brand-color-gray)/30] focus:outline-none w-[75%]"
                                     id="mobile_no"
                                     name="mobile_no"
-                                    placeholder="Type Number: 1700000000"
+                                    placeholder="017XXXXXXXX"
                                     maxlength="11"
                                     autocomplete="off"
                                     type="number"
@@ -41,6 +51,17 @@
                                 class="text-[color:var(--brand-color-blue)] text-lg rounded-md w-full py-2 mt-5 bg-white"
                                 type="submit">Send Code
                         </button>
+
+                        {{--<div class="flex gap-3 items-center bg-white rounded-full px-3">
+                            <p class="text-base text-red-600 w-[90%] flex justify-center">Invalid phone number</p>
+                            <button class="w-[10%] p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>--}}
+
                     </div>
                 </div>
             </div>
@@ -49,62 +70,6 @@
 </main>
 <!-- Main Area End -->
 
-<script type="application/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        const mobileNoInput = document.getElementById('mobile_no');
-        const errorMessageDiv = document.getElementById('error_message');
-        const submitButton = document.querySelector('button[type="submit"]');
-
-        // showLoader();
-        buttonDisable(submitButton, true);
-        mobileNoInput.addEventListener('input', function () {
-            handlePhoneNumberInput(mobileNoInput, errorMessageDiv, submitButton);
-        });
-
-        document.querySelector('button[type="submit"]').addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-            buttonDisable(submitButton, true);
-            showLoader();
-
-            let mobileNumberVal = mobileNoInput.value;
-            if (!mobileNumberVal) return;
-            storeData('pn', mobileNumberVal);
-
-            axios.post(otpWrap, {
-                'mobile_no': mobileNumberVal
-            })
-                .then(function (response) {
-                    hideLoader(); // Hide the loader
-
-                    let respData = response.data,
-                        statusCode = response.status;
-
-                    if (statusCode === 200) {
-                        console.log('Success');
-                        console.log('URL:', respData.url);
-                        goTo(respData.url);
-                    } else {
-                        // Handle non-200 response status codes
-                        console.log('ErrorCode:', statusCode);
-                        console.log('Message:', respData.message);
-                        hideLoader(); // Hide the loader
-                        displayErrorMessage(respData.message, errorMessageDiv);
-                    }
-
-                })
-                .catch(function (error) {
-                    let errMsg = error.response.data;
-                    console.log('catch statusCode', error.response.status);
-                    console.log('catch error', errMsg);
-
-                    hideLoader(); // Hide the loader
-                    displayErrorMessage(errMsg.message, errorMessageDiv);
-                });
-        });
-
-
-    });
-
-</script>
+<script src="{{ asset('js/send-otp.js') }}"></script>
 
 @include('partials.footer')

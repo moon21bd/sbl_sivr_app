@@ -1,4 +1,4 @@
-<!-- Footer Araea Start -->
+<!-- Footer Area Start -->
 <footer class="py-5 bg-yellow-500 fixed bottom-0 right-0 left-0 z-40">
 
     <div class="container px-4 mx-auto">
@@ -41,34 +41,9 @@
     </div>
 
 </footer>
-<!-- Footer Araea End -->
+<!-- Footer Area End -->
 
 <script type="application/javascript">
-
-    function toggleAudio() {
-        const audioElement = document.getElementById('playMedia');
-        const toggleButton = document.getElementById('toggleAudio');
-
-        if (audioElement.paused) {
-            playAudio();
-            toggleButton.classList.remove('play');
-            toggleButton.classList.add('pause');
-        } else {
-            pauseAudio();
-            toggleButton.classList.remove('pause');
-            toggleButton.classList.add('play');
-        }
-    }
-
-    function playAudio() {
-        const audioElement = document.getElementById('playMedia');
-        audioElement.play();
-    }
-
-    function pauseAudio() {
-        const audioElement = document.getElementById('playMedia');
-        audioElement.pause();
-    }
 
     const backButton = document.getElementById('btnBack');
     backButton.addEventListener('click', function () {

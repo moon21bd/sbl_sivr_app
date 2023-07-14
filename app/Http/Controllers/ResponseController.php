@@ -143,4 +143,16 @@ class ResponseController extends Controller
         json_decode($string);
         return (json_last_error() === JSON_ERROR_NONE);
     }
+
+    protected function hidePhoneNumber($phoneNumber)
+    {
+        $length = strlen($phoneNumber);
+        if ($length >= 10) {
+            return substr($phoneNumber, 0, 3) . '******' . substr($phoneNumber, -2);
+        } else {
+            return $phoneNumber;
+        }
+
+    }
+
 }

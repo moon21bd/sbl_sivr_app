@@ -29,6 +29,12 @@
     </div>
 </div>
 
+{{--@if(!request()->is('send-otp', 'verify-otp'))
+    <!-- HTML content to load conditionally -->
+    <div>
+        <!-- Your HTML code here -->
+    </div>
+@endif--}}
 
 <audio id="playMedia" controls style="display: none;">
     <source src="{{ $prompt ?? "" }}" type="audio/mpeg">
