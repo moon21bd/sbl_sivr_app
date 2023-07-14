@@ -2,131 +2,98 @@
 <html>
 <head>
     <title>Web Crypto API Example</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
 </head>
 <body>
 
-<script>
-    // Generate a random 256-bit encryption key
-    async function generateEncryptionKey() {
-        const key = await crypto.subtle.generateKey(
-            { name: 'AES-CBC', length: 256 },
-            true,
-            ['encrypt', 'decrypt']
-        );
+<!-- example.blade.php -->
+<h1>Encrypted Data</h1>
+<p>Key from PW: {{$keyFromPw}}</p>
+<p>IV: {{$iv}}</p>
+<p>Encrypted Value: {{$encryptedVal}}</p>
+<p>Decrypted Value: {{$decryptedVal}}</p>
 
-        const exportedKey = await crypto.subtle.exportKey('jwk', key);
-        return exportedKey;
-    }
 
-    // Import the encryption key as a CryptoKey object
-    async function importEncryptionKey(encryptionKey) {
-        const key = await crypto.subtle.importKey(
-            'jwk',
-            encryptionKey,
-            { name: 'AES-CBC' },
-            true,
-            ['encrypt', 'decrypt']
-        );
-        return key;
-    }
+<h1>Encrypt/Decrypt use Encryption class.</h1>
 
-    // Encrypt the payload using the Web Crypto API
-    async function encryptPayload(payload, encryptionKey) {
-        const encodedPayload = new TextEncoder().encode(JSON.stringify(payload));
-        const iv = crypto.getRandomValues(new Uint8Array(16));
+<h3>Original:</h3>
+{{--<p id="original-text">{{ $decryptedVal }}</p>--}}
+<p id="original-text">Moon21</p>
 
-        const cryptoKey = await importEncryptionKey(encryptionKey);
+<h3>Encrypted:</h3>
+<p id="encrypted-text"></p>
 
-        const encryptedPayload = await crypto.subtle.encrypt(
-            { name: 'AES-CBC', iv },
-            cryptoKey,
-            encodedPayload
-        );
+<h3>Decrypted:</h3>
+<p id="decrypted-text"></p>
 
-        const encryptedData = new Uint8Array(encryptedPayload);
-        const encryptedBase64 = btoa(String.fromCharCode.apply(null, encryptedData));
-        const ivHex = Array.from(iv)
-            .map(byte => ('00' + byte.toString(16)).slice(-2))
-            .join('');
+<h3>KeyFromText:</h3>
+<p id="keyFromText"></p>
 
-        return { encryptedData: encryptedBase64, iv: ivHex };
-    }
+<script type="module">
+    import Encryption from './js/Encryption.js';
 
-    // Decrypt the response from the server
-    async function decryptResponse(response, encryptionKey) {
-        try {
-            const iv = new Uint8Array(
-                response.iv.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
-            );
-            const encryptedData = new Uint8Array(
-                Array.from(atob(response.encryptedData), char => char.charCodeAt(0))
-            );
+    const encryptionObj = new Encryption({
+        debug: true,
+    });
 
-            const cryptoKey = await importEncryptionKey(encryptionKey);
+    const secretKey = '{{ $keyFromPw }}';
 
-            const decryptedPayload = await crypto.subtle.decrypt(
-                { name: 'AES-CBC', iv },
-                cryptoKey,
-                encryptedData
-            );
+    window.addEventListener('DOMContentLoaded', async () => {
 
-            const decodedPayload = new TextDecoder().decode(decryptedPayload);
-            return JSON.parse(decodedPayload);
-        } catch (error) {
-            console.error('An error occurred during decryption:', error);
-            throw error;
-        }
-    }
+        /*if (location.protocol !== 'https:') {
+            alert('Please open via HTTPS.');
+        }*/
 
-    // Make the API request and handle the response
-    async function makeApiRequest() {
-        try {
-            const encryptionKey = await generateEncryptionKey();
-            const payload = { message: 'Hello, Laravel!' };
-            const encryptedPayload = await encryptPayload(payload, encryptionKey);
+        const originalText = document.getElementById('original-text').innerText;
+        const encryptedText = document.getElementById('encrypted-text');
+        const decryptedText = document.getElementById('decrypted-text');
+        const keyFromText = document.getElementById('keyFromText');
 
-            // Make the API request with the encrypted payload
-            const response = await axios.post('/api/endpoint', encryptedPayload);
+        // const key = await encryptionObj.generateKey();
+        // console.log('generateKey: ', key);
 
-            // Decrypt and process the response
-            const decryptedResponse = await decryptResponse(response.data, encryptionKey);
-            console.log(decryptedResponse);
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
-    }
 
-    // Usage
-    makeApiRequest();
+        console.log('getKeyFromPassword');
+        const keyFromPw = await encryptionObj.getCryptoKeyFromString(secretKey);
+        console.log(keyFromPw);
+
+       // keyFromText.innerHTML = JSON.parse(keyFromPw);
+
+        const iv = encryptionObj.getIV();
+        console.log('getIV: ', iv, encryptionObj.bufferToBase64(iv));
+
+        console.log('-------------');
+
+        console.log('encrypt():');
+        const encryptedVal = await encryptionObj.encrypt(originalText, keyFromPw, iv);
+        console.log('encrypted: ', encryptedVal);
+        encryptedText.innerHTML = encryptedVal;
+
+        console.log('-------------');
+
+        console.log('decrypt():');
+        const decryptedVal = await encryptionObj.decrypt(encryptedVal, keyFromPw);
+        console.log('decrypted: ', decryptedVal);
+        decryptedText.innerHTML = decryptedVal;
+
+        console.log('-------------',{
+            "data": encryptedVal,
+            "key": secretKey,
+        });
+
+        // Make the Axios request
+        axios.post('/api/decrypt', {
+            "data": encryptedVal,
+            "key": secretKey,
+        })
+            .then(response => {
+                console.log('Response:', response.data);
+                // Handle the response data as needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 </script>
-
 </body>
 </html>
-
-
-{{--
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Localization Example</title>
-</head>
-<body>
-<h1>{{ __('messages.welcome') }}</h1>
-<p>{{ __('This is an example of localization in Laravel') }}</p>
-
-<form action="/change-locale" method="get">
-    @csrf
-    <label for="locale-select">Select Language:</label>
-    <select id="locale-select" name="locale">
-        <option value="en">English</option>
-        <option value="bn">Bengali</option>
-    </select>
-    <button type="submit">Change Language</button>
-</form>
-
-
-
-</body>
-</html>
---}}

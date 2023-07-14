@@ -5,8 +5,34 @@
  * Description: This file contains home file related JavaScripts codes for the project.
  */
 
+document.addEventListener('DOMContentLoaded', function () {
 
-$(document).ready(function () {
+    const btnCardActivate = document.getElementById('btnCardActivate');
+
+    btnCardActivate.addEventListener('click', function () {
+        tUj('card-activate', {
+            'purpose': 'cardActivate',
+            'page': 'home',
+            'button': 'btnCardActivate',
+            'user_phone_no': getData('pn'),
+            'user_account_no': getData('acn')
+        });
+
+        const audioElement = document.querySelector('audio');
+        audioElement.addEventListener('ended', redirectToPage);
+
+        // Check if the audio is not playing on page load
+        if (audioElement.paused || audioElement.ended) {
+            redirectToPage();
+        }
+
+        function redirectToPage() {
+            // Redirect to page-b.
+            console.log('ended', audioElement);
+            goTo('send-otp');
+        }
+    });
+
 
     // Check for the saved locale in cookie or localStorage
     const savedLocale = getSavedLocale();

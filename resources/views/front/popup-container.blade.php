@@ -105,7 +105,7 @@
             // Set the flag variable in sessionStorage to hide the "Get Started" button
             try {
                 sessionStorage.setItem('hideGetStartedBtn', 'show');
-                tUj('get-started', {'page': 'home', 'button': 'getStarted'});
+                tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': 'getStartedBtn'});
             } catch (error) {
                 // Handle any errors related to saving data in sessionStorage
                 console.error('Error saving data in sessionStorage:', error);

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\EncryptionUtilityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/get-encryption-key', [ApiController::class, 'getEncryptionKey']);
-Route::post('/endpoint', [ApiController::class, 'endpoint']);
+Route::post('/encrypt', [EncryptionUtilityController::class, 'encrypt']);
+Route::post('/decrypt', [ApiController::class, 'decrypt']);
 

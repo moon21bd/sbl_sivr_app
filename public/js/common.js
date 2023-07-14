@@ -120,6 +120,7 @@ function tUj(action, data) {
     // Set the request headers, including the CSRF token
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
     // Handle the response
     xhr.onload = function () {
@@ -246,4 +247,70 @@ function getData(key) {
     }
     // No data found for the given key
     return null;
+}
+
+/*function toggleAudio() {
+    const audioElement = document.getElementById('playMedia');
+    const toggleButton = document.getElementById('toggleAudio');
+
+    if (audioElement.paused) {
+        playAudio();
+        toggleButton.classList.remove('play');
+        toggleButton.classList.add('pause');
+    } else {
+        pauseAudio();
+        toggleButton.classList.remove('pause');
+        toggleButton.classList.add('play');
+    }
+}
+
+function playAudio() {
+    const audioElement = document.getElementById('playMedia');
+    audioElement.play();
+}
+
+function pauseAudio() {
+    const audioElement = document.getElementById('playMedia');
+    audioElement.pause();
+}*/
+
+function toggleAudio() {
+    const audioElement = document.getElementById('playMedia');
+    const toggleButton = document.getElementById('toggleAudio');
+
+    if (audioElement.paused) {
+        playAudio(audioElement);
+        toggleButton.classList.remove('play');
+        toggleButton.classList.add('pause');
+    } else {
+        pauseAudio(audioElement);
+        toggleButton.classList.remove('pause');
+        toggleButton.classList.add('play');
+    }
+}
+
+function playAudio(audioElement) {
+    if (audioElement.paused || audioElement.ended) {
+        audioElement.play().catch(function (error) {
+            console.log('Failed to play audio:', error);
+        });
+    }
+}
+
+function pauseAudio(audioElement) {
+    if (!audioElement.paused && !audioElement.ended) {
+        audioElement.pause();
+    }
+}
+
+function playErrorAudio(audioUrl) {
+    setTimeout(() => {
+        if (audioUrl) {
+            const audioElem = document.querySelector('audio');
+            audioElem.src = audioUrl;
+            audioElem.play();
+        } else {
+            // console.error('Audio URL not found in the response.');
+        }
+    }, 100); // Adjust the delay time as needed
 }

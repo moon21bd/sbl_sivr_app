@@ -14,7 +14,7 @@ class APIHandler
     {
         $options = [
             'verify' => $isSSLVerify,
-            'timeout' => 20, // Set the timeout value in seconds
+            // 'timeout' => 60, // Set the timeout value in seconds
             'headers' => [
                 'Accept' => '*/*',
                 'Content-Type' => 'application/json',
@@ -27,7 +27,7 @@ class APIHandler
 
         try {
             $response = $client->post($url, $options);
-            Log::info('API: ' . $url . 'options:' . json_encode($params) . 'response:' . json_encode($response));
+            Log::info('API: ' . $url . ' options:' . json_encode($params) . 'response:' . json_encode($response));
 
             return [
                 'status' => 'success',

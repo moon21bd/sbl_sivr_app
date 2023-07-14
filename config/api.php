@@ -9,4 +9,5 @@ return [
     'send_otp_url' => 'api/callcenter/SendOTP',
     'verify_otp_url' => 'api/callcenter/VerifyOTP',
     'get_account_list_url' => 'api/callcenter/GetAccountList',
+    'active_wallet_url' => 'api/callcenter/activeWallet',
 ];
