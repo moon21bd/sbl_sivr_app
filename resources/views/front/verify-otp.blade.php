@@ -62,10 +62,10 @@
                         <span class="text-red-700 text-base pt-1 block hidden"
                               id="error_message"></span>
 
-                        <p class="text-white text-base mt-3">Didn’t received the code?</p>
+                        {{--<p class="text-white text-base mt-3">Didn’t received the code?</p>
                         <div class="div">
                             <button class="text-white text-lg border-b-[1px] border-white">Resend</button>
-                        </div>
+                        </div>--}}
 
                         <button
                             class="text-[color:var(--brand-color-blue)] text-lg rounded-md w-full py-2 mt-10 bg-white"
@@ -109,45 +109,6 @@
                 .catch(error => handleError(error));
         });
 
-        /*inputs.forEach((input, index) => {
-            input.addEventListener('input', function () {
-                this.value = this.value.replace(/\D/g, '');
-
-                if (this.value.length > 1) {
-                    this.value = this.value.slice(0, 1);
-                }
-
-                if (this.value.length === 1) {
-                    if (index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    } else {
-                        submitButton.focus();
-                    }
-                }
-
-                const allFilled = Array.from(inputs).every(input => input.value !== '');
-                const code = Array.from(inputs).map(input => Number(input.value)).join('');
-
-                if (allFilled && code.length === 6) {
-                    buttonDisable(submitButton, false);
-                    clearErrorMessage(errorMessageDiv);
-                } else {
-                    buttonDisable(submitButton, true);
-                    if (code.length !== 6) {
-                        displayErrorMessage('Please enter all 6 digits of the number.', errorMessageDiv);
-                    } else {
-                        clearErrorMessage(errorMessageDiv);
-                    }
-                }
-            });
-
-            input.addEventListener('keydown', function (event) {
-                if (event.key === 'Backspace' && this.value.length === 0 && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
-        });*/
-
         inputs.forEach((input, index) => {
             input.addEventListener('input', function () {
                 this.value = this.value.replace(/\D/g, '');
@@ -187,7 +148,6 @@
                 }
             });
         });
-
 
         function handleInvalidCode() {
             hideLoader();

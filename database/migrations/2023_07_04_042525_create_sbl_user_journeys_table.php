@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_journeys', function (Blueprint $table) {
+        Schema::create('sbl_user_journeys', function (Blueprint $table) {
             $table->id();
             $table->string('user_id')->nullable();
             $table->string('user_phone_no')->nullable();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_journeys');
+        Schema::dropIfExists('sbl_user_journeys');
     }
 };

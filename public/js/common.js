@@ -7,6 +7,40 @@
 
 const otpWrap = '/otp-wrap';
 const verifyWrap = '/verify-wrap';
+const callDynamically = '/calldapi';
+
+// Function to check login status using Axios and redirect to send-otp if not logged in
+function checkLoginStatus() {
+    return new Promise((resolve, reject) => {
+        axios.get('/check-login') // Replace with the URL of your Laravel endpoint for login check
+            .then(response => {
+                // Resolve the promise with a boolean indicating login status
+                resolve(response.data.is_logged);
+            })
+            .catch(error => {
+                // An error occurred during login check, reject the promise with the error message
+                reject(error);
+            });
+    });
+}
+
+function showVerificationAlert() {
+    playErrorAudio('/uploads/prompts/verify-account-to-access-feature.mp3'); // Play the error audio
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Verification Required',
+        text: 'You need to verify your account first to access this feature.',
+        showCancelButton: true,
+        confirmButtonText: 'Go to Verification',
+        cancelButtonText: 'Cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect the user to the login page
+            goTo('send-otp'); // Replace with your login page URL
+        }
+    });
+}
 
 function makeHttpRequest(url, dataForGetPost, method = "GET", headers = null) {
     return new Promise(function (resolve, reject) {
@@ -249,30 +283,6 @@ function getData(key) {
     return null;
 }
 
-/*function toggleAudio() {
-    const audioElement = document.getElementById('playMedia');
-    const toggleButton = document.getElementById('toggleAudio');
-
-    if (audioElement.paused) {
-        playAudio();
-        toggleButton.classList.remove('play');
-        toggleButton.classList.add('pause');
-    } else {
-        pauseAudio();
-        toggleButton.classList.remove('pause');
-        toggleButton.classList.add('play');
-    }
-}
-
-function playAudio() {
-    const audioElement = document.getElementById('playMedia');
-    audioElement.play();
-}
-
-function pauseAudio() {
-    const audioElement = document.getElementById('playMedia');
-    audioElement.pause();
-}*/
 
 function toggleAudio() {
     const audioElement = document.getElementById('playMedia');
@@ -310,7 +320,65 @@ function playErrorAudio(audioUrl) {
             audioElem.src = audioUrl;
             audioElem.play();
         } else {
-            // console.error('Audio URL not found in the response.');
+            console.error('Audio URL not found in the response.');
         }
     }, 100); // Adjust the delay time as needed
+}
+
+function getSavedLocale() {
+    // Check if the locale is saved in cookie
+    const savedLocale = getCookie('locale');
+    if (savedLocale) {
+        return savedLocale;
+    }
+    // Check if the locale is saved in localStorage
+    return localStorage.getItem('locale');
+}
+
+function setActiveState(locale) {
+    // Remove active class from all buttons
+    $('.radioBtn a').removeClass('active');
+    // Add active class to the button with the matching locale
+    $('.radioBtn a[data-locale="' + locale + '"]').addClass('active');
+    // Save the active locale in cookie or localStorage
+    setSavedLocale(locale);
+}
+
+function setSavedLocale(locale) {
+    // Save the locale in cookie
+    setCookie('locale', locale, 30); // Set the cookie expiration to 30 days
+    // Save the locale in localStorage
+    localStorage.setItem('locale', locale);
+}
+
+// Helper function to get cookie value by name
+function getCookie(name) {
+    const cookieArr = document.cookie.split(';');
+    for (let i = 0; i < cookieArr.length; i++) {
+        const cookiePair = cookieArr[i].split('=');
+        if (name === cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+    return null;
+}
+
+// Helper function to set cookie
+function setCookie(name, value, days) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expires.toUTCString() + ';path=/';
+}
+
+function showToast(title, message, icon, timer = 3000) {
+    Swal.fire({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: timer,
+        timerProgressBar: true,
+        icon: icon,
+        title: title,
+        text: message,
+    });
 }

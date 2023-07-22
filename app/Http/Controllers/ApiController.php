@@ -12,6 +12,34 @@ use Illuminate\Http\Response;
 
 class ApiController extends ResponseController
 {
+    public function getBalance(Request $request)
+    {
+        // will be deleted this code later
+        $responseOut = [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'balance' => 120
+        ];
+        return $this->sendResponse($responseOut);
+        // will be deleted this code later
+
+        $response = self::fetchGetWalletDetails('01710455990');
+        if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
+            $responseOut = [
+                'code' => Response::HTTP_OK,
+                'status' => 'success',
+                'balance' => number_format($response['data']['balanceAmount'], 2),
+            ];
+            return $this->sendResponse($responseOut, Response::HTTP_OK);
+        }
+
+        $responseOut = [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'balance' => 0
+        ];
+        return $this->sendResponse($responseOut);
+    }
 
     public function endpoint(Request $request)
     {
@@ -56,11 +84,29 @@ class ApiController extends ResponseController
         ], $this->phoneValidationErrorMessages());
 
         $mobileNo = $request->input('mobile_no');
-        // $mobileNo = '01293495606'; // will be removed later
+
+        // will be removed later
+        $mobileNo = '01710455990';
+        $strRefId = $mobileNo . randomDigits();
+        Session::put('otp', [
+            'phone_masked' => $this->hidePhoneNumber($mobileNo),
+            'otp_phone' => $mobileNo,
+            'strRefId' => $strRefId
+        ]);
+
+        $responseOut = [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Success.',
+            'url' => url('verify-otp')
+        ];
+        return $this->sendResponse($responseOut, $responseOut['code']);
+        // will be removed later
+
 
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.send_otp_url');
-        $strRefId = $mobileNo . $this->randomDigits();
+        $strRefId = $mobileNo . randomDigits();
         $response = $apiHandler->postCall($url, [
             'strRefId' => $strRefId,
             'strMobileNo' => $mobileNo,
@@ -79,7 +125,8 @@ class ApiController extends ResponseController
                     $responseOut = [
                         'code' => $statusCode,
                         'status' => 'error',
-                        'message' => 'The phone number entered is invalid or an unexpected error has occurred.'
+                        'message' => 'The phone number entered is invalid or an unexpected error has occurred.',
+                        'prompt' => getPromptPath('phone-number-invalid')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
 
@@ -143,6 +190,57 @@ class ApiController extends ResponseController
         $mobileNo = Session::get('otp.otp_phone');
         $strRefId = Session::get('otp.strRefId');
 
+        // will be removed later
+
+        // call api to get user account name.
+        $otpInfo = Session::get('otp');
+        $statusCode = Response::HTTP_OK;
+        // $getAccountList = self::fetchSavingsDeposits($otpInfo['otp_phone']);
+        $getAccountList = [
+            'AccountName' => 'Md Raqibul Hasan',
+            'AccountNo' => '5107801028828',
+        ];
+
+        Session::put('logInfo', [
+            'is_logged' => base64_encode(true),
+            'otp_info' => $otpInfo,
+            'account_info' => $getAccountList,
+        ]);
+
+        Session::forget('otp');
+
+        /*$apiCalling = Session::get('api_calling');
+        if (isset($apiCalling['purpose'])) {
+            $purpose = $apiCalling['purpose'];
+            if (strtoupper($purpose) === "CARDACTIVATE") {
+                $resp = $this->processApiCallingCardActivation($mobileNo);
+
+                session(['api_response' => [
+                    'purpose' => $purpose,
+                    'response' => $resp
+                ]]);
+            }
+        }*/
+
+        $responseOut = [
+            'code' => $statusCode,
+            'status' => 'success',
+            'message' => 'Your account verification was successful.',
+            'prompt' => getPromptPath('account-verification-success'),
+            'pn' => $mobileNo,
+            'an' => $getAccountList[1]['AccountName'] ?? null,
+            'acn' => $getAccountList[1]['AccountNo'] ?? null,
+            'url' => url('/')
+        ];
+
+        // Set the flash message
+        session()->flash('status', $responseOut['status']);
+        session()->flash('message', $responseOut['message']);
+
+        return $this->sendResponse($responseOut, $responseOut['code']);
+
+        // will be removed later
+
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.verify_otp_url');
         $response = $apiHandler->postCall($url, [
@@ -182,15 +280,18 @@ class ApiController extends ResponseController
                     ]);
                     Session::forget('otp');
 
-                    $purpose = Session::get('api_calling')['purpose'];
-                    if (strtoupper($purpose) === "CARDACTIVATE") {
-                        $resp = $this->processApiCallingFromSessionValue($mobileNo);
+                    /*$apiCalling = Session::get('api_calling');
+                    if (isset($apiCalling['purpose'])) {
+                        $purpose = $apiCalling['purpose'];
+                        if (strtoupper($purpose) === "CARDACTIVATE") {
+                            $resp = $this->processApiCallingCardActivation($mobileNo);
 
-                        session(['api_response' => [
-                            'purpose' => $purpose,
-                            'response' => $resp
-                        ]]);
-                    }
+                            session(['api_response' => [
+                                'purpose' => $purpose,
+                                'response' => $resp
+                            ]]);
+                        }
+                    }*/
 
                     $responseOut = [
                         'code' => $statusCode,
@@ -255,15 +356,77 @@ class ApiController extends ResponseController
         return [];
     }
 
-    private function processApiCallingFromSessionValue($phoneNumber)
+    public static function fetchGetWalletDetails($phoneNumber)
     {
+        $url = config('api.base_url') . config('api.get_wallet_details_url');
+        $apiHandler = new APIHandler();
+        $response = $apiHandler->postCall($url, ['mobileNo' => $phoneNumber, 'userId' => 'Agx01254']);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+
+            if ($data['status'] === '200' && $data['statsDetails'] === 'success' && isset($data['acList'][0])) {
+                $accountList = $data['acList'];
+
+                return [
+                    'status' => 'success',
+                    'message' => 'Data Received',
+                    'code' => Response::HTTP_OK,
+                    'data' => [
+                        'name' => $data['name'] ?? null,
+                        'accountName' => $accountList[0]['accountName'] ?? null,
+                        'accountNo' => $accountList[0]['accountNo'] ?? null,
+                        'balanceAmount' => $data['balanceAmount'] ?? 0,
+                        'walletStatus' => $data['walletStatus'] ?? null,
+                        'accountList' => $accountList,
+                    ]
+                ];
+            }
+        }
+
+        return [
+
+            'status' => 'error',
+            'code' => Response::HTTP_NOT_FOUND,
+            'message' => 'Data not found',
+            'data' => [
+                'name' => null,
+                'accountName' => null,
+                'accountNo' => null,
+                'balanceAmount' => 0,
+                'walletStatus' => null,
+                'accountList' => [],
+            ]
+
+        ];
+    }
+
+    public static function processApiCallingCardActivation($data)
+    {
+        // will be remove later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your account activation request was successful.',
+            'prompt' => getPromptPath('account-activation-successful')
+        ];
+
+        /*return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Account activation failed.',
+            'prompt' => getPromptPath('account-activation-failed')
+        ];*/
+        // will be remove later
+
         $url = config('api.base_url') . config('api.active_wallet_url');
         $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
-            "mobileNo" => $phoneNumber,
+            "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => "for lost and reback customer",
-            "refId" => $phoneNumber . $this->randomDigits()
+            "refId" => $mobileNo . randomDigits()
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -274,7 +437,8 @@ class ApiController extends ResponseController
                 return [
                     'code' => $response['statusCode'],
                     'status' => 'success',
-                    'message' => 'Account activation successful.'
+                    'message' => 'Your account activation request was successful.',
+                    'prompt' => getPromptPath('account-activation-successful')
                 ];
             }
         }
@@ -282,7 +446,8 @@ class ApiController extends ResponseController
         return [
             'code' => $response['statusCode'],
             'status' => 'error',
-            'message' => 'Account activation failed.'
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('account-activation-failed')
         ];
     }
 
@@ -313,6 +478,62 @@ class ApiController extends ResponseController
             return $this->sendError('Decryption failed.', Response::HTTP_EXPECTATION_FAILED);
         }
 
+    }
+
+    public static function callDynamicApi(Request $request)
+    {
+        $request->validate([
+            'purpose' => 'required',
+            'page' => 'required',
+            'button' => 'required',
+        ]);
+
+        $purpose = strtoupper($request->input('purpose'));
+        $phoneNumber = Session::get('logInfo')['otp_info']['otp_phone'];
+
+        // Prepare data for API call
+        $data = ['mobile_no' => $phoneNumber];
+
+        // Call the dynamic API based on the purpose
+        $apiResponse = self::processDynamicAPICalling($purpose, $data);
+
+        // Prepare the response based on the API response
+        $responseOut = [
+            'code' => $apiResponse['code'],
+            'status' => $apiResponse['status'],
+            'message' => $apiResponse['message'],
+            'prompt' => $apiResponse['prompt'] ?? null,
+        ];
+
+        // Additional handling for CARDACTIVATE purpose
+        if ($purpose === "CARDACTIVATE") {
+            $responseOut = ($apiResponse['code'] === Response::HTTP_OK && $apiResponse['status'] === 'success')
+                ? [
+                    'code' => $apiResponse['code'],
+                    'status' => 'success',
+                    'message' => 'Your account activation request was successful.',
+                    'prompt' => $apiResponse['prompt']
+                ]
+                : [
+                    'code' => $apiResponse['code'],
+                    'status' => 'error',
+                    'message' => 'Your account activation request has failed.',
+                    'prompt' => $apiResponse['prompt']
+                ];
+        }
+
+        return (new ApiController)->sendResponse($responseOut, $responseOut['code']);
+    }
+
+    public static function processDynamicAPICalling($purpose, $data = [])
+    {
+        switch ($purpose) {
+            case 'CARDACTIVATE':
+                return self::processApiCallingCardActivation($data);
+            default:
+                // Code to be executed if $purpose is different from all cases;
+                return false;
+        }
     }
 
 }

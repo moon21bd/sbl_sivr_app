@@ -417,6 +417,20 @@ video {
   height: auto;
 }
 
+/* Langua Toggle */
+
+.radioBtn .active {
+  background-color: var(--brand-color-blue);
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.radioBtn .notActive {
+  color: var(--brand-color-blue);
+}
+
+/* Langua Toggle End */
+
 .audioBtn {
   height: 2rem;
   width: 2rem;
@@ -952,6 +966,14 @@ video {
 
 .w-5 {
   width: 1.25rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.w-36 {
+  width: 9rem;
 }
 
 .max-w-sm {

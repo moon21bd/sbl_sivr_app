@@ -10,4 +10,5 @@ return [
     'verify_otp_url' => 'api/callcenter/VerifyOTP',
     'get_account_list_url' => 'api/callcenter/GetAccountList',
     'active_wallet_url' => 'api/callcenter/activeWallet',
+    'get_wallet_details_url' => 'api/callcenter/getWalletDetails',
 ];

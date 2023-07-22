@@ -110,10 +110,6 @@ class ResponseController extends Controller
         ];
     }
 
-    protected function randomDigits($len = 3): string
-    {
-        return str_pad(mt_rand(0, 999), $len, '0', STR_PAD_LEFT);
-    }
 
     protected function decodeJsonIfValid($jsonString)
     {

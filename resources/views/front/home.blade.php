@@ -1,10 +1,13 @@
 @include('partials.header')
 
+<link rel="stylesheet" href="{{ asset('css/get-balance.css') }}">
+
 <!-- Header Area Start -->
 <header class="py-3 bg-yellow-500 fixed top-0 right-0 left-0 rounded-b-lg z-40">
 
     <div class="container px-3 mx-auto">
         <div class="flex gap-3 justify-between items-center">
+
             <div
                 class="bg-white relative w-20 h-10 rounded-full cursor-pointer p-2 flex items-center justify-center radioBtn">
                 <a class="w-1/2 h-8 text-sm font-semibold rounded-full flex items-center justify-center"
@@ -15,7 +18,7 @@
 
             <div class="flex gap-3 justify-between items-center">
                 <div class="text-white text-xl font-bold">
-                    {{ $name ?? __('messages.main-menu') }}
+                    {{ __('messages.main-menu') }}
                 </div>
                 <div class="cursor-pointer p-3" onclick="openNav()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -37,6 +40,37 @@
 <main>
 
     <div class="container px-4 mx-auto pt-24 pb-24">
+        {{--        <a href="#" id="showToastButton">Show Toast</a>--}}
+        <div class="px-3 py-5 flex flex-row gap-3 items-center bg-white rounded-md mb-4 z-10">
+            <div class="p-2 rounded-md bg-[color:var(--brand-color-blue)] z-10" id="userPhotoDiv">
+                <label for="photoInput" style="cursor: pointer;">
+                    <img src="{{ asset('img/icon/user.svg') }}" alt="" id="userPhotoIcon" width="30" height="30">
+                </label>
+
+                <!-- The container to hold the file input -->
+                <div id="fileInputContainer" style="display: none;"></div>
+            </div>
+
+
+            <div class=" z-10">
+                <h2 class="text-xl text-[color:var(--brand-color-blue)] font-bold mb-1">{{ $name ?? "Guest User" }}</h2>
+                <button id="balance-button" class="px-2 py-1 rounded-full w-36 bg-[color:var(--brand-color-blue)]">
+                    <div id="balance-container" class="flex gap-2 items-center">
+                        <img src="{{ asset('img/icon/taka.svg') }}" alt="">
+                        <span id="balance-text" class="text-white text-sm">Tap for Balance</span>
+                    </div>
+                </button>
+            </div>
+
+            {{--<div class="z-10">
+                <a class="flex gap-2 items-center text-[color:var(--brand-color-blue)] text-base" href="#">
+                    <img src="{{ asset('img/icon/edit-user.svg') }}" alt="">
+                    Edit Profile
+                </a>
+            </div>--}}
+
+        </div>
+
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-4 z-10">
                 <a href="javascript:void(0)" id="btnCardActivate"
@@ -161,6 +195,29 @@
 </main>
 <!-- Main Area End -->
 
+<script>
+    // Function to display the flash message using SweetAlert2
+    function showFlashMessage() {
+        // Check if the flash message exists in the session
+        const status = '{{ session('status') }}';
+        const message = '{{ session('message') }}';
+
+        if (status && message) {
+            // Display the SweetAlert2 message based on the flash status
+            Swal.fire({
+                icon: status,
+                title: message,
+                showConfirmButton: false,
+                timer: 4000, // 4 seconds
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', showFlashMessage);
+</script>
+
+<script src="{{ asset('js/get-balance.js') }}"></script>
+<script src="{{ asset('js/upload-user-photo.js') }}"></script>
 @include('front.popup-container')
 <script src="{{ asset('js/home.js') }}"></script>
 @include('partials.footer-menu')

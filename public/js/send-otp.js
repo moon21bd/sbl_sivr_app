@@ -22,8 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (response) {
                 hideLoader(); // Hide the loader
 
-                let respData = response.data,
-                    statusCode = response.status;
+                let respData = response.data, statusCode = response.status;
 
                 if (statusCode === 200) {
                     console.log('Success');
@@ -33,6 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Handle non-200 response status codes
                     console.log('ErrorCode:', statusCode);
                     console.log('Message:', respData.message);
+                    const audioUrl = respData.prompt;
+                    console.log('audioUrl', audioUrl)
+                    playErrorAudio(audioUrl);
                     hideLoader(); // Hide the loader
                     displayErrorMessage(respData.message, errorMessageDiv);
                 }
@@ -42,6 +44,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 let errMsg = error.response.data;
                 console.log('catch statusCode', error.response.status);
                 console.log('catch error', errMsg);
+                const audioUrl = errMsg.prompt;
+                console.log('audioUrl', audioUrl)
+                playErrorAudio(audioUrl);
 
                 hideLoader(); // Hide the loader
                 displayErrorMessage(errMsg.message, errorMessageDiv);

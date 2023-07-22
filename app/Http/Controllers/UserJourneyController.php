@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserJourney;
+use App\Models\SBLUserJourney;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -16,7 +16,7 @@ class UserJourneyController extends Controller
             $this->decidePurposeWise($requestData['purpose']);
         }
 
-        $journey = new UserJourney();
+        $journey = new SBLUserJourney();
         $journey->user_id = optional($request->user())->id;
         $journey->user_phone_no = $requestData['user_phone_no'] ?? (optional($request->user())->user_phone_no ?? '');
         $journey->user_account_no = $requestData['user_account_no'] ?? (optional($request->user())->user_account_no ?? '');
