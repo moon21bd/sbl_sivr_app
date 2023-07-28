@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Log;
 
 class APIHandler
 {
-    public function postCall($url, $params = [], $isSSLVerify = true): array
+    /*
+     * Here $isSSLVerify value is by default false. we got some issues in sonali bank api "cURL error 60: SSL certificate problem: certificate has expired" that's why passing false to bypassing the ssl certificate false. after production implementation this will change to true
+     * */
+    public function postCall($url, $params = [], $isSSLVerify = false): array
     {
         $options = [
             'verify' => $isSSLVerify,
@@ -39,6 +42,12 @@ class APIHandler
                 'data' => $response->getBody()->getContents(),
                 'exceptionType' => 'NONE',
             ];
+
+            // Validate the status code received in the API response
+            if (!is_numeric($responseData['statusCode']) || $responseData['statusCode'] === 0) {
+                $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
+            }
+
         } catch (Exception $e) {
             $responseData = $this->handleException($url, $e);
         } catch (ConnectException $e) {
@@ -65,16 +74,21 @@ class APIHandler
 
     protected function handleException($url, $e): array
     {
+        $statusCode = $e->getCode();
+        if (!is_numeric($statusCode) || $statusCode === 0) {
+            $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+        }
+
         $exceptions = [
             'status' => 'error',
-            'statusCode' => $e->getCode(),
+            'statusCode' => $statusCode,
             'data' => null,
             'api_url' => $url,
             'exceptionType' => get_class($e),
             'exceptionMessage' => $e->getMessage(),
         ];
 
-        Log::info('EXCEPTION-HAPPEN-DURING-API-CALL:: ' . json_encode($exceptions));
+        Log::error('EXCEPTION-HAPPEN-DURING-API-CALL:: ' . json_encode($exceptions));
         return $exceptions;
     }
 

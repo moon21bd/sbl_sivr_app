@@ -19,6 +19,7 @@
     <script>
         // Configure Axios to include the CSRF token in the headers of all requests
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
+        const helpCenterNumber = {{ config('bank.customer-support') }};
     </script>
 </head>
 

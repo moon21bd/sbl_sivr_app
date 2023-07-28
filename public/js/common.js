@@ -9,6 +9,37 @@ const otpWrap = '/otp-wrap';
 const verifyWrap = '/verify-wrap';
 const callDynamically = '/calldapi';
 
+const audioManager = {
+    audio: [],
+
+    playAudio: function (audioUrl) {
+        // Stop any existing audio before playing a new one
+        this.stopAudio();
+
+        const audioElement = new Audio(audioUrl);
+        this.audio.push(audioElement);
+
+        audioElement.onended = () => {
+            // Remove the audio element from the array when playback is complete
+            const index = this.audio.indexOf(audioElement);
+            if (index !== -1) {
+                this.audio.splice(index, 1);
+            }
+        };
+
+        audioElement.play();
+    },
+
+    stopAudio: function () {
+        // Stop all existing audio elements
+        for (const audioElement of this.audio) {
+            audioElement.pause();
+            audioElement.onended = null;
+        }
+        this.audio = [];
+    }
+};
+
 // Function to check login status using Axios and redirect to send-otp if not logged in
 function checkLoginStatus() {
     return new Promise((resolve, reject) => {
@@ -88,7 +119,7 @@ function uniqueID() {
     return Math.floor(Math.random() * Date.now());
 }
 
-function goTo(url) {
+function goTo(url = '/') {
     location.replace(url);
     return false;
 }
@@ -314,6 +345,8 @@ function pauseAudio(audioElement) {
 }
 
 function playErrorAudio(audioUrl) {
+    // console.log('playErrorAudio called', audioUrl)
+
     setTimeout(() => {
         if (audioUrl) {
             const audioElem = document.querySelector('audio');

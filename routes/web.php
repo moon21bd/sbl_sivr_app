@@ -33,11 +33,12 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 
     Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
 
+    Route::post('/logout', 'AuthController@logout')->name('logout');
+
 });
 
 Route::middleware('web')->group(function () {
-
-
+    // Web routes goes here
 });
 
 // web api routes

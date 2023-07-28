@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 class MainController extends Controller
@@ -16,26 +17,29 @@ class MainController extends Controller
 
     public function index()
     {
-        // Toast::info('This is a toast message.');
         return view('front.index');
     }
 
     public function home()
     {
-        // dd(ApiController::fetchGetWalletDetails('01710455990'));
+        // Uncomment these lines for debugging
+        // session()->forget(['logInfo', 'api_calling']);
         // dd(Session::all());
-        $name = "Guest User";
-        if (Session::has('logInfo') && isset(Session::get('logInfo')['account_info'][0]['AccountName'])) {
-            $name = Session::get('logInfo')['account_info'][0]['AccountName'];
-        }
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
             'title' => 'Home',
             'prompt' => getPromptPath("get-started"),
-            'name' => $name
+            'name' => $name,
+            'photo' => $userPhoto,
         ];
 
-        return view('front.home')->with($data);
+        return view('front.home', $data);
     }
 
     public function sendOtp()
@@ -60,36 +64,50 @@ class MainController extends Controller
 
     public function uploadUserPhoto(Request $request)
     {
-        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            $file = $request->file('photo');
+        try {
+            // Get the base64 image data from the request
+            $base64Image = $request->input('photo');
 
-            // Store the image directly in the desired public folder (public/uploads/photos)
-            $publicPath = $file->storeAs('uploads/photos', $file->hashName(), 'public');
+            // Save the image to the public/uploads/photos directory and get the image path
+            $userPhone = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
+            $accountName = Session::get('logInfo')['account_info']['accountName'] ?? null;
+            $accountNo = Session::get('logInfo')['account_info']['accountNo'] ?? null;
+
+            $imagePath = $this->uploadBase64Image($base64Image, $userPhone);
 
             // Save the image details in the database using the SblUserImage model
-
-            $name = null;
-            $userPhone = null;
-            $userAccount = null;
-            if (Session::has('logInfo') && isset(Session::get('logInfo')['account_info'][0]['AccountName'])) {
-                $name = Session::get('logInfo')['account_info'][0]['AccountName'] ?? null;
-                // $userPhone = Session::get('logInfo')['account_info'][0]['AccountNo'];
-                $userPhone = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
-            }
-
             $image = new SblUserImage();
-            $image->user_id = 0; // Replace null with the user ID if applicable
-            $image->name = $name;
+            $image->user_id = 0;
+            $image->name = $accountName;
             $image->user_phone = $userPhone;
-            $image->user_account = $userAccount;
-            $image->filename = $file->getClientOriginalName();
-            $image->path = $publicPath;
+            $image->user_account = $accountNo;
+            $image->filename = $imagePath['filename'];
+            $image->path = $imagePath['path']; // Save the image path in the database
             $image->save();
 
-            return response()->json(['image_url' => asset($publicPath)], 200);
+            // Return the image URL as a response
+            return response()->json(['image_url' => asset($imagePath['path'])], 200);
+        } catch (\Exception $error) {
+            // Handle the error appropriately
+            return response()->json(['message' => 'An error occurred while uploading the file. Please try again later.'], 500);
         }
+    }
 
-        return response()->json(['message' => 'No photo provided.'], 400);
+    protected function uploadBase64Image($inputFile, $namePrefix)
+    {
+        $imagePathPrefix = "uploads/photos/"; // Update the image path prefix
+        $imageParts = explode(";base64,", $inputFile);
+        $imageTypeAux = explode("image/", $imageParts[0]);
+        $extension = $imageTypeAux[1];
+        $imageBase64 = base64_decode($imageParts[1]);
+        $fileNameToStore = $namePrefix . '-' . uniqid() . '.' . $extension;
+        $filePath = public_path($imagePathPrefix) . $fileNameToStore;
+        file_put_contents($filePath, $imageBase64);
+
+        return [
+            'filename' => $fileNameToStore,
+            'path' => $imagePathPrefix . $fileNameToStore
+        ];
     }
 
 
