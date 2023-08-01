@@ -135,7 +135,7 @@
 
 
             <div class="col-span-4 z-10">
-                <a href="#" id="btnPaymentInfo"
+                <a href="javascript:void(0)" id="btnPaymentInfo"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
@@ -171,7 +171,7 @@
             </div>
 
             <div class="col-span-4 z-10">
-                <a href="#" id="btnAgentAssist"
+                <a href="javascript:void(0)" id="btnAgentAssist"
                    class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
@@ -197,44 +197,6 @@
 <!-- Main Area End -->
 
 <script>
-
-
-    // reset pin dialog open and api calling
-
-    /*Swal.fire({
-        title: 'Submit your Github username',
-        input: 'text',
-        inputAttributes: {
-            autocapitalize: 'off'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Look up',
-        showLoaderOnConfirm: true,
-        preConfirm: (login) => {
-            return fetch(`//api.github.com/users/${login}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText)
-                    }
-                    return response.json()
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(
-                        `Request failed: ${error}`
-                    )
-                })
-        },
-        allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: `${result.value.login}'s avatar`,
-                imageUrl: result.value.avatar_url
-            })
-        }
-    })*/
-
-
     // Function to display the flash message using SweetAlert2
     function showFlashMessage() {
         // Check if the flash message exists in the session

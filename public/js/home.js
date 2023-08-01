@@ -333,6 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle click events on the buttons
+    addClickEventWithAsyncHandler('btnPaymentInfo', showMessageForHelp);
     addClickEventWithAsyncHandler('btnStatement', showMessageForHelp);
     addClickEventWithAsyncHandler('btnCardDetails', showMessageForHelp);
     addClickEventWithAsyncHandler('btnAgentAssist', showMessageForHelp);
