@@ -15,12 +15,12 @@ class ApiController extends ResponseController
     public function getBalance(Request $request)
     {
         // will be deleted this code later
-        $responseOut = [
+        /*$responseOut = [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'balance' => 120
         ];
-        return $this->sendResponse($responseOut);
+        return $this->sendResponse($responseOut);*/
         // will be deleted this code later
 
         $phoneNumber = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
@@ -50,7 +50,7 @@ class ApiController extends ResponseController
         $mobileNo = $request->input('mobile_no');
 
         // will be removed later
-        $mobileNo = '01710455990';
+        /*$mobileNo = '01710455990';
         $strRefId = $mobileNo . randomDigits();
         Session::put('otp', [
             'phone_masked' => $this->hidePhoneNumber($mobileNo),
@@ -64,7 +64,7 @@ class ApiController extends ResponseController
             'message' => 'Success.',
             'url' => url('verify-otp')
         ];
-        return $this->sendResponse($responseOut, $responseOut['code']);
+        return $this->sendResponse($responseOut, $responseOut['code']);*/
         // will be removed later
 
 
@@ -85,7 +85,7 @@ class ApiController extends ResponseController
             if ($isValidData !== null) {
                 $data = $this->decodeJsonIfValid($isValidData);
                 $statusCode = intval($data['StatusCode']);
-                if ($statusCode === 400) {
+                if ($statusCode === Response::HTTP_BAD_REQUEST) {
                     $responseOut = [
                         'code' => $statusCode,
                         'status' => 'error',
@@ -155,9 +155,8 @@ class ApiController extends ResponseController
         $strRefId = Session::get('otp.strRefId');
 
         // WILL BE REMOVED LATER
-
         // call api to get user account name.
-        $otpInfo = Session::get('otp');
+        /*$otpInfo = Session::get('otp');
         $statusCode = Response::HTTP_OK;
         $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
 
@@ -184,7 +183,7 @@ class ApiController extends ResponseController
         session()->flash('status', $responseOut['status']);
         session()->flash('message', $responseOut['message']);
 
-        return $this->sendResponse($responseOut, $responseOut['code']);
+        return $this->sendResponse($responseOut, $responseOut['code']);*/
 
         // will be removed later
 
@@ -219,12 +218,21 @@ class ApiController extends ResponseController
                     // Make the user as logged-in user, set flag to verify user.
                     // call api to get user account name.
                     $otpInfo = Session::get('otp');
-                    $getAccountList = self::fetchSavingsDeposits($otpInfo['otp_phone']);
+                    /*$getAccountList = self::fetchSavingsDeposits($otpInfo['otp_phone']);
                     Session::put('logInfo', [
                         'is_logged' => base64_encode(true),
                         'otp_info' => $otpInfo,
                         'account_info' => $getAccountList,
+                    ]);*/
+
+                    $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
+
+                    Session::put('logInfo', [
+                        'is_logged' => base64_encode(true),
+                        'otp_info' => $otpInfo,
+                        'account_info' => $getAccountList['data'],
                     ]);
+
                     Session::forget('otp');
 
                     /*$apiCalling = Session::get('api_calling');
@@ -240,7 +248,7 @@ class ApiController extends ResponseController
                         }
                     }*/
 
-                    $responseOut = [
+                    /*$responseOut = [
                         'code' => $statusCode,
                         'status' => 'success',
                         'message' => 'Success',
@@ -248,7 +256,23 @@ class ApiController extends ResponseController
                         'an' => $getAccountList[1]['AccountName'] ?? null,
                         'acn' => $getAccountList[1]['AccountNo'] ?? null,
                         'url' => url('/')
+                    ];*/
+
+                    $responseOut = [
+                        'code' => $statusCode,
+                        'status' => 'success',
+                        'message' => 'Verification successful. Please proceed with your previous service request.',
+                        'prompt' => getPromptPath('account-verification-success'),
+                        'pn' => $mobileNo,
+                        'an' => $getAccountList['data']['accountName'] ?? null,
+                        'acn' => $getAccountList['data']['accountNo'] ?? null,
+                        'url' => url('/')
                     ];
+
+                    // Set the flash message
+                    session()->flash('status', $responseOut['status']);
+                    session()->flash('message', $responseOut['message']);
+
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
             } else {
@@ -401,7 +425,7 @@ class ApiController extends ResponseController
     public static function processApiCallingResetPin($data): array
     {
 
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'PIN reset request successful.',
@@ -413,7 +437,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => 'PIN reset request failed.',
             'prompt' => getPromptPath('pin-reset-failed')
-        ];
+        ];*/
 
         // dd($data);
         // will be remove later
@@ -467,7 +491,7 @@ class ApiController extends ResponseController
     public static function processApiCallingDeviceBind($data): array
     {
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your device binding request was successful.',
@@ -479,7 +503,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => 'Your device binding request failed.',
             'prompt' => getPromptPath('device-bind-failed')
-        ];
+        ];*/
 
         // will be removed later
 

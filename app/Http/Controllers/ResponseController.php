@@ -13,14 +13,6 @@ use App\User;
 
 class ResponseController extends Controller
 {
-    /**
-     * error response codes.
-     *
-     * @return string
-     */
-    protected $commonSuccessCode = 200;
-    protected $commonErrorCode = 400;
-
     protected function sendResponse($content = [], $status = 200)
     {
         return response()->json($content, $status);

@@ -14,12 +14,10 @@ use Illuminate\Support\Facades\Validator;
 
 class MainController extends Controller
 {
-
     public function index()
     {
         return view('front.index');
     }
-
     public function home()
     {
         // Uncomment these lines for debugging
