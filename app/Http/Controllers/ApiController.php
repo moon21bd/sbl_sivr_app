@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 
 class ApiController extends ResponseController
 {
+
     public function getBalance(Request $request)
     {
         // will be deleted this code later
@@ -328,6 +329,26 @@ class ApiController extends ResponseController
 
     public static function fetchGetWalletDetails($phoneNumber): array
     {
+
+        // will be removed this later
+        return [
+            'status' => 'success',
+            'message' => 'Data Received',
+            'code' => Response::HTTP_OK,
+            'data' => [
+                'name' => 'Md. Raqibul Hasan',
+                'accountName' => 'Md. Raqibul Hasan',
+                'accountNo' => '5158242353328',
+                'balanceAmount' => 1000000,
+                'walletStatus' => null,
+                'accountList' => [
+                    'name' => 'Md. Raqibul Hasan',
+                    'accountName' => 'Md. Raqibul Hasan',
+                    'accountNo' => '5158242353328',
+                ],
+            ]
+        ];
+
         $url = config('api.base_url') . config('api.get_wallet_details_url');
         $apiHandler = new APIHandler();
         $response = $apiHandler->postCall($url, ['mobileNo' => $phoneNumber, 'userId' => 'Agx01254']);
@@ -419,6 +440,156 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => 'Your account activation request has failed.',
             'prompt' => getPromptPath('account-activation-failed')
+        ];
+    }
+
+    public static function processApiCallingDebitCardActivation($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your debit card activation request was successful.',
+            'prompt' => getPromptPath('debit-card-activation-successful')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Debit card activation failed.',
+            'prompt' => getPromptPath('debit-card-activation-failed')
+        ];
+
+        // will be removed later
+
+        $url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your debit card activation request was successful.',
+                    'prompt' => getPromptPath('debit-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your debit card activation request has failed.',
+            'prompt' => getPromptPath('debit-card-activation-failed')
+        ];
+    }
+
+    public static function processApiCallingCreditCardActivation($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your credit card activation request was successful.',
+            'prompt' => getPromptPath('credit-card-activation-successful')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your credit card activation failed.',
+            'prompt' => getPromptPath('credit-card-activation-failed')
+        ];
+        // will be removed later
+
+        $url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('credit-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('credit-card-activation-failed')
+        ];
+    }
+
+    public static function processApiCallingPrepaidCardActivation($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your prepaid card activation request was successful.',
+            'prompt' => getPromptPath('prepaid-card-activation-successful')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Prepaid card activation failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];
+        // will be removed later
+
+        $url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
         ];
     }
 
@@ -542,7 +713,7 @@ class ApiController extends ResponseController
     public static function processApiCallingCreateIssue($data): array
     {
         // will be removed later
-        /*return [
+        return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your issue has been successfully submitted.',
@@ -558,7 +729,7 @@ class ApiController extends ResponseController
             'message' => 'Your issue submission has failed. Please try again later.',
             'prompt' => getPromptPath('issue-submission-failed'),
             'issueId' => null
-        ];*/
+        ];
 
         // will be removed later
 
@@ -669,11 +840,8 @@ class ApiController extends ResponseController
         // we need to add/pass additional data to array_merge 's first param
         $data = array_merge(['mobile_no' => $phoneNumber], $request->all());
 
-        // dd($data, $request->all());
-
         // Call the dynamic API based on the purpose
         $apiResponse = self::processDynamicAPICalling($purpose, $data);
-
         // Prepare the response based on the API response
         $responseOut = [
             'code' => $apiResponse['code'],
@@ -720,6 +888,12 @@ class ApiController extends ResponseController
                 return self::processApiCallingCreateIssue($data);
             case 'LOCKWALLET':
                 return self::processApiCallingLockWallet($data);
+            case 'DEBITCARDACTIVATION':
+                return self::processApiCallingDebitCardActivation($data);
+            case 'CREDITCARDACTIVATION':
+                return self::processApiCallingCreditCardActivation($data);
+            case 'PREPAIDCARDACTIVATION':
+                return self::processApiCallingPrepaidCardActivation($data);
             default:
                 // Code to be executed if $purpose is different from all cases;
                 return false;

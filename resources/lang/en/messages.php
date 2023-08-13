@@ -14,4 +14,17 @@ return [
     'statement-btn' => 'Statement',
     'card-details-btn' => 'Card Details',
     'agent-assist-btn' => 'Agent Assist',
+
+    'cards-btn' => 'Cards',
+    'debit-card-btn' => 'Debit',
+    'credit-card-btn' => 'Credit',
+    'prepaid-card-btn' => 'Prepaid',
+    'account-or-loan-btn' => 'Account/Loan',
+    'eSheba-btn' => 'eSheba',
+    'eWallet-btn' => 'eWallet',
+    'spg-btn' => 'SPG',
+    'islami-banking-btn' => 'Islami Bank',
+    'agent-banking-btn' => 'Agent Bank',
+    'sonali-bank-product-btn' => 'SBL Product',
+    'my-complain-btn' => 'My Complain',
 ];

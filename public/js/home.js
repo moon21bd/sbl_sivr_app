@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    const currentPath = window.location.pathname;
+
     // Function to handle API calls
     async function callDynamicAPI(data) {
         try {
@@ -135,6 +138,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function handleLockWalletClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Reason for locking the wallet?', "Please enter the reason for locking the wallet.", 'enter-reason-locking-wallet');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'lockWallet', 'page': 'home', 'button': 'btnLockWallet', 'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnLockWallet click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
     async function handleCreateIssueClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -171,19 +205,85 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function handleLockWalletClick() {
+    console.log('currentPath: ' + currentPath)
+    if (currentPath === '/') {
+
+        // Event listener for cards button
+        const btnCards = document.getElementById('btnCards');
+        btnCards.addEventListener('click', handleCardsButtonClick);
+
+        // Event listener for accountOrLoan button
+        // const accountOrLoan = document.getElementById('btnAccountOrLoan');
+        // accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
+
+        addClickEventWithAsyncHandler('btnAccountOrLoan', showMessageForHelp);
+
+
+        // Event listener for creation issue button
+        const btnCreateIssue = document.getElementById('btnCreateIssue');
+        btnCreateIssue.addEventListener('click', handleCreateIssueClick);
+
+        // Handle click events on the buttons
+        addClickEventWithAsyncHandler('btnSonaliBankProduct', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnAgentBanking', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIslamiBanking', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSPG', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnEWallet', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnESheba', showMessageForHelp);
+
+        /*// Event listener for create issue button
+        const btnLockWallet = document.getElementById('btnLockWallet');
+        btnLockWallet.addEventListener('click', handleLockWalletClick);
+
+        // Event listener for device binding button
+        const btnDeviceBind = document.getElementById('btnDeviceBind');
+        btnDeviceBind.addEventListener('click', handleDeviceBindClick);
+
+        // Event listener for reset PIN button
+        const btnResetPin = document.getElementById('btnResetPin');
+        btnResetPin.addEventListener('click', handleResetPin);
+
+        // Event listener for card activation button
+        const btnCardActivate = document.getElementById('btnCardActivate');
+        btnCardActivate.addEventListener('click', handleCardActivateClick);
+
+        // Handle click events on the buttons
+        addClickEventWithAsyncHandler('btnPaymentInfo', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnStatement', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCardDetails', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnAgentAssist', showMessageForHelp);*/
+
+
+    } // end of pathname detect and conditionally assign event listener
+    else if (currentPath === '/cards') {
+
+        const btnDebitCardActivate = document.getElementById('btnDebitCard');
+        btnDebitCardActivate.addEventListener('click', handleDebitCardActivationClick);
+
+        const btnCreditCardActivate = document.getElementById('btnCreditCard');
+        btnCreditCardActivate.addEventListener('click', handleCreditCardActivationClick);
+
+        const btnPrepaidCardActivate = document.getElementById('btnPrepaidCard');
+        btnPrepaidCardActivate.addEventListener('click', handlePrepaidCardActivationClick);
+
+    }
+
+    async function handleDebitCardActivationClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
-                const reason = await enterReason('Reason for locking the wallet?', "Please enter the reason for locking the wallet.", 'enter-reason-locking-wallet');
+                const reason = await enterReason('Reason for debit card activation?', "Please enter the reason for debit card activation.", 'enter-reason-for-debit-card-activation');
 
                 if (reason.isConfirmed) {
                     const apiResponse = await callDynamicAPI({
-                        'purpose': 'lockWallet', 'page': 'home', 'button': 'btnLockWallet', 'reason': reason.value
+                        'purpose': 'debitCardActivation',
+                        'page': 'cards',
+                        'button': 'btnDebitCard',
+                        'reason': reason.value
                     });
 
                     Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
                     });
                     playErrorAudio(apiResponse.prompt);
                 }
@@ -191,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showVerificationAlert();
             }
         } catch (error) {
-            console.error('Error in btnLockWallet click:', error);
+            console.error('Error in btnDebitCardActivate click:', error);
 
             if (error.status === 'error') {
                 Swal.fire({
@@ -202,50 +302,76 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event listener for create issue button
-    const btnLockWallet = document.getElementById('btnLockWallet');
-    btnLockWallet.addEventListener('click', handleLockWalletClick);
+    async function handleCreditCardActivationClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Reason for credit card activation?', "Please enter the reason for credit card activation.", 'enter-reason-for-credit-card-activation');
 
-    // Event listener for create issue button
-    const btnCreateIssue = document.getElementById('btnCreateIssue');
-    btnCreateIssue.addEventListener('click', handleCreateIssueClick);
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'creditCardActivation',
+                        'page': 'cards',
+                        'button': 'btnCreditCard',
+                        'reason': reason.value
+                    });
 
-    // Event listener for device binding button
-    const btnDeviceBind = document.getElementById('btnDeviceBind');
-    btnDeviceBind.addEventListener('click', handleDeviceBindClick);
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnCreditCard click:', error);
 
-    // Event listener for reset PIN button
-    const btnResetPin = document.getElementById('btnResetPin');
-    btnResetPin.addEventListener('click', handleResetPin);
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handlePrepaidCardActivationClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Reason for prepaid card activation?', "Please enter the reason for prepaid card activation.", 'enter-reason-for-prepaid-card-activation');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'prepaidCardActivation',
+                        'page': 'cards',
+                        'button': 'btnPrepaidCard',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnPrepaidCard click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
 
     // Event listener for card activation button
-    const btnCardActivate = document.getElementById('btnCardActivate');
-    btnCardActivate.addEventListener('click', handleCardActivateClick);
 
-
-    /*// Handle click event on language buttons
-    $('.radioBtn a').on('click', function () {
-        const locale = $(this).data('locale');
-
-        // Update the active state based on the clicked locale
-        setActiveState(locale);
-
-        axios.post('/change-locale', {locale: locale})
-            .then(response => {
-                console.log(response.data);
-                // Redirect to the received URL
-                goTo(response.data.redirect);
-            })
-            .catch(error => {
-                console.error(error);
-                // Handle any errors that occur during the request
-            });
-    });
-
-    // Check for the saved locale in cookie or localStorage
-    const savedLocale = getSavedLocale();
-    // Set the initial active state based on the saved locale
-    setActiveState(savedLocale);*/
 
     document.querySelectorAll('.radioBtn a').forEach(button => {
         button.addEventListener('click', function () {
@@ -332,10 +458,50 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(elementId).addEventListener('click', asyncHandler);
     }
 
-    // Handle click events on the buttons
-    addClickEventWithAsyncHandler('btnPaymentInfo', showMessageForHelp);
-    addClickEventWithAsyncHandler('btnStatement', showMessageForHelp);
-    addClickEventWithAsyncHandler('btnCardDetails', showMessageForHelp);
-    addClickEventWithAsyncHandler('btnAgentAssist', showMessageForHelp);
+
+    // Handling cards functionality from here.
+
+    async function handleCardsButtonClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                // redirect to cards page
+                goTo('/cards');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in cardsButtonClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleAccountOrLoanButtonClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                // redirect to cards page
+                goTo('/account-or-loan');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in cardsButtonClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
 
 });

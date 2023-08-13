@@ -20,12 +20,17 @@ Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('ho
 Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
 Route::get('/check-login', [\App\Http\Controllers\AuthController::class, 'checkLoginStatus']);
 
+Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
+    Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
+    Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
+});
+
 Route::middleware(['web', 'verify.login'])->group(function () {
     // Your routes and route groups protected by the specified middleware go here
     Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
 
-    Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
-    Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
+    Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
+    Route::get('/account-or-loan', [\App\Http\Controllers\MainController::class, 'accountOrLoan'])->name('accountOrLoan');
 
     Route::post('/otp-wrap', [\App\Http\Controllers\ApiController::class, 'sendOtpWrapper'])->name('sendOtpWrapper');
     Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');
@@ -35,10 +40,6 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
 
-});
-
-Route::middleware('web')->group(function () {
-    // Web routes goes here
 });
 
 // web api routes

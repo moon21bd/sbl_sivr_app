@@ -45,9 +45,11 @@
 
 <script type="application/javascript">
 
-    const backButton = document.getElementById('btnBack');
-    backButton.addEventListener('click', function () {
-        window.history.back();
+    document.addEventListener('DOMContentLoaded', function () {
+        const backButton = document.getElementById('btnBack');
+        backButton.addEventListener('click', function () {
+            window.history.back();
+        });
     });
 
 </script>

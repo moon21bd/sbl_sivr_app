@@ -18,6 +18,7 @@ class MainController extends Controller
     {
         return view('front.index');
     }
+
     public function home()
     {
         // Uncomment these lines for debugging
@@ -38,6 +39,44 @@ class MainController extends Controller
         ];
 
         return view('front.home', $data);
+    }
+
+    public function cards()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Cards',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.cards', $data);
+    }
+
+    public function accountOrLoan()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Account Or Loan',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.account-or-loan', $data);
     }
 
     public function sendOtp()

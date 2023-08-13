@@ -15,4 +15,17 @@ return [
     'card-details-btn' => 'কার্ড ডিটেইলস',
     'agent-assist-btn' => 'এজেন্ট সহায়তা',
 
+    'cards-btn' => 'কার্ডস',
+    'debit-card-btn' => 'ডেবিট',
+    'credit-card-btn' => 'ক্রেডিট',
+    'prepaid-card-btn' => 'প্রি-পেইড',
+    'account-or-loan-btn' => 'অ্যাকাউন্ট/লোন',
+    'eSheba-btn' => 'ই-সেবা',
+    'eWallet-btn' => 'ই-ওয়ালেট',
+    'spg-btn' => 'এসপিজি',
+    'islami-banking-btn' => 'ইসলামী ব্যাংকিং',
+    'agent-banking-btn' => 'এজেন্ট ব্যাংকিং',
+    'sonali-bank-product-btn' => 'সোনালী ব্যাংক প্রোডাক্ট',
+    'my-complain-btn' => 'আমার অভিযোগ',
+
 ];
