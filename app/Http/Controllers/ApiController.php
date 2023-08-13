@@ -112,7 +112,7 @@ class ApiController extends ResponseController
 
                 } else {
                     $responseOut = [
-                        'code' => $statusCode,
+                        'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
                         'message' => 'Apologies, something went wrong. Please try again later.',
                         'prompt' => getPromptPath('apologies-error')
@@ -247,9 +247,9 @@ class ApiController extends ResponseController
                                 'response' => $resp
                             ]]);
                         }
-                    }*/
+                    }
 
-                    /*$responseOut = [
+                    $responseOut = [
                         'code' => $statusCode,
                         'status' => 'success',
                         'message' => 'Success',
