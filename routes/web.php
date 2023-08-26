@@ -30,7 +30,23 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
 
     Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
-    Route::get('/account-or-loan', [\App\Http\Controllers\MainController::class, 'accountOrLoan'])->name('accountOrLoan');
+    Route::get('/account-and-loan', [\App\Http\Controllers\MainController::class, 'accountAndLoan'])->name('accountAndLoan');
+    Route::get('/casasnd', [\App\Http\Controllers\MainController::class, 'casasnd'])->name('casasnd');
+    Route::get('/account-dps', [\App\Http\Controllers\MainController::class, 'accountDPS'])->name('account-dps');
+    Route::get('/fixed-deposit', [\App\Http\Controllers\MainController::class, 'fixedDeposit'])->name('fixed-deposit');
+    Route::get('/loans-advances', [\App\Http\Controllers\MainController::class, 'loansAdvances'])->name('loans-advances');
+    Route::get('/agent-banking', [\App\Http\Controllers\MainController::class, 'agentBanking'])->name('agent-banking');
+    Route::get('/credit-card', [\App\Http\Controllers\MainController::class, 'creditCard'])->name('credit-card');
+
+    Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
+    Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class, 'prePaidCard'])->name('prepaid-card');
+    Route::get('/esheba', [\App\Http\Controllers\MainController::class, 'eSheba'])->name('esheba');
+    Route::get('/ewallet', [\App\Http\Controllers\MainController::class, 'eWallet'])->name('ewallet');
+    Route::get('/islami-banking', [\App\Http\Controllers\MainController::class, 'islamiBanking'])->name('islami-banking');
+    Route::get('/ib-account-related', [\App\Http\Controllers\MainController::class, 'ibAccountRelated'])->name('ib-account-related');
+    Route::get('/ib-loans-advances', [\App\Http\Controllers\MainController::class, 'ibLoansAdvances'])->name('ib-loans-advances');
+    Route::get('/sonali-products', [\App\Http\Controllers\MainController::class, 'sonaliBankProducts'])->name('sonali-products');
+    Route::get('/spg', [\App\Http\Controllers\MainController::class, 'sonaliPaymentGateway'])->name('spg');
 
     Route::post('/otp-wrap', [\App\Http\Controllers\ApiController::class, 'sendOtpWrapper'])->name('sendOtpWrapper');
     Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');

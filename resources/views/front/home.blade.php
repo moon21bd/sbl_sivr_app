@@ -16,7 +16,7 @@
         </div>
 
         <div class="col-span-4 z-10">
-            <a href="javascript:void(0)" id="btnAccountOrLoan"
+            <a href="javascript:void(0)" id="btnAccountAndLoan"
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">

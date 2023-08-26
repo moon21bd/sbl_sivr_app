@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const currentPath = window.location.pathname;
 
-    // Function to handle API calls
     async function callDynamicAPI(data) {
         try {
             const response = await axios.post(callDynamically, data);
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to enter reason in SweetAlert
     async function enterReason(title, message, audioFile) {
         const popupAudio = new Audio(`/uploads/prompts/${audioFile}.mp3`);
         popupAudio.play();
@@ -42,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Function to handle reset PIN
     async function handleResetPin() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -74,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to handle card activation
     async function handleCardActivateClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -106,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to handle device binding
     async function handleDeviceBindClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -208,28 +203,44 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('currentPath: ' + currentPath)
     if (currentPath === '/') {
 
-        // Event listener for cards button
         const btnCards = document.getElementById('btnCards');
         btnCards.addEventListener('click', handleCardsButtonClick);
 
-        // Event listener for accountOrLoan button
-        // const accountOrLoan = document.getElementById('btnAccountOrLoan');
-        // accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
+        const accountOrLoan = document.getElementById('btnAccountAndLoan');
+        accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
 
-        addClickEventWithAsyncHandler('btnAccountOrLoan', showMessageForHelp);
+        const btnAgentBanking = document.getElementById('btnAgentBanking');
+        btnAgentBanking.addEventListener('click', handleAgentBankingClick);
 
+        const btnESheba = document.getElementById('btnESheba');
+        btnESheba.addEventListener('click', handleEShebaClick);
+
+        const btnEWallet = document.getElementById('btnEWallet');
+        btnEWallet.addEventListener('click', handleEWalletClick);
+
+        const btnIslamiBanking = document.getElementById('btnIslamiBanking');
+        btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
+
+        const btnSonaliBankProduct = document.getElementById('btnSonaliBankProduct');
+        btnSonaliBankProduct.addEventListener('click', handleSonaliBankProductClick);
+
+        const btnSPG = document.getElementById('btnSPG');
+        btnSPG.addEventListener('click', handleSPGClick);
+
+        // addClickEventWithAsyncHandler('btnAccountOrLoan', showMessageForHelp);
 
         // Event listener for creation issue button
         const btnCreateIssue = document.getElementById('btnCreateIssue');
         btnCreateIssue.addEventListener('click', handleCreateIssueClick);
 
         // Handle click events on the buttons
-        addClickEventWithAsyncHandler('btnSonaliBankProduct', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnAgentBanking', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnIslamiBanking', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSPG', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnEWallet', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnESheba', showMessageForHelp);
+        // addClickEventWithAsyncHandler('btnSonaliBankProduct', showMessageForHelp);
+        // addClickEventWithAsyncHandler('btnAgentBanking', showMessageForHelp);
+        // addClickEventWithAsyncHandler('btnIslamiBanking', showMessageForHelp);
+        // addClickEventWithAsyncHandler('btnSPG', showMessageForHelp);
+        // addClickEventWithAsyncHandler('btnEWallet', showMessageForHelp);
+
+        // addClickEventWithAsyncHandler('btnESheba', showMessageForHelp);
 
         /*// Event listener for create issue button
         const btnLockWallet = document.getElementById('btnLockWallet');
@@ -258,14 +269,529 @@ document.addEventListener('DOMContentLoaded', function () {
     else if (currentPath === '/cards') {
 
         const btnDebitCardActivate = document.getElementById('btnDebitCard');
-        btnDebitCardActivate.addEventListener('click', handleDebitCardActivationClick);
+        btnDebitCardActivate.addEventListener('click', handleDebitCardPageClick);
 
-        const btnCreditCardActivate = document.getElementById('btnCreditCard');
-        btnCreditCardActivate.addEventListener('click', handleCreditCardActivationClick);
+        const btnCreditCard = document.getElementById('btnCreditCard');
+        btnCreditCard.addEventListener('click', handleCreditCardPageClick);
 
-        const btnPrepaidCardActivate = document.getElementById('btnPrepaidCard');
-        btnPrepaidCardActivate.addEventListener('click', handlePrepaidCardActivationClick);
+        const btnPrepaidCard = document.getElementById('btnPrepaidCard');
+        btnPrepaidCard.addEventListener('click', handlePrePaidCardPageClick);
 
+    } else if (currentPath === '/account-and-loan') {
+
+        const btnCASASND = document.getElementById('btnCASASND');
+        btnCASASND.addEventListener('click', handleCASASNDClick);
+
+        const btnDPS = document.getElementById('btnDPS');
+        btnDPS.addEventListener('click', handleDPSClick);
+
+        const btnFixedDeposit = document.getElementById('btnFixedDeposit');
+        btnFixedDeposit.addEventListener('click', handleFixedDepositClick);
+
+        const btnLoansAndAdvances = document.getElementById('btnLoansAndAdvances');
+        btnLoansAndAdvances.addEventListener('click', handleLoansAndAdvancesClick);
+
+    } else if (currentPath === '/islami-banking') {
+
+        const btnIBAccountRelated = document.getElementById('btnIBAccountRelated');
+        btnIBAccountRelated.addEventListener('click', handleIBAccountRelatedClick);
+
+        const btnIBLoansAndAdvances = document.getElementById('btnIBLoansAndAdvances');
+        btnIBLoansAndAdvances.addEventListener('click', handleIBARLoansAndAdvancesClick);
+
+    } else if (currentPath === '/sonali-products') {
+
+        addClickEventWithAsyncHandler('btnSBDepositProducts', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSBPForeignCurrencyExchangeRate', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSBPLoanProducts', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSBPOtherProducts', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSBPScheduleOfCharges', showMessageForHelp);
+
+    } else if (currentPath === '/spg') {
+
+        addClickEventWithAsyncHandler('btnSPGBlazeRemittanceServices', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSPGChallanRelatedServices', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSPGEducationalFeesPayment', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSPGInternetBankingServices', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSPGOnlineBillPaymentService', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnSPGSonaliBankAccountToBkash', showMessageForHelp);
+
+    } else if (currentPath === '/loans-advances') {
+
+        addClickEventWithAsyncHandler('btnLALoanClosureProcess', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnLALoanDetails', showMessageForHelp);
+
+        const btnLADueDateInstallment = document.getElementById('btnLADueDateInstallment');
+        btnLADueDateInstallment.addEventListener('click', handleLADueDateInstallmentClick);
+
+        const btnLAOutstandingLoanBalance = document.getElementById('btnLAOutstandingLoanBalance');
+        btnLAOutstandingLoanBalance.addEventListener('click', handleLAOutstandingLoanBalanceClick);
+
+    } else if (currentPath === '/fixed-deposit') {
+
+        addClickEventWithAsyncHandler('btnFDEncashmentProcess', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnFDFixedDepositDetails', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnFDMaturityDate', showMessageForHelp);
+
+    } else if (currentPath === '/account-dps') {
+
+        addClickEventWithAsyncHandler('btnALAccountDPSAvailableBalance', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnALAccountClosureProcess', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnALAccountDPSEncashmentProcess', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnALAccountDPSInstalmentDetails', showMessageForHelp);
+
+    } else if (currentPath === '/ib-account-related') {
+
+
+        const btnIBARChequeBookLeaf = document.getElementById('btnIBARChequeBookLeaf');
+        btnIBARChequeBookLeaf.addEventListener('click', handleIBARChequeBookLeafClick);
+
+        addClickEventWithAsyncHandler('btnIBARActivateSmsBanking', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBARAvailableBalance', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBARFundTransferServices', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBARMiniStatement', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBARChequeBookRequisition', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBARIslamicBankingProducts', showMessageForHelp);
+
+    } else if (currentPath === '/ewallet') {
+
+        const btnEWChangeOrResetEWalletPIN = document.getElementById('btnEWChangeOrResetEWalletPIN');
+        btnEWChangeOrResetEWalletPIN.addEventListener('click', handleEWChangeOrResetEWalletPINClick);
+
+        const btnEWDeviceBind = document.getElementById('btnEWDeviceBind');
+        btnEWDeviceBind.addEventListener('click', handleEWDeviceBindClick);
+
+        const btnEWLockOrBlock = document.getElementById('btnEWLockOrBlock');
+        btnEWLockOrBlock.addEventListener('click', handleEWLockOrBlockClick);
+
+        const btnEWUnlockOrActive = document.getElementById('btnEWUnlockOrActive');
+        btnEWUnlockOrActive.addEventListener('click', handleEWUnlockOrActiveClick);
+
+        addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnEWApproveOrReject', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnEWEWalletClose', showMessageForHelp);
+
+    } else if (currentPath === '/esheba') {
+
+        addClickEventWithAsyncHandler('btnESAccountOpening', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnESAboutSonaliESheba', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnESOtherServices', showMessageForHelp);
+
+    } else if (currentPath === '/credit-card') {
+
+        addClickEventWithAsyncHandler('btnCCreditCardActivation', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditCardBlock', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditChangeOrResetPIN', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditECommerceActivationOrDeactivation', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditGreenPINGeneration', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditMiniStatement', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditOutstandingBDT', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditOutstandingUSD', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCCreditCardPayment', showMessageForHelp);
+
+    } else if (currentPath === '/debit-card') {
+        addClickEventWithAsyncHandler('btnDCDebitCardActivation', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnDCDebitCardBlock', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnDCDebitChangeOrResetPIN', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCDebitECommerceActivationOrDeactivation', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCDebitGreenPINGeneration', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCDebitMiniStatement', showMessageForHelp);
+    } else if (currentPath === '/prepaid-card') {
+        addClickEventWithAsyncHandler('btnCPrepaidCardActivation', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCPrepaidCardBlock', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCPrepaidChangeOrResetPIN', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCPrepaidECommerceActivationOrDeactivation', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCPrepaidGreenPINGeneration', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCPrepaidMiniStatement', showMessageForHelp);
+    } else if (currentPath === '/agent-banking') {
+        addClickEventWithAsyncHandler('btnABAgentBankingServices', showMessageForHelp);
+    } else if (currentPath === '/casasnd') {
+
+        const btnChequeBookLeaf = document.getElementById('btnChequeBookLeaf');
+        btnChequeBookLeaf.addEventListener('click', handleChequeBookLeafClick);
+
+        const btnCASAActivateSMSBanking = document.getElementById('btnCASAActivateSMSBanking');
+        btnCASAActivateSMSBanking.addEventListener('click', handleCASAActivateSMSBankingClick);
+
+        addClickEventWithAsyncHandler('btnCASAMiniStatement', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnFundTransferServices', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnCASAAvailableBalance', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnChequeBookRequisition', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnAccountClosureProcess', showMessageForHelp);
+    } else if (currentPath === '/ib-loans-advances') {
+
+        addClickEventWithAsyncHandler('btnIBLALoanClosureProcess', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBLALoanDetails', showMessageForHelp);
+        addClickEventWithAsyncHandler('btnIBLAOutstandingLoanBalance', showMessageForHelp);
+    }
+
+
+    async function handleEWChangeOrResetEWalletPINClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-change-reset-pin');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'EW-CHANGE-OR-RESET-PIN',
+                        'page': 'ewallet',
+                        'button': 'btnEWChangeOrResetEWalletPIN',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnLAOutstandingLoanBalance click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleEWDeviceBindClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-device-bind');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'EW-DEVICE-BIND',
+                        'page': 'ewallet',
+                        'button': 'btnEWDeviceBind',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnLAOutstandingLoanBalance click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleEWLockOrBlockClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-lock-block');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'EW-LOCK-BLOCK',
+                        'page': 'ewallet',
+                        'button': 'btnEWLockOrBlock',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWLockOrBlock click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleEWUnlockOrActiveClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-unlock-active');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'EW-UNLOCK-ACTIVE',
+                        'page': 'ewallet',
+                        'button': 'btnEWUnlockOrActive',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWUnlockOrActive click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleIBAccountRelatedClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/ib-account-related');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleIBAccountRelatedClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleSonaliBankProductClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/sonali-products');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleSonaliBankProductClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+
+    async function handleSPGClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/spg');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleSPGClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleIBARLoansAndAdvancesClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/ib-loans-advances');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleIBAccountRelatedClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleLoansAndAdvancesClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/loans-advances');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnLoansAdvances click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleCreditCardPageClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/credit-card');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleCreditCardPage click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleDebitCardPageClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/debit-card');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleCreditCardPage click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handlePrePaidCardPageClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/prepaid-card');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handlePrePaidCardPage click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleFixedDepositClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/fixed-deposit');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnFixedDeposit click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleCASASNDClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/casasnd');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnCASASND click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleDPSClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                goTo('/account-dps');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnDPSClick click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
     }
 
     async function handleDebitCardActivationClick() {
@@ -370,8 +896,176 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event listener for card activation button
 
+    async function handleChequeBookLeafClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Reason for cheque book leaf?', "Please enter the reason for cheque book leaf process.", 'enter-reason-cheque-book-leaf');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'ChequeBookLeaf',
+                        'page': 'casasnd',
+                        'button': 'btnChequeBookLeaf',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnChequeBookLeaf click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleLADueDateInstallmentClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Please enter loan amount.', "Please enter Sanction/Renewed/Re-Schedule loan amount here.", 'enter-loan-amount-due-date-installment');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'LA-DUE-DATE-INSTALLMENT',
+                        'page': 'loanAndAdvances',
+                        'button': 'btnLADueDateInstallment',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnChequeBookLeaf click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleLAOutstandingLoanBalanceClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Please enter loan amount.', "Please enter Sanction/Renewed/Re-Schedule loan amount here.", 'enter-outstanding-loan-amount-due-date-installment');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'LA-OUTSTANDING-LOAN-BALANCE',
+                        'page': 'btnLAOutstandingLoanBalance',
+                        'button': 'handleLAOutstandingLoanBalanceClick',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnLAOutstandingLoanBalance click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleIBARChequeBookLeafClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Please enter last transaction amount.', "Please enter last transaction amount here.", 'enter-ib-stop-payment-amount');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'IB-AR-CHEQUE-BOOK-LEAF-STOP-PAYMENT',
+                        'page': 'ib-account-related',
+                        'button': 'btnIBARChequeBookLeaf',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnIBARChequeBookLeaf click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleCASAActivateSMSBankingClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const reason = await enterReason('Reason for activation of SMS banking?', "Please enter the reason for activation of SMS banking.", 'enter-reason-activate-sms-banking');
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'CASAActivateSMSBanking',
+                        'page': 'casasnd',
+                        'button': 'btnCASAActivateSMSBanking',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnCASAActivateSMSBanking click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
 
     document.querySelectorAll('.radioBtn a').forEach(button => {
         button.addEventListener('click', function () {
@@ -487,12 +1181,93 @@ document.addEventListener('DOMContentLoaded', function () {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
                 // redirect to cards page
-                goTo('/account-or-loan');
+                goTo('/account-and-loan');
             } else {
                 showVerificationAlert();
             }
         } catch (error) {
-            console.error('Error in cardsButtonClick :', error);
+            console.error('Error in accountAndLoanClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleAgentBankingClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                // redirect to cards page
+                goTo('/agent-banking');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in accountAndLoanClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleEShebaClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                goTo('/esheba');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleEShebaClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleEWalletClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                goTo('/ewallet');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleEWalletClick :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleIslamiBankingClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                goTo('/islami-banking');
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in handleIslamiBankingClick :', error);
 
             if (error.status === 'error') {
                 Swal.fire({

@@ -57,10 +57,10 @@ class MainController extends Controller
             'photo' => $userPhoto
         ];
 
-        return view('front.cards', $data);
+        return view('front.cards.index', $data);
     }
 
-    public function accountOrLoan()
+    public function accountAndLoan()
     {
 
         $logInfo = Session::get('logInfo');
@@ -70,13 +70,300 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Account Or Loan',
+            'title' => 'Account & Loan',
             'prompt' => getPromptPath("get-started"),
             'name' => $name,
             'photo' => $userPhoto
         ];
 
-        return view('front.account-or-loan', $data);
+        return view('front.account-and-loan.index', $data);
+    }
+
+    public function casasnd()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'CASASND',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.account-and-loan.casasnd', $data);
+    }
+
+    public function fixedDeposit()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Fixed Deposit',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.account-and-loan.fixed-deposit', $data);
+    }
+
+    public function accountDPS()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'DPS',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.account-and-loan.dps', $data);
+    }
+
+    public function loansAdvances()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Loans & Advances',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.account-and-loan.loans-and-advances', $data);
+    }
+
+    public function agentBanking()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Agent Banking',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.agent-banking', $data);
+    }
+
+    public function creditCard()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Credit Card',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.cards.credit-card', $data);
+    }
+
+    public function debitCard()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Debit Card',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.cards.debit-card', $data);
+    }
+
+    public function prePaidCard()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Pre-Paid Card',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.cards.prepaid-card', $data);
+    }
+
+    public function eSheba()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'eSheba',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.esheba.index', $data);
+    }
+
+    public function eWallet()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'eWallet',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.eWallet.index', $data);
+    }
+
+
+    public function islamiBanking()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Islami Banking',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.islami-banking.index', $data);
+    }
+
+    public function ibAccountRelated()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Account Related',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.islami-banking.account-related.index', $data);
+    }
+
+
+    public function ibLoansAdvances()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Loans & Advances',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.islami-banking.loans-advances.index', $data);
+    }
+
+    public function sonaliBankProducts()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Sonali Bank Products',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.sonali-products.index', $data);
+    }
+
+    public function sonaliPaymentGateway()
+    {
+
+        $logInfo = Session::get('logInfo');
+        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $userPhone = data_get($logInfo, 'otp_info.otp_phone');
+        $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+
+        $data = [
+            'title' => 'Sonali Payment Gateway',
+            'prompt' => getPromptPath("get-started"),
+            'name' => $name,
+            'photo' => $userPhoto
+        ];
+
+        return view('front.spg.index', $data);
     }
 
     public function sendOtp()
