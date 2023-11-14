@@ -39,8 +39,8 @@
                 <div class="flex flex-col gap-2 justify-center items-center text-center mb-10 z-10">
                     <img src="{{ asset('img/logo-white.png') }}" alt="">
                     <h1 class="text-white [font-size:var(--font-size-title)] font-bold relative after:absolute after:w-full after:h-[2px] after:left-0 after:-bottom-1 after:bg-gray-300">
-                        সোনালী ব্যাংক লিমিটেড</h1>
-                    <h2 class="text-white [font-size:var(--font-size-title)] font-bold">Sonali Bank Limited</h2>
+                        সোনালী ব্যাংক পিএলসি</h1>
+                    <h2 class="text-white [font-size:var(--font-size-title)] font-bold">Sonali Bank PLC</h2>
                 </div>
 
                 <div class="bg-white rounded-md px-3 py-6 w-full mb-16 z-10">

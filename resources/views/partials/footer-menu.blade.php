@@ -47,9 +47,26 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         const backButton = document.getElementById('btnBack');
-        backButton.addEventListener('click', function () {
+        const btnHome = document.getElementById('btnHome');
+        /*backButton.addEventListener('click', function () {
             window.history.back();
+        });*/
+
+        btnHome.addEventListener('click', function () {
+            goTo();
         });
+
+        backButton.addEventListener('click', function () {
+            // Check if there is history
+            if (window.history.length > 1) {
+                // Go back in history
+                window.history.back();
+            } else {
+                // Fallback: Go to the home page URL
+                window.location.href = window.location.origin;
+            }
+        });
+
     });
 
 </script>

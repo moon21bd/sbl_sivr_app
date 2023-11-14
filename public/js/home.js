@@ -166,28 +166,110 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function handleCreateIssueClick() {
         try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for creating the issue?', "Please enter the reason for creating an issue.", 'enter-reason-creating-issue');
+            // Fetch dropdown values from the API
+            const dropdownValuesResponse = await callDynamicAPI({
+                'purpose': 'GET-DROP-DOWN-VALUES', 'page': 'home', 'button': 'createIssue',
+            });
 
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'createIssue', 'page': 'home', 'button': 'btnCreateIssue', 'reason': reason.value
-                    });
-                    console.log('apiResponse', apiResponse)
+            const dropdownValues = dropdownValuesResponse.data;
 
-                    const issueId = apiResponse.data?.issueId;
-                    const issue = issueId ? issueId : null;
-                    Swal.fire({
-                        title: apiResponse.message,
-                        icon: apiResponse.status === 'success' ? 'success' : 'error',
-                        text: "IssueId: " + issue
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
+            const {value: selectedValues, dismiss, inputValue: reasonInput} = await Swal.fire({
+                title: 'Create Complaint',
+                html: `<label for="callTypeSelect">Call Type:</label>
+                <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="Call Type" required>
+                    <option value="" disabled selected>Select an option</option>
+                    ${getOptionsHtml(dropdownValues.callType)}
+                </select>
+                <label for="callCategorySelect">Call Category:</label>
+                <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="Select Call Category" required>
+                    <option value="" disabled selected>Select an option</option>
+                    ${getOptionsHtml(dropdownValues.callCategory)}
+                </select>
+                <label for="reasonInput">Reason:</label>
+                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="Type the reason" required />`,
+                focusConfirm: false,
+                preConfirm: () => {
+                    const callTypeOpts = document.getElementById('callTypeSelect').value;
+                    const callCategoryOpts = document.getElementById('callCategorySelect').value;
+                    const reason = document.getElementById('reasonInput').value;
+
+                    // Validate that all required fields are filled
+                    if (!callTypeOpts || !callCategoryOpts || !reason) {
+                        Swal.showValidationMessage('Please fill in all required fields');
+                    }
+
+                    return {
+                        callTypeOpts, callCategoryOpts, reason
+                    };
+                },
+                showCancelButton: true
+            });
+
+            if (selectedValues && !dismiss) {
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'createIssue',
+                    'page': 'home',
+                    'button': 'btnCreateIssue',
+                    'callType': selectedValues.callTypeOpts,
+                    'callCategory': selectedValues.callCategoryOpts,
+                    'reason': selectedValues.reason || reasonInput
+                });
+
+                console.log('apiResponse', apiResponse);
+
+                const issueId = apiResponse.data?.issueId;
+                const issue = issueId ? issueId : null;
+                Swal.fire({
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    text: "IssueId: " + issue
+                });
+                playErrorAudio(apiResponse.prompt);
+            } else if (dismiss === Swal.DismissReason.cancel) {
+                // Handle cancel action if needed
             }
+
+        } catch (error) {
+            console.error('Error in btnCreateIssue click:', error);
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+
+    const getOptionsHtml = (options) => {
+        return Object.entries(options).map(([value, text]) => `<option value="${value}">${text}</option>`).join('');
+    };
+
+
+    /* async function handleCreateIssueClick() {
+        try {
+            // const isLoggedIn = await checkLoginStatus();
+            // if (isLoggedIn) {
+            const reason = await enterReason('Reason for creating the issue?', "Please enter the reason for creating an issue.", 'enter-reason-creating-issue');
+
+            if (reason.isConfirmed) {
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'createIssue', 'page': 'home', 'button': 'btnCreateIssue', 'reason': reason.value
+                });
+                console.log('apiResponse', apiResponse)
+
+                const issueId = apiResponse.data?.issueId;
+                const issue = issueId ? issueId : null;
+                Swal.fire({
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    text: "IssueId: " + issue
+                });
+                playErrorAudio(apiResponse.prompt);
+            }
+            // } else {
+            //     showVerificationAlert();
+            // }
         } catch (error) {
             console.error('Error in btnCreateIssue click:', error);
 
@@ -198,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
-    }
+    }*/
 
     console.log('currentPath: ' + currentPath)
     if (currentPath === '/') {
@@ -209,11 +291,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const accountOrLoan = document.getElementById('btnAccountAndLoan');
         accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
 
-        const btnAgentBanking = document.getElementById('btnAgentBanking');
-        btnAgentBanking.addEventListener('click', handleAgentBankingClick);
+        /*const btnAgentBanking = document.getElementById('btnAgentBanking');
+        btnAgentBanking.addEventListener('click', handleAgentBankingClick);*/
+
+        addClickEventWithAsyncHandler('btnAgentBanking', showMessageForHelp);
+
+        /*const btnESheba = document.getElementById('btnESheba');
+        btnESheba.addEventListener('click', handleEShebaClick);*/
 
         const btnESheba = document.getElementById('btnESheba');
-        btnESheba.addEventListener('click', handleEShebaClick);
+        btnESheba.addEventListener('click', handleEShebaClickToAppStore);
 
         const btnEWallet = document.getElementById('btnEWallet');
         btnEWallet.addEventListener('click', handleEWalletClick);
@@ -221,11 +308,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnIslamiBanking = document.getElementById('btnIslamiBanking');
         btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
 
-        const btnSonaliBankProduct = document.getElementById('btnSonaliBankProduct');
-        btnSonaliBankProduct.addEventListener('click', handleSonaliBankProductClick);
+        // const btnSonaliBankProduct = document.getElementById('btnSonaliBankProduct');
+        // btnSonaliBankProduct.addEventListener('click', handleSonaliBankProductClick);
 
-        const btnSPG = document.getElementById('btnSPG');
-        btnSPG.addEventListener('click', handleSPGClick);
+        addClickEventWithAsyncHandler('btnSonaliBankProduct', showMessageForHelp);
+
+        // const btnSPG = document.getElementById('btnSPG');
+        // btnSPG.addEventListener('click', handleSPGClick);
+
+        addClickEventWithAsyncHandler('btnSPG', showMessageForHelp);
 
         // addClickEventWithAsyncHandler('btnAccountOrLoan', showMessageForHelp);
 
@@ -234,10 +325,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btnCreateIssue.addEventListener('click', handleCreateIssueClick);
 
         // Handle click events on the buttons
-        // addClickEventWithAsyncHandler('btnSonaliBankProduct', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnAgentBanking', showMessageForHelp);
+
+
         // addClickEventWithAsyncHandler('btnIslamiBanking', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnSPG', showMessageForHelp);
         // addClickEventWithAsyncHandler('btnEWallet', showMessageForHelp);
 
         // addClickEventWithAsyncHandler('btnESheba', showMessageForHelp);
@@ -1238,6 +1328,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function handleEShebaClickToAppStore() {
+        const androidAppPackageName = "bd.com.sonalibank.sw";
+        const iOSAppPackageName = "sonali-esheba/id1626802631";
+
+        if (isAndroid()) {
+            // Android: Redirect using intent:// URL
+            window.location.href = "intent://details?id=" + androidAppPackageName + "#Intent;scheme=market;action=android.intent.action.VIEW;package=" + androidAppPackageName + ";end";
+        } else if (isIOS()) {
+            // iOS: Redirect to the Apple App Store
+            window.location.href = "https://apps.apple.com/us/app/" + iOSAppPackageName;
+        }
+    }
+
+
     async function handleEWalletClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -1276,6 +1380,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
+    }
+
+    function isAndroid() {
+        return /Android/i.test(navigator.userAgent);
+    }
+
+    function isIOS() {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
 

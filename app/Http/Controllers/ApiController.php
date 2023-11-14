@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 class ApiController extends ResponseController
 {
 
+
     public function getBalance(Request $request)
     {
         // will be deleted this code later
@@ -1043,6 +1044,592 @@ class ApiController extends ResponseController
         ];*/
     }
 
+    public static function processGetDropDownValues($data)
+    {
+
+        $callType = self::getDropDownForCallTypeApi();
+        $callCategory = self::getDropDownForCallCategoryApi();
+
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Data Found.',
+            'prompt' => "",
+            'data' => [
+                'callType' => $callType,
+                'callCategory' => $callCategory,
+            ]
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'eWallet Unlock/Active request failed.',
+            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-failed')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processToCreateTicketInCRM($data)
+    {
+
+        $response = '{
+    "success": true,
+    "data": {
+        "id": "S1412061660",
+        "message": "Dear Sir,Your Request/Query has been resolved successfully.Your tracking ID is #S1412061660.Thank you for Banking with Sonali Bank.For details Call 16639"
+    },
+    "message": null
+}';
+
+        $responseData = json_decode($response, true);
+        $ticketId = $responseData['data']['id'];
+        $message = $responseData['data']['message'];
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Data Found.',
+            'prompt' => "",
+            'data' => [
+                'ticketId' => $ticketId,
+                'ticketMessage' => $message,
+            ]
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'eWallet Unlock/Active request failed.',
+            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-failed')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+
+    public static function getDropDownForCallCategoryApi()
+    {
+        $dummyResponse = '{
+    "success": true,
+    "data": [
+        {
+            "id": "1",
+            "name": "Card",
+            "call_type_id": "4"
+        },
+        {
+            "id": "2",
+            "name": "BEFTN/RTGS/BACH/NPSB",
+            "call_type_id": "3"
+        },
+        {
+            "id": "3",
+            "name": "BEFTN/RTGS/BACH/NPSB",
+            "call_type_id": "2"
+        },
+        {
+            "id": "4",
+            "name": "BEFTN/RTGS/BACH/NPSB",
+            "call_type_id": "1"
+        },
+        {
+            "id": "5",
+            "name": "Agent Banking",
+            "call_type_id": "3"
+        },
+        {
+            "id": "6",
+            "name": "Agent Banking",
+            "call_type_id": "2"
+        },
+        {
+            "id": "8",
+            "name": "Agent Banking",
+            "call_type_id": "1"
+        },
+        {
+            "id": "9",
+            "name": "Bhata",
+            "call_type_id": "3"
+        },
+        {
+            "id": "10",
+            "name": "Mobile App",
+            "call_type_id": "4"
+        },
+        {
+            "id": "11",
+            "name": "Card",
+            "call_type_id": "3"
+        },
+        {
+            "id": "12",
+            "name": "Challan/e-challan/A-challan",
+            "call_type_id": "3"
+        },
+        {
+            "id": "13",
+            "name": "Challan/e-challan/A-challan",
+            "call_type_id": "2"
+        },
+        {
+            "id": "14",
+            "name": "Challan/e-challan/A-challan",
+            "call_type_id": "1"
+        },
+        {
+            "id": "15",
+            "name": "Retail Banking",
+            "call_type_id": "3"
+        },
+        {
+            "id": "16",
+            "name": "Card",
+            "call_type_id": "1"
+        },
+        {
+            "id": "17",
+            "name": "Card",
+            "call_type_id": "2"
+        },
+        {
+            "id": "18",
+            "name": "Prank",
+            "call_type_id": "3"
+        },
+        {
+            "id": "19",
+            "name": "Others",
+            "call_type_id": "3"
+        },
+        {
+            "id": "20",
+            "name": "Open SR",
+            "call_type_id": "3"
+        },
+        {
+            "id": "21",
+            "name": "System",
+            "call_type_id": "3"
+        },
+        {
+            "id": "22",
+            "name": "Nagorik Sheba",
+            "call_type_id": "3"
+        },
+        {
+            "id": "23",
+            "name": "Mobile banking",
+            "call_type_id": "3"
+        },
+        {
+            "id": "24",
+            "name": "LGSP",
+            "call_type_id": "3"
+        },
+        {
+            "id": "25",
+            "name": "Internet Banking (Upcoming)",
+            "call_type_id": "3"
+        },
+        {
+            "id": "26",
+            "name": "Digital Banking (Upcoming)",
+            "call_type_id": "3"
+        },
+        {
+            "id": "27",
+            "name": "Corporate Banking",
+            "call_type_id": "3"
+        },
+        {
+            "id": "28",
+            "name": "Pension",
+            "call_type_id": "3"
+        },
+        {
+            "id": "29",
+            "name": "Utility Payments",
+            "call_type_id": "3"
+        },
+        {
+            "id": "30",
+            "name": "Utility Payments",
+            "call_type_id": "1"
+        },
+        {
+            "id": "31",
+            "name": "ITFD",
+            "call_type_id": "2"
+        },
+        {
+            "id": "32",
+            "name": "SME Covid-19 Packages",
+            "call_type_id": "3"
+        },
+        {
+            "id": "33",
+            "name": "Food Procurement",
+            "call_type_id": "3"
+        },
+        {
+            "id": "34",
+            "name": "SMS Service",
+            "call_type_id": "3"
+        },
+        {
+            "id": "35",
+            "name": "SMS Service",
+            "call_type_id": "1"
+        },
+        {
+            "id": "36",
+            "name": "SMS Service",
+            "call_type_id": "2"
+        },
+        {
+            "id": "37",
+            "name": "Govt. Service",
+            "call_type_id": "3"
+        },
+        {
+            "id": "38",
+            "name": "IPFD",
+            "call_type_id": "3"
+        },
+        {
+            "id": "39",
+            "name": "IPFD",
+            "call_type_id": "2"
+        },
+        {
+            "id": "40",
+            "name": "Retail Banking",
+            "call_type_id": "2"
+        },
+        {
+            "id": "41",
+            "name": "MFS-Link Account",
+            "call_type_id": "3"
+        },
+        {
+            "id": "42",
+            "name": "MFS-Link Account",
+            "call_type_id": "1"
+        },
+        {
+            "id": "43",
+            "name": "MFS-Link Account",
+            "call_type_id": "2"
+        },
+        {
+            "id": "44",
+            "name": "T.Bill/T.Bond/Sukuk",
+            "call_type_id": "3"
+        },
+        {
+            "id": "45",
+            "name": "General Loan",
+            "call_type_id": "3"
+        },
+        {
+            "id": "46",
+            "name": "Import/Export/Others",
+            "call_type_id": "3"
+        },
+        {
+            "id": "47",
+            "name": "Sanchaypatra",
+            "call_type_id": "3"
+        },
+        {
+            "id": "48",
+            "name": "Sanchaypatra",
+            "call_type_id": "2"
+        },
+        {
+            "id": "49",
+            "name": "US Bond",
+            "call_type_id": "3"
+        },
+        {
+            "id": "50",
+            "name": "General Loan",
+            "call_type_id": "2"
+        },
+        {
+            "id": "51",
+            "name": "Micro Credit",
+            "call_type_id": "3"
+        },
+        {
+            "id": "52",
+            "name": "Online Service",
+            "call_type_id": "3"
+        },
+        {
+            "id": "53",
+            "name": "Micro Credit",
+            "call_type_id": "2"
+        },
+        {
+            "id": "54",
+            "name": "SME",
+            "call_type_id": "3"
+        },
+        {
+            "id": "55",
+            "name": "Online Service",
+            "call_type_id": "1"
+        },
+        {
+            "id": "56",
+            "name": "Rural Credit",
+            "call_type_id": "3"
+        },
+        {
+            "id": "57",
+            "name": "Rural Credit",
+            "call_type_id": "2"
+        },
+        {
+            "id": "58",
+            "name": "SME",
+            "call_type_id": "2"
+        },
+        {
+            "id": "60",
+            "name": "Online Service",
+            "call_type_id": "2"
+        },
+        {
+            "id": "61",
+            "name": "Foreign Remittance",
+            "call_type_id": "3"
+        },
+        {
+            "id": "62",
+            "name": "Mobile App",
+            "call_type_id": "3"
+        },
+        {
+            "id": "63",
+            "name": "Mobile App",
+            "call_type_id": "2"
+        },
+        {
+            "id": "64",
+            "name": "Mobile App",
+            "call_type_id": "1"
+        },
+        {
+            "id": "65",
+            "name": "Islamic banking",
+            "call_type_id": "3"
+        },
+        {
+            "id": "66",
+            "name": "Islamic banking",
+            "call_type_id": "2"
+        },
+        {
+            "id": "67",
+            "name": "SME",
+            "call_type_id": "5"
+        },
+        {
+            "id": "68",
+            "name": "Agent Banking",
+            "call_type_id": "5"
+        },
+        {
+            "id": "69",
+            "name": "Card",
+            "call_type_id": "5"
+        },
+        {
+            "id": "70",
+            "name": "Import/Export/Others",
+            "call_type_id": "5"
+        },
+        {
+            "id": "71",
+            "name": "Islamic banking",
+            "call_type_id": "5"
+        },
+        {
+            "id": "72",
+            "name": "Loan",
+            "call_type_id": "5"
+        },
+        {
+            "id": "73",
+            "name": "Retail Banking",
+            "call_type_id": "5"
+        },
+        {
+            "id": "74",
+            "name": "Rural and Micro Credit",
+            "call_type_id": "5"
+        },
+        {
+            "id": "75",
+            "name": "Foreign Remittance",
+            "call_type_id": "2"
+        },
+        {
+            "id": "76",
+            "name": "PO/DD/FDD",
+            "call_type_id": "2"
+        },
+        {
+            "id": "77",
+            "name": "Customer Complaint",
+            "call_type_id": "2"
+        },
+        {
+            "id": "78",
+            "name": "Bank Solvency Certificate",
+            "call_type_id": "2"
+        },
+        {
+            "id": "79",
+            "name": "Schedule Payment Request",
+            "call_type_id": "2"
+        },
+        {
+            "id": "80",
+            "name": "Auto debit loan repayment",
+            "call_type_id": "2"
+        },
+        {
+            "id": "81",
+            "name": "PO/DD/FDD",
+            "call_type_id": "3"
+        },
+        {
+            "id": "82",
+            "name": "Universal Pension Scheme",
+            "call_type_id": "3"
+        }
+    ],
+    "message": null
+}';
+        $response = json_decode($dummyResponse, true);
+
+        $callCategories = $response['data'] ?? [];
+        $options = [];
+        foreach ($callCategories as $category) {
+            $options[$category['id'] . "|" . $category['call_type_id']] = $category['name'];
+        }
+
+        return $options;
+
+    }
+
+    public static function getDropDownForCallTypeApi()
+    {
+        $dummyResponse = '{
+    "success": true,
+    "data": [
+        {
+            "id": "1",
+            "name": "Complaint"
+        },
+        {
+            "id": "2",
+            "name": "Service Request"
+        },
+        {
+            "id": "3",
+            "name": "Query"
+        },
+        {
+            "id": "4",
+            "name": "Request"
+        },
+        {
+            "id": "5",
+            "name": "Lead"
+        }
+    ],
+    "message": null
+}';
+        $response = json_decode($dummyResponse, true);
+
+        $callTypes = $response['data'] ?? [];
+        $options = [];
+        foreach ($callTypes as $type) {
+            $options[$type['id']] = $type['name'];
+        }
+
+        return $options;
+
+    }
+
     public static function processApiCallingResetPin($data): array
     {
 
@@ -1162,6 +1749,27 @@ class ApiController extends ResponseController
 
     public static function processApiCallingCreateIssue($data): array
     {
+        $callTypeId = $data['callType'];
+        $callCategoryIdInfo = $data['callCategory']; // "9|3" here first one is category id and second one is call_type_id
+        list($callCategoryId, $callCategoryTypeId) = explode("|", $callCategoryIdInfo);
+        $appParamsData = array(
+            'channel_id' => 1,
+            'idesk_agent_id' => 1,
+            'cus_name' => 'Test Development Ticket',
+            'cus_contact_no' => '01770430605',
+            'call_type' => $callTypeId,
+            'call_category' => $callCategoryId,
+            // 'call_sub_category' => 2,
+            // 'call_sub_subcategory' => 2,
+            'account_no' => null, // or you can set a default value if needed
+            // 'idesk_agent_name' => 'testName',
+            // 'employee_id' => '11223344',
+        );
+
+        $apiResponse = self::processToCreateTicketInCRM($appParamsData);
+        $ticketId = $apiResponse['data']['ticketId'];
+        $ticketMessage = $apiResponse['data']['ticketMessage'];
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
@@ -1169,7 +1777,7 @@ class ApiController extends ResponseController
             'message' => 'Your issue has been successfully submitted.',
             'prompt' => getPromptPath('issue-submission-success'),
             'data' => [
-                'issueId' => randomDigits(10),
+                'issueId' => $ticketId,
             ]
         ];
 
@@ -1293,7 +1901,6 @@ class ApiController extends ResponseController
 
         // Call the dynamic API based on the purpose
         $apiResponse = self::processDynamicAPICalling($purpose, $data);
-
         // Prepare the response based on the API response
         $responseOut = [
             'code' => $apiResponse['code'],
@@ -1326,6 +1933,7 @@ class ApiController extends ResponseController
 
         return (new ApiController)->sendResponse($responseOut, $responseOut['code']);
     }
+
 
     public static function processDynamicAPICalling($purpose, $data = [])
     {
@@ -1364,6 +1972,8 @@ class ApiController extends ResponseController
                 return self::processApiCallingEWUnlockActive($data);
             case 'IB-AR-CHEQUE-BOOK-LEAF-STOP-PAYMENT':
                 return self::processApiCallingIBARChequeBookLeafStopPaymentClick($data);
+            case 'GET-DROP-DOWN-VALUES':
+                return self::processGetDropDownValues($data);
             default:
                 // Code to be executed if $purpose is different from all cases;
                 return false;

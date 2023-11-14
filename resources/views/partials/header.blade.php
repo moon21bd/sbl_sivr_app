@@ -21,6 +21,94 @@
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
         const helpCenterNumber = {{ config('bank.customer-support') }};
     </script>
+
+    <style>
+        /*@media (max-width: 600px) {
+            .swal2-popup {
+                width: 100% !important;
+                padding: 10px !important;
+            }
+
+            .swal2-title,
+            .swal2-content,
+            .swal2-actions,
+            .swal2-footer {
+                width: auto !important;
+                box-sizing: border-box;
+            }
+        }*/
+
+        /* Responsive styles for SweetAlert modal */
+        @media (max-width: 600px) {
+            .swal2-popup {
+                width: 90% !important;
+                padding: 15px !important;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .swal2-title {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+                color: #333;
+            }
+
+            .swal2-content {
+                font-size: 1.2em;
+                color: #555;
+                margin-bottom: 20px;
+            }
+
+            .swal2-input,
+            .swal2-textarea,
+            .swal2-select {
+                width: 100% !important;
+                margin-bottom: 15px;
+                font-size: 1em;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            /* Increase the height of the input box for the "Reason" field */
+            #reasonInput {
+                height: 80px;
+            }
+
+            .swal2-select {
+                appearance: none;
+                background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M5 6L0 1l1.4-1.4L5 3.2 8.6.6 10 1z' fill='%23444444'/></svg>") no-repeat right 10px center/10px 6px;
+                padding-right: 30px;
+            }
+
+            .swal2-cancel,
+            .swal2-confirm {
+                padding: 12px 20px;
+                font-size: 1.2em;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .swal2-cancel {
+                margin-right: 10px;
+                background-color: #ddd;
+            }
+
+            .swal2-confirm {
+                background-color: #4caf50;
+                color: #fff;
+            }
+
+            .swal2-cancel:hover,
+            .swal2-confirm:hover {
+                background-color: #ccc;
+            }
+        }
+
+
+    </style>
 </head>
 
 <body class="w-full min-h-screen" style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
@@ -35,5 +123,6 @@
 <audio id="playMedia" controls style="display: none;">
     <source src="{{ $prompt ?? "" }}" type="audio/mpeg">
 </audio>
+
 
 @include('partials.bg-dots')

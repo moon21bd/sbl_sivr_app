@@ -25,6 +25,10 @@ Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
 });
 
+Route::middleware(['web'])->group(function () {
+    Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
+});
+
 Route::middleware(['web', 'verify.login'])->group(function () {
     // Your routes and route groups protected by the specified middleware go here
     Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
@@ -51,8 +55,6 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::post('/otp-wrap', [\App\Http\Controllers\ApiController::class, 'sendOtpWrapper'])->name('sendOtpWrapper');
     Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');
     Route::post('/upload-photo', [\App\Http\Controllers\MainController::class, 'uploadUserPhoto'])->name('verifyOtpWrapper');
-
-    Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
 
