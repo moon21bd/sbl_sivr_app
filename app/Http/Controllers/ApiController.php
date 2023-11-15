@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+
 
 class ApiController extends ResponseController
 {
-
-
     public function getBalance(Request $request)
     {
         // will be deleted this code later
@@ -1046,7 +1046,6 @@ class ApiController extends ResponseController
 
     public static function processGetDropDownValues($data)
     {
-
         $callType = self::getDropDownForCallTypeApi();
         $callCategory = self::getDropDownForCallCategoryApi();
 
@@ -1104,7 +1103,89 @@ class ApiController extends ResponseController
 
     public static function processToCreateTicketInCRM($data)
     {
+        self::defaultResponseForProcessToCreateTicketInCRM();
 
+        $accessToken = Cache::get('crm_access_token');
+
+        if (!$accessToken) {
+            $accessToken = self::generateCRMLoginToken();
+            if (false === $accessToken) {
+                return [
+                    'code' => Response::HTTP_EXPECTATION_FAILED,
+                    'status' => 'failed',
+                    'message' => 'Data not found.',
+                    'prompt' => getPromptPath('issue-submission-failed'),
+                    'data' => [
+                        'ticketId' => null,
+                        'ticketMessage' => null,
+                    ]
+                ];
+            }
+        }
+
+        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_create_url');
+        $apiHandler = new APIHandler();
+        $response = $apiHandler->doPostCall($url, $data, [
+            'Authorization' => 'Bearer ' . $accessToken,
+        ]);
+
+        if ($response['statusCode'] >= 200 && $response['statusCode'] <= 299) {
+            $responseData = json_decode($response['data'], true);
+
+            $ticketId = $responseData['data']['id'];
+            $message = $responseData['data']['message'];
+
+            return [
+                'code' => Response::HTTP_OK,
+                'status' => 'success',
+                'message' => 'Data Found.',
+                'prompt' => getPromptPath('issue-submission-success'),
+                'data' => [
+                    'ticketId' => $ticketId,
+                    'ticketMessage' => $message,
+                ]
+            ];
+        }
+
+        // If unauthorized or internal server error, try to refresh the token and make the API call again
+        if ($response['statusCode'] === Response::HTTP_UNAUTHORIZED || $response['statusCode'] === Response::HTTP_INTERNAL_SERVER_ERROR) {
+            $accessToken = self::generateCRMLoginToken();
+            if (false !== $accessToken) {
+                $response = $apiHandler->doPostCall($url, $data, [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                ]);
+                $responseData = json_decode($response['data'], true);
+
+                $ticketId = $responseData['data']['id'];
+                $message = $responseData['data']['message'];
+
+                return [
+                    'code' => Response::HTTP_OK,
+                    'status' => 'success',
+                    'message' => 'Data Found.',
+                    'prompt' => getPromptPath('issue-submission-success'),
+                    'data' => [
+                        'ticketId' => $ticketId,
+                        'ticketMessage' => $message,
+                    ]
+                ];
+            }
+        }
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'failed',
+            'message' => 'Data not found.',
+            'prompt' => getPromptPath('issue-submission-failed'),
+            'data' => [
+                'ticketId' => null,
+                'ticketMessage' => null,
+            ]
+        ];
+    }
+
+    public static function defaultResponseForProcessToCreateTicketInCRM()
+    {
         $response = '{
     "success": true,
     "data": {
@@ -1128,49 +1209,37 @@ class ApiController extends ResponseController
                 'ticketMessage' => $message,
             ]
         ];
-
-        return [
-            'code' => Response::HTTP_EXPECTATION_FAILED,
-            'status' => 'error',
-            'message' => 'eWallet Unlock/Active request failed.',
-            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-failed')
-        ];
-        // will be removed later
-
-        /*$url = config('api.base_url') . config('api.active_wallet_url');
-        $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
-        $response = $apiHandler->postCall($url, [
-            "mobileNo" => $mobileNo,
-            "userId" => "Agx01254",
-            "requestDetails" => "for lost and reback customer",
-            "refId" => $mobileNo . randomDigits()
-        ]);
-
-        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
-            $data = json_decode($response['data'], true);
-            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
-            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
-
-                return [
-                    'code' => $response['statusCode'],
-                    'status' => 'success',
-                    'message' => 'Your credit card activation request was successful.',
-                    'prompt' => getPromptPath('prepaid-card-activation-successful')
-                ];
-            }
-        }
-
-        return [
-            'code' => $response['statusCode'],
-            'status' => 'error',
-            'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
-        ];*/
     }
 
-
     public static function getDropDownForCallCategoryApi()
+    {
+        // will be removed later
+        self::dummyResponseForGetDropDownForCallCategoryApi();
+
+        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_category_url');
+        $apiHandler = new APIHandler();
+        $responseData = $apiHandler->doGetCall($url, [], [
+            'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
+        ]);
+
+        $options = [];
+        if ($responseData['status'] === 'success' && $responseData['statusCode'] === 200) {
+            $response = json_decode($responseData['data'], true);
+
+            if ($response['success']) {
+                $callCategories = $response['data'] ?? [];
+                foreach ($callCategories as $category) {
+                    $options[$category['id'] . "|" . $category['call_type_id']] = $category['name'];
+                }
+            }
+
+            return $options;
+        }
+        return $options;
+
+    }
+
+    public static function dummyResponseForGetDropDownForCallCategoryApi()
     {
         $dummyResponse = '{
     "success": true,
@@ -1592,6 +1661,34 @@ class ApiController extends ResponseController
 
     public static function getDropDownForCallTypeApi()
     {
+        // will be removed later
+        self::dummyResponseForGetDropDownForCallTypeApi();
+
+        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_type_url');
+        $apiHandler = new APIHandler();
+        $responseData = $apiHandler->doGetCall($url, [], [
+            'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
+        ]);
+
+        $options = [];
+        if ($responseData['status'] === 'success' && $responseData['statusCode'] === 200) {
+            $response = json_decode($responseData['data'], true);
+
+            if ($response['success']) {
+                $callTypes = $response['data'] ?? [];
+                foreach ($callTypes as $type) {
+                    $options[$type['id']] = $type['name'];
+                }
+            }
+
+            return $options;
+        }
+        return $options;
+
+    }
+
+    public static function dummyResponseForGetDropDownForCallTypeApi()
+    {
         $dummyResponse = '{
     "success": true,
     "data": [
@@ -1627,7 +1724,6 @@ class ApiController extends ResponseController
         }
 
         return $options;
-
     }
 
     public static function processApiCallingResetPin($data): array
@@ -1750,13 +1846,14 @@ class ApiController extends ResponseController
     public static function processApiCallingCreateIssue($data): array
     {
         $callTypeId = $data['callType'];
-        $callCategoryIdInfo = $data['callCategory']; // "9|3" here first one is category id and second one is call_type_id
+        $callCategoryIdInfo = $data['callCategory']; // "9|3" here the first one is category id and the second one is call_type_id
         list($callCategoryId, $callCategoryTypeId) = explode("|", $callCategoryIdInfo);
-        $appParamsData = array(
+
+        $appParamsData = [
             'channel_id' => 1,
             'idesk_agent_id' => 1,
             'cus_name' => 'Test Development Ticket',
-            'cus_contact_no' => '01770430605',
+            // 'cus_contact_no' => '01770430605',
             'call_type' => $callTypeId,
             'call_category' => $callCategoryId,
             // 'call_sub_category' => 2,
@@ -1764,7 +1861,7 @@ class ApiController extends ResponseController
             'account_no' => null, // or you can set a default value if needed
             // 'idesk_agent_name' => 'testName',
             // 'employee_id' => '11223344',
-        );
+        ];
 
         $apiResponse = self::processToCreateTicketInCRM($appParamsData);
         $ticketId = $apiResponse['data']['ticketId'];
@@ -2045,4 +2142,59 @@ class ApiController extends ResponseController
 
     }
 
+    public static function generateCRMLoginToken()
+    {
+        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_login_url');
+        $apiHandler = new APIHandler();
+
+        $loginData = config('api.crm_ticket_login_info');
+        $response = $apiHandler->postCall($url, $loginData);
+
+        /*{
+            "success": true,
+        "data": {
+            "user": {
+                "id": 5,
+            "userid": "#SBL_05",
+            "name": "IDesk",
+            "email": "rahim@gmail.com",
+            "mobile_no": "01369874565",
+            "nid_no": "456789545544",
+            "dob": "2023-08-02",
+            "present_address": "test",
+            "permanent_address": "test",
+            "role": "5",
+            "designation": null,
+            "type_of_branch": null,
+            "branch": null,
+            "department": null,
+            "is_br_manager": null,
+            "email_verified_at": null,
+            "change_password_at": "2023-08-03 15:58:55.813",
+            "created_by": null,
+            "updated_by": "Super Admin",
+            "created_at": "2022-10-10T11:22:51.000000Z",
+            "updated_at": "2023-08-03T09:58:55.813000Z",
+            "status_id": "1",
+            "status_reason": null
+        },
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYmE4OTE2YTNmNWM5YWQ2YzlhMTdiNWIwNjcxMWM5YThjMzViNmY3N2FkNjlkODA1MDRlNjFhNDAzZDEzYmZiZWYwOTk2YzIxMzM1MTc0MjAiLCJpYXQiOjE2OTk5NDE5NTEuODE1MzM5LCJuYmYiOjE2OTk5NDE5NTEuODE1MzQxLCJleHAiOjE3MzE1NjQzNTEuODEzNTMsInN1YiI6IjUiLCJzY29wZXMiOltdfQ.Jnv1Jh-UQSYn_7fn0q5L4RgyEE8dThR-XsoaAqFolLiLcpmXO_FWD6NRsCKDoeWFiCo54dhB7XeyDEFzI9vMCRd5pmidcc5MoZyttHZIo3PUFJ_Z-hWiM_L8qkZ9SGhSyqPlckolr8lMd9-PTn4Sj86gvQ34TGQjHXOiaR2iEtTkZa6ozNZpMnIgJb6AiK9KjtU3BRnfhmERtbihl4Iycg_EVQ4SBTrxetvZmdWsQwYMFcd6NE1dhKS9BKcZaEILMJTNE4Vtiqvr0FOrU_XIZ1SpjHvY-NQb1r56PFl0vE06xz0G91lP-IGL3oJvr330fnCBXiBlYB-5E0FNviV2-qYfDz0Lwsd0oML70gD8L_wEup6L8xeXYC6rJV-3atMvwsmaxMYyn0yCNaTJabkddehFWQkKdXgKAxFNSFMuizxjkzErTfyrjmudZzt8RhANywh82BDoEwjECkEHW5bNGZL43E7MBbYBJgJ39uqaByY0dbtRjZedSaDYj-xnshlQjG6VGedamX8x9h75HWZQoJnR0qj3v_x0sBoQG1DG3HyfhUIn7YccHPN_4VvecEt9IMmeOLDoP55cVnZE7tmTLz4yoMyUQQL7PMG-N6PLavOgfuSnZzHhP4yc3QNkxj2SXXFKy6M4z-pK8WsGI27pish3z2Usc1O6vnXPQM6wnvw"
+        },
+        "message": null
+        }*/
+
+        if ($response['success'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+
+            if ($data['success'] && !empty($data['token'])) {
+                Cache::put('crm_access_token', $data['token'], now()->addMinutes(120));
+
+                return $data['token'];
+            }
+        } else {
+            Log::error('CRM-LOGIN-API-ERROR : ' . json_encode($response['data']));
+            return false;
+        }
+
+    }
 }

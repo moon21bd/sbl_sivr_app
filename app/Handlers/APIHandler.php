@@ -63,6 +63,96 @@ class APIHandler
         return $responseData;
     }
 
+    public function doPostCall($url, $params = [], $headers = [], $isSSLVerify = false): array
+    {
+        $options = [
+            'verify' => $isSSLVerify,
+            'headers' => array_merge([
+                'Accept' => '*/*',
+                'Content-Type' => 'application/json',
+            ], $headers),
+            'json' => $params,
+        ];
+
+        $client = new Client();
+        $responseData = []; // Initialize an empty array
+
+        try {
+            $startTime = microtime(true);
+            $response = $client->post($url, $options);
+            $endTime = microtime(true);
+
+            $responseData = [
+                'status' => 'success',
+                'statusCode' => $response->getStatusCode(),
+                'data' => $response->getBody()->getContents(),
+                'exceptionType' => 'NONE',
+            ];
+
+            // Validate the status code received in the API response
+            if (!is_numeric($responseData['statusCode']) || $responseData['statusCode'] === 0) {
+                $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
+            }
+
+        } catch (Exception $e) {
+            $responseData = $this->handleException($url, $e);
+        } catch (ConnectException $e) {
+            $responseData = $this->handleException($url, $e);
+        } catch (GuzzleException $e) {
+            $responseData = $this->handleException($url, $e);
+        }
+
+        $responseTime = microtime(true) - $startTime;
+
+        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
+
+        return $responseData;
+    }
+
+    public function doGetCall($url, $params = [], $headers = [], $isSSLVerify = false): array
+    {
+        $options = [
+            'verify' => $isSSLVerify,
+            'headers' => array_merge([
+                'Accept' => '*/*',
+                'Content-Type' => 'application/json',
+            ], $headers),
+            'query' => $params,
+        ];
+
+        $client = new Client();
+        $responseData = []; // Initialize an empty array
+
+        try {
+            $startTime = microtime(true);
+            $response = $client->get($url, $options);
+
+            $responseData = [
+                'status' => 'success',
+                'statusCode' => $response->getStatusCode(),
+                'data' => $response->getBody()->getContents(),
+                'exceptionType' => 'NONE',
+            ];
+
+            // Validate the status code received in the API response
+            if (!is_numeric($responseData['statusCode']) || $responseData['statusCode'] === 0) {
+                $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
+            }
+        } catch (Exception $e) {
+            $responseData = $this->handleException($url, $e);
+        } catch (ConnectException $e) {
+            $responseData = $this->handleException($url, $e);
+        } catch (GuzzleException $e) {
+            $responseData = $this->handleException($url, $e);
+        }
+
+        $responseTime = microtime(true) - $startTime;
+
+        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
+
+        return $responseData;
+    }
+
     protected function addBasicAuthHeader(&$options)
     {
         $username = config('api.basic-auth')['username'];
