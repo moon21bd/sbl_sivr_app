@@ -2567,7 +2567,7 @@ class ApiController extends ResponseController
 
         $loginData = config('api.crm_ticket_login_info');
         $response = $apiHandler->postCall($url, $loginData);
-        Log::info('CRM Login response : ' . json_encode($response['data']));
+        Log::info('CRM Login response : ' . json_encode($response));
 
         /*{
             "success": true,
