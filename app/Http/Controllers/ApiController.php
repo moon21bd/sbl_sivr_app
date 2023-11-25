@@ -2567,6 +2567,7 @@ class ApiController extends ResponseController
 
         $loginData = config('api.crm_ticket_login_info');
         $response = $apiHandler->postCall($url, $loginData);
+        Log::info('CRM Login response : ' . json_encode($response['data']));
 
         /*{
             "success": true,
@@ -2603,7 +2604,7 @@ class ApiController extends ResponseController
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
             $data = json_decode($response['data'], true);
-
+            Log::info('CRM Login Token : ' . $data['token']);
             if ($data['success'] && !empty($data['token'])) {
                 Cache::put('crm_access_token', $data['token'], now()->addMinutes(120));
 
