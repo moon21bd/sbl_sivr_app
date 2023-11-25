@@ -1555,7 +1555,7 @@ class ApiController extends ResponseController
                     'Authorization' => 'Bearer ' . $accessToken,
                 ]);
                 $responseData = json_decode($response['data'], true);
-
+                Log::info('Response::', json_encode($responseData));
                 $ticketId = $responseData['data']['id'];
                 $message = $responseData['data']['message'];
 
@@ -2604,11 +2604,11 @@ class ApiController extends ResponseController
 
         if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
             $data = json_decode($response['data'], true);
-            Log::info('CRM Login Token : ' . json_encode(['res' => $data]));
-            if ($data['success'] && !empty($data['token'])) {
-                Cache::put('crm_access_token', $data['token'], now()->addMinutes(120));
+            Log::info('CRM Login Token : ' . json_encode(['res' => $data['token']]));
+            if ($data['success'] && !empty($data['data']['token'])) {
+                Cache::put('crm_access_token', $data['data']['token'], now()->addMinutes(120));
 
-                return $data['token'];
+                return $data['data']['token'];
             }
         } else {
             Log::error('CRM-LOGIN-API-ERROR : ' . json_encode($response['data']));
