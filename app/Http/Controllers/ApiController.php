@@ -2601,7 +2601,7 @@ class ApiController extends ResponseController
         "message": null
         }*/
 
-        if ($response['success'] === 'success' && $response['statusCode'] === 200) {
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
             $data = json_decode($response['data'], true);
 
             if ($data['success'] && !empty($data['token'])) {
