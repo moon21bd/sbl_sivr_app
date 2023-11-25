@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'get-started-text' => 'Welcome to Sonali Bank PLC VIVR! Stay connected for exclusive offers, better deals, and round-the-clock customer support.',
+    'get-started-text' => 'Welcome to Sonali Bank PLC Visual IVR! Life is now simple and convenient. You can easily fulfill your banking operations by using Sonali Bank Visual IVR.',
     'get-started-btn' => 'Get Started',
     'welcome' => 'Welcome to our website',
     'main-menu' => 'Main Menu',

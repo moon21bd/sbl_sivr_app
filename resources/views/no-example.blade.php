@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<!-- example.blade.php -->
+<!-- no-example.blade.php -->
 <h1>Encrypted Data</h1>
 <p>Key from PW: {{$keyFromPw}}</p>
 <p>IV: {{$iv}}</p>

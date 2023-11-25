@@ -4,25 +4,13 @@
 
     .popup-container {
         display: none;
+        /* Other styles for the popup container */
     }
 
     .get-started-btn {
         display: block;
+        /* Other styles for the "Get Started" button */
     }
-
-    /* For Language switcher in Get Started Popup*/
-
-    /*.language-button {
-        transition: background-color 0.3s;
-        border: 2px solid #fff;
-        border-radius: 9999px;
-        overflow: hidden;
-    }
-
-    .selected-language {
-        background-color: var(--brand-color-blue);
-        color: #fff;
-    }*/
 
 </style>
 
@@ -64,16 +52,8 @@
                             class="get-started-btn text-[color:var(--brand-color-blue)] text-xl font-bold bg-white rounded-md h-12 w-full cursor-pointer">
                         {{ __('messages.get-started-btn') }}
                     </button>
-                </div>
 
-                {{--<div class="relative" style="bottom: 15px;">
-                    <div class="flex relative top-5">
-                        <a data-locale="bn" id="bnButton" onclick="selectLanguage('bn')"
-                           class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-4">বাংলা</a>
-                        <a data-locale="en" id="enButton" onclick="selectLanguage('en')"
-                           class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-4">English</a>
-                    </div>
-                </div>--}}
+                </div>
 
             </div>
         </div>
@@ -136,11 +116,5 @@
 
     });
 
-    function selectLanguage(locale) {
-        console.log('language', locale);
-        $('.language-button').removeClass('selected-language');
-        $('#' + locale + 'Button').addClass('selected-language');
-        setSavedLocale(locale);
-    }
 
 </script>

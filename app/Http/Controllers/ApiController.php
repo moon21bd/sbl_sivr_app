@@ -701,14 +701,64 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your Due date installment request was successful.',
-            'prompt' => getPromptPath('la-due-date-installment-request-successful')
+            'prompt' => getPromptPath('voice-for-la-due-date-installment-request-successful-en')
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'Due date installment request failed.',
-            'prompt' => getPromptPath('la-due-date-installment-request-failed')
+            'prompt' => getPromptPath('voice-for-la-due-date-installment-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingLALoanDetails($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-la-loan-details-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your request has failed.',
+            'prompt' => getPromptPath('voice-for-la-loan-details-request-failed-en')
         ];
         // will be removed later
 
@@ -751,14 +801,114 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your Outstanding loan balance request was successful.',
-            'prompt' => getPromptPath('la-outstanding-loan-balance-request-successful')
+            'prompt' => getPromptPath('voice-for-la-loan-details-request-successful-en')
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'Outstanding loan balance request failed.',
-            'prompt' => getPromptPath('la-outstanding-loan-balance-request-failed')
+            'prompt' => getPromptPath('voice-for-la-loan-details-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingFDFixedDepositDetails($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-fd-fixed-deposit-details-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Outstanding loan balance request failed.',
+            'prompt' => getPromptPath('voice-for-fd-fixed-deposit-details-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingFDMaturityDate($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-fd-maturity-date-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your request has failed.',
+            'prompt' => getPromptPath('voice-for-fd-maturity-date-request-failed-en')
         ];
         // will be removed later
 
@@ -959,6 +1109,256 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => 'eWallet Unlock/Active request failed.',
             'prompt' => getPromptPath('ew-unlock-active-request-failed')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingCASAAvailableBalance($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-casa-available-balance-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'eWallet Unlock/Active request failed.',
+            'prompt' => getPromptPath('voice-for-casa-available-balance-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingCASAMiniStatement($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-casa-mini-statement-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your has request failed.',
+            'prompt' => getPromptPath('voice-for-casa-mini-statement-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingALAccountDPSAvailableBalance($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-al-account-dps-available-balance-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your has request failed.',
+            'prompt' => getPromptPath('voice-for-al-account-dps-available-balance-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingALDPSDetails($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-al-dps-details-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your request has failed.',
+            'prompt' => getPromptPath('voice-for-al-dps-details-request-failed-en')
+        ];
+        // will be removed later
+
+        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => "for lost and reback customer",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => 'Your credit card activation request was successful.',
+                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => 'Your account activation request has failed.',
+            'prompt' => getPromptPath('prepaid-card-activation-failed')
+        ];*/
+    }
+
+    public static function processApiCallingALAccountDPSInstalmentDetails($data)
+    {
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Your request was successful.',
+            'prompt' => getPromptPath('voice-for-al-account-dps-instalment-details-request-successful-en')
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => 'Your request has failed.',
+            'prompt' => getPromptPath('voice-for-al-account-dps-instalment-details-request-failed-en')
         ];
         // will be removed later
 
@@ -2057,8 +2457,14 @@ class ApiController extends ResponseController
                 return self::processApiCallingCASAActivateSMSBanking($data);
             case 'LA-DUE-DATE-INSTALLMENT':
                 return self::processApiCallingLADueDateInstallment($data);
+            case 'LA-LOAN-DETAILS':
+                return self::processApiCallingLALoanDetails($data);
             case 'LA-OUTSTANDING-LOAN-BALANCE':
                 return self::processApiCallingLAOutstandingLoanBalance($data);
+            case 'FD-FIXED-DEPOSIT-DETAILS':
+                return self::processApiCallingFDFixedDepositDetails($data);
+            case 'FD-MATURITY-DATE':
+                return self::processApiCallingFDMaturityDate($data);
             case 'EW-CHANGE-OR-RESET-PIN':
                 return self::processApiCallingEWChangeOrResetEWalletPIN($data);
             case 'EW-DEVICE-BIND':
@@ -2067,6 +2473,18 @@ class ApiController extends ResponseController
                 return self::processApiCallingEWLockBlock($data);
             case 'EW-UNLOCK-ACTIVE':
                 return self::processApiCallingEWUnlockActive($data);
+            case 'CASA-AVAILABLE-BALANCE':
+                return self::processApiCallingCASAAvailableBalance($data);
+            case 'CASA-MINI-STATEMENT':
+                return self::processApiCallingCASAMiniStatement($data);
+            case 'AL-ACCOUNT-DPS-AVAILABLE-BALANCE':
+                return self::processApiCallingALAccountDPSAvailableBalance($data);
+            case 'AL-DPS-DETAILS':
+                return self::processApiCallingALDPSDetails($data);
+            case 'AL-ACCOUNT-DPS-INSTALMENT-DETAILS':
+                return self::processApiCallingALAccountDPSInstalmentDetails($data);
+//            case 'LA-DUE-DATE-INSTALLMENT':
+//                return self::processApiCallingLADueDateInstallment($data);
             case 'IB-AR-CHEQUE-BOOK-LEAF-STOP-PAYMENT':
                 return self::processApiCallingIBARChequeBookLeafStopPaymentClick($data);
             case 'GET-DROP-DOWN-VALUES':

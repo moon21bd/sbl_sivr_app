@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +19,12 @@
     <script>
         // Configure Axios to include the CSRF token in the headers of all requests
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
-        const helpCenterNumber = {{ config('bank.customer-support') }};
+
+        const helpCenterNumber = {{ config('bank.customer-support') }},
+            defaultContactOurCallCenter = "{{ __('scripts.default-contact-our-call-center') }}",
+            defaultCallCenterText = "{{ __('scripts.default-contact-our-call-center') }}",
+            defaultConfirmButtonText = "{{ __('scripts.default-confirm-button-text') }}",
+            defaultCancelButtonText = "{{ __('scripts.default-cancel-button-text') }}";
     </script>
 
     <style>
@@ -39,9 +44,12 @@
         }*/
 
         /* Responsive styles for SweetAlert modal */
-        @media (max-width: 600px) {
+        @media (max-width: 767px) {
             .swal2-popup {
                 width: 90% !important;
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
                 padding: 15px !important;
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -62,7 +70,7 @@
             .swal2-input,
             .swal2-textarea,
             .swal2-select {
-                width: 100% !important;
+                width: 90% !important;
                 margin-bottom: 15px;
                 font-size: 1em;
                 border: 1px solid #ccc;
@@ -106,7 +114,6 @@
                 background-color: #ccc;
             }
         }
-
 
     </style>
 </head>
