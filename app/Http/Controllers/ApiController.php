@@ -2256,8 +2256,8 @@ class ApiController extends ResponseController
             // 'cus_contact_no' => '01770430605',
             'call_type' => $callTypeId,
             'call_category' => $callCategoryId,
-            // 'call_sub_category' => 2,
-            // 'call_sub_subcategory' => 2,
+            'call_sub_category' => 2,
+            'call_sub_subcategory' => 2,
             'account_no' => null, // or you can set a default value if needed
             // 'idesk_agent_name' => 'testName',
             // 'employee_id' => '11223344',
