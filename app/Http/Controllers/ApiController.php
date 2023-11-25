@@ -81,8 +81,6 @@ class ApiController extends ResponseController
 
         if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) { // successful api response found from apihandler end.
 
-            Log::info('API RESPONSE:: ' . json_encode($response['data']));
-
             $isValidData = $this->decodeJsonIfValid($response['data']);
             if ($isValidData !== null) {
                 $data = $this->decodeJsonIfValid($isValidData);
@@ -199,7 +197,6 @@ class ApiController extends ResponseController
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) { // successful api response found from apihandler end.
 
-            // Log::info('API RESPONSE:: ' . json_encode($response['data']));
             $firstData = json_decode($response['data']);
             $secondData = json_decode($firstData);
             $apiStatus = (bool)$secondData->Status;
@@ -1555,7 +1552,6 @@ class ApiController extends ResponseController
                     'Authorization' => 'Bearer ' . $accessToken,
                 ]);
                 $responseData = json_decode($response['data'], true);
-                Log::info('Response::', json_encode($responseData));
                 $ticketId = $responseData['data']['id'];
                 $message = $responseData['data']['message'];
 
@@ -2256,8 +2252,8 @@ class ApiController extends ResponseController
             // 'cus_contact_no' => '01770430605',
             'call_type' => $callTypeId,
             'call_category' => $callCategoryId,
-            'call_sub_category' => 2,
-            'call_sub_subcategory' => 2,
+            'call_sub_category' => 2, // Need to talk about this field
+            'call_sub_subcategory' => 2, // Need to talk about this field
             'account_no' => null, // or you can set a default value if needed
             // 'idesk_agent_name' => 'testName',
             // 'employee_id' => '11223344',
@@ -2567,40 +2563,6 @@ class ApiController extends ResponseController
 
         $loginData = config('api.crm_ticket_login_info');
         $response = $apiHandler->postCall($url, $loginData);
-        // Log::info('CRM Login response : ' . json_encode($response['data']));
-
-        /*{
-            "success": true,
-        "data": {
-            "user": {
-                "id": 5,
-            "userid": "#SBL_05",
-            "name": "IDesk",
-            "email": "rahim@gmail.com",
-            "mobile_no": "01369874565",
-            "nid_no": "456789545544",
-            "dob": "2023-08-02",
-            "present_address": "test",
-            "permanent_address": "test",
-            "role": "5",
-            "designation": null,
-            "type_of_branch": null,
-            "branch": null,
-            "department": null,
-            "is_br_manager": null,
-            "email_verified_at": null,
-            "change_password_at": "2023-08-03 15:58:55.813",
-            "created_by": null,
-            "updated_by": "Super Admin",
-            "created_at": "2022-10-10T11:22:51.000000Z",
-            "updated_at": "2023-08-03T09:58:55.813000Z",
-            "status_id": "1",
-            "status_reason": null
-        },
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYmE4OTE2YTNmNWM5YWQ2YzlhMTdiNWIwNjcxMWM5YThjMzViNmY3N2FkNjlkODA1MDRlNjFhNDAzZDEzYmZiZWYwOTk2YzIxMzM1MTc0MjAiLCJpYXQiOjE2OTk5NDE5NTEuODE1MzM5LCJuYmYiOjE2OTk5NDE5NTEuODE1MzQxLCJleHAiOjE3MzE1NjQzNTEuODEzNTMsInN1YiI6IjUiLCJzY29wZXMiOltdfQ.Jnv1Jh-UQSYn_7fn0q5L4RgyEE8dThR-XsoaAqFolLiLcpmXO_FWD6NRsCKDoeWFiCo54dhB7XeyDEFzI9vMCRd5pmidcc5MoZyttHZIo3PUFJ_Z-hWiM_L8qkZ9SGhSyqPlckolr8lMd9-PTn4Sj86gvQ34TGQjHXOiaR2iEtTkZa6ozNZpMnIgJb6AiK9KjtU3BRnfhmERtbihl4Iycg_EVQ4SBTrxetvZmdWsQwYMFcd6NE1dhKS9BKcZaEILMJTNE4Vtiqvr0FOrU_XIZ1SpjHvY-NQb1r56PFl0vE06xz0G91lP-IGL3oJvr330fnCBXiBlYB-5E0FNviV2-qYfDz0Lwsd0oML70gD8L_wEup6L8xeXYC6rJV-3atMvwsmaxMYyn0yCNaTJabkddehFWQkKdXgKAxFNSFMuizxjkzErTfyrjmudZzt8RhANywh82BDoEwjECkEHW5bNGZL43E7MBbYBJgJ39uqaByY0dbtRjZedSaDYj-xnshlQjG6VGedamX8x9h75HWZQoJnR0qj3v_x0sBoQG1DG3HyfhUIn7YccHPN_4VvecEt9IMmeOLDoP55cVnZE7tmTLz4yoMyUQQL7PMG-N6PLavOgfuSnZzHhP4yc3QNkxj2SXXFKy6M4z-pK8WsGI27pish3z2Usc1O6vnXPQM6wnvw"
-        },
-        "message": null
-        }*/
 
         if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
             $data = json_decode($response['data'], true);
