@@ -56,15 +56,28 @@ function checkLoginStatus() {
 }
 
 function showVerificationAlert() {
-    playErrorAudio('/uploads/prompts/verify-account-to-access-feature.mp3'); // Play the error audio
+    const getLocaleFromLS = getSavedLocale();
+    playErrorAudio(`/uploads/prompts/common/verify-your-account-${getLocaleFromLS}.m4a`); // Play the error audio
+
+    // let verificationTextEn;
+    // let verificationTextBn;
+    // let verificationTitleEn;
+    // let verificationTitleBn;
+
+    let titleHere = verificationTitleBn;
+    let textHere = verificationTextBn;
+    if (getLocaleFromLS === 'en') {
+        titleHere = verificationTitleEn;
+        textHere = verificationTextEn;
+    }
 
     Swal.fire({
         icon: 'warning',
-        title: 'Verification Required',
-        text: 'You need to verify your account first to access this feature.',
+        title: titleHere,
+        text: textHere,
         showCancelButton: true,
-        confirmButtonText: 'Go to Verification',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: defaultVerificationText,
+        cancelButtonText: defaultVerificationCancelText,
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect the user to the login page

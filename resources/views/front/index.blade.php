@@ -46,17 +46,21 @@
             // User already exists, redirect to another page
             window.location.href = redirectTo;
         } else {
-            // Add event listener to the "Get Started" button
-            getStartedButton.addEventListener("click", function () {
-                // Generate a unique identifier for the user
-                userId = generateUniqueId(); // Replace with your own function to generate a unique identifier
 
-                // Store the unique identifier in localStorage
-                localStorage.setItem("userId", userId);
+            if (getStartedButton) {
+                // Add event listener to the "Get Started" button
+                getStartedButton.addEventListener("click", function () {
+                    // Generate a unique identifier for the user
+                    userId = generateUniqueId(); // Replace with your own function to generate a unique identifier
 
-                // Redirect to another page
-                window.location.href = redirectTo;
-            });
+                    // Store the unique identifier in localStorage
+                    localStorage.setItem("userId", userId);
+
+                    // Redirect to another page
+                    window.location.href = redirectTo;
+                });
+            }
+
         }
 
         function generateUniqueId() {

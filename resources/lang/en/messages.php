@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'get-started-text' => 'Welcome to Sonali Bank PLC Visual IVR! Life is now simple and convenient. You can easily fulfill your banking operations by using Sonali Bank Visual IVR.',
+    'get-started-text' => 'Welcome to Sonali Bank PLC Digital IVR! Life is now simple and convenient. You can easily fulfill your banking operations by using Sonali Bank Digital IVR.',
+    'get-started-text-en' => 'Welcome to Sonali Bank PLC Digital IVR! Life is now simple and convenient. You can easily fulfill your banking operations by using Sonali Bank Digital IVR.',
     'get-started-btn' => 'Get Started',
     'welcome' => 'Welcome to our website',
     'main-menu' => 'Main Menu',
@@ -114,5 +115,9 @@ return [
     'spg-internet-banking-services' => 'Internet Banking services',
     'spg-online-bill-payment-service' => 'Online Bill Payment Service',
     'spg-sonali-bank-account-to-bkash' => 'SB Account to bKash',
-
+    'send-otp-input-phone-text' => 'Please enter your registered phone number. We will send 6 digits otp code to your registered phone number to verify your account number.',
+    'send-otp-mobile-number-text' => 'Mobile Number',
+    'send-otp-send-code-text' => 'Send Code',
+    'verify-otp-verify-account-text' => 'Verify Account!',
+    'verify-otp-verify-message-text' => 'Please enter the 6 digits OTP code that we have send to your registered phone number and press Submit.',
 ];

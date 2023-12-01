@@ -89,20 +89,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Application Supported Locale Configuration
-    |--------------------------------------------------------------------------
-    |
-    | The application locale determines the default locale that will be used
-    | by the translation service provider. You are free to set this value
-    | to any of the locales which will be supported by the application.
-    |
-    */
-
-    'supported_locales' => ['en', 'bn'],
+    'locale' => env('APP_LOCALE', 'bn'),
 
     /*
     |--------------------------------------------------------------------------
@@ -115,7 +102,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'bn',
 
     /*
     |--------------------------------------------------------------------------

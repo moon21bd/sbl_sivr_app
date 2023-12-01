@@ -1,9 +1,33 @@
 <?php
 return [
+    "defaultGetStarted" => [
+        'voice' => [
+            'en' => '/uploads/prompts/home/get-started-en.m4a',
+            'bn' => '/uploads/prompts/home/get-started-bn.m4a',
+        ],
+        'text' => [
+            'en' => 'Welcome to Sonali Bank PLC Digital IVR! Life is now simple and convenient. You can easily fulfill your banking operations by using Sonali Bank Digital IVR.',
+            'bn' => 'সোনালী ব্যাংক পিএলসি ডিজিটাল আইভিআর-এ স্বাগতম! জীবন এখন আরও সহজ। সোনালী ব্যাংক পিএলসি ডিজিটাল আইভিআর ব্যবহার করে আপনি সহজেই আপনার ব্যাঙ্কিং কার্যক্রমগুলি সম্পন্ন করতে পারেন।'
+        ],
+    ],
+    "defaultVerification" => [
+        'voice' => [
+            'en' => '/uploads/prompts/common/verify-your-account-en.m4a',
+            'bn' => '/uploads/prompts/common/verify-your-account-bn.m4a',
+        ],
+        'text' => [
+            'en' => 'To avail this service, please verify your account first.',
+            'bn' => 'এই সেবাটি ব্যবহার করার জন্য আপনার অ্যাকাউন্টটি যাচাইয়ের প্রয়োজন।'
+        ],
+        'title' => [
+            'en' => 'Please verify your account.',
+            'bn' => 'আপনার অ্যাকাউন্টটি যাচাইয়ের প্রয়োজন।'
+        ]
+    ],
     "defaultCallForHelp" => [
         'voice' => [
-            'en' => '/uploads/prompts/call-for-help-en.mp3',
-            'bn' => '/uploads/prompts/call-for-help-bn.mp3',
+            'en' => '/uploads/prompts/common/call-for-help-en.m4a',
+            'bn' => '/uploads/prompts/common/call-for-help-bn.m4a',
         ],
         'text' => [
             'en' => 'To avail the service please call our call center at 16639.',

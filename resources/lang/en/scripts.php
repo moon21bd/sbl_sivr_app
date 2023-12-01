@@ -5,4 +5,6 @@ return [
     'default-contact-our-call-center' => 'Contact our call center.',
     'default-confirm-button-text' => 'Call',
     'default-cancel-button-text' => 'Ok',
+    'default-verification-button-text' => 'Proceed',
+    'default-verification-cancel-button-text' => 'Cancel',
 ];

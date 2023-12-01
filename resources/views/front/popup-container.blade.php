@@ -6,13 +6,13 @@
         display: none;
     }
 
-    .get-started-btn {
+    /*.get-started-btn {
         display: block;
-    }
+    }*/
 
     /* For Language switcher in Get Started Popup*/
 
-    /*.language-button {
+    .language-button {
         transition: background-color 0.3s;
         border: 2px solid #fff;
         border-radius: 9999px;
@@ -22,7 +22,7 @@
     .selected-language {
         background-color: var(--brand-color-blue);
         color: #fff;
-    }*/
+    }
 
 </style>
 
@@ -55,92 +55,138 @@
                     <h2 class="text-white [font-size:var(--font-size-title)] font-bold">Sonali Bank PLC</h2>
                 </div>
 
-                <div class="bg-white rounded-md px-3 py-6 w-full mb-16 z-10">
-                    <p class="text-[color:var(--brand-color-gray)] text-lg">{{ __('messages.get-started-text') }}</p>
+                <div class="bg-white rounded-md px-3 py-6 w-full mb-16 z-10"
+                     data-text-en="{{ config('voices.defaultGetStarted.text.en')}}"
+                     data-text-bn="{{ config('voices.defaultGetStarted.text.bn') }}"
+                     data-voice-en="{{ config('voices.defaultGetStarted.voice.en')}}"
+                     data-voice-bn="{{ config('voices.defaultGetStarted.voice.bn') }}"
+                >
+                    <p class="get-started-text text-[color:var(--brand-color-gray)] text-lg">{{ config('voices.defaultGetStarted.text.bn') }}</p>
                 </div>
 
-                <div class="w-full z-10">
+                {{--<div class="w-full z-10">
                     <button type="submit" id="getStartedBtn"
                             class="get-started-btn text-[color:var(--brand-color-blue)] text-xl font-bold bg-white rounded-md h-12 w-full cursor-pointer">
                         {{ __('messages.get-started-btn') }}
                     </button>
-                </div>
+                </div>--}}
 
-                {{--<div class="relative" style="bottom: 15px;">
-                    <div class="flex relative top-5">
+                <div class="relative" style="bottom: 15px;">
+                    {{--<div class="flex relative top-5">
                         <a data-locale="bn" id="bnButton" onclick="selectLanguage('bn')"
                            class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-4">বাংলা</a>
                         <a data-locale="en" id="enButton" onclick="selectLanguage('en')"
                            class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-4">English</a>
+                    </div>--}}
+
+                    <div class="flex relative top-5">
+
+                        <button id="bnButton" type="submit" data-locale="bn"
+                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-4">
+                            বাংলা
+                        </button>
+
+                        <button id="enButton" type="submit" data-locale="en"
+                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-4">
+                            English
+                        </button>
                     </div>
-                </div>--}}
+                </div>
 
             </div>
         </div>
 
     </div>
 </div>
+
 <!-- End of Popup Container -->
 
 <script type="application/javascript">
-
     document.addEventListener('DOMContentLoaded', function () {
-
-        // get started consent save start
-
-        const getStartedButton = document.getElementById('getStartedBtn');
         const popupContainer = document.querySelector('.popup-container');
+        const bnButton = document.getElementById('bnButton');
+        const enButton = document.getElementById('enButton');
         let showGetStartedBtn = true;
 
-        // Check if the flag variable is set in sessionStorage
         try {
-            const flag = sessionStorage.getItem('hideGetStartedBtn');
-            if (flag === 'show') {
-                showGetStartedBtn = false;
-            }
+            showGetStartedBtn = sessionStorage.getItem('hideGetStartedBtn') !== 'show';
         } catch (error) {
-            // Handle any errors related to retrieving data from sessionStorage
             console.error('Error retrieving data from sessionStorage:', error);
         }
 
-        // Show or hide the "Get Started" button based on the flag variable
-        if (showGetStartedBtn) {
-            popupContainer.style.display = 'block';
-        } else {
-            popupContainer.style.display = 'none';
+        popupContainer.style.display = showGetStartedBtn ? 'block' : 'none';
+
+        function playGSAudio(audio) {
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+            });
         }
 
-        // Add event listener to the "Get Started" button
-        getStartedButton.addEventListener('click', function () {
-            toggleSound();
-            saveUserConsent();
-            hidePopupContainer();
-        });
+        function handleLanguageButtonClick(locale) {
+            const selector = `[data-text-${locale}]`;
+            const textContent = document.querySelector(selector)?.getAttribute(`data-text-${locale}`);
+            const voiceContent = document.querySelector(selector)?.getAttribute(`data-voice-${locale}`);
+
+            if (textContent !== null) {
+                $('.get-started-text').text(textContent);
+                $('.language-button').removeClass('selected-language');
+                $(`#${locale}Button`).addClass('selected-language');
+                setSavedLocale(locale);
+
+                const audio = new Audio(voiceContent);
+                audio.addEventListener('canplaythrough', () => {
+                    if (!this.hasToggledSound) {
+                        toggleSound();
+                        this.hasToggledSound = true;
+                    }
+                    playGSAudio(audio);
+                });
+
+                audio.addEventListener('ended', () => {
+                    hidePopupContainer();
+                    saveUserConsent(locale);
+                    axios.post('/change-locale', {locale})
+                        .then(response => {
+                            console.log(response.data);
+                            goTo(response.data.redirect);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        })
+                        .finally(() => {
+                            console.log('AJAX request completed.');
+                        });
+                });
+            } else {
+                console.error(`Element with attribute data-text-${locale} not found.`);
+            }
+        }
+
+        function addLanguageButtonEventListener(button, locale) {
+            if (button) {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    this.hasToggledSound = false;
+                    const locale = this.getAttribute('data-locale');
+                    handleLanguageButtonClick(locale);
+                });
+            }
+        }
+
+        addLanguageButtonEventListener(enButton, 'en');
+        addLanguageButtonEventListener(bnButton, 'bn');
 
         function hidePopupContainer() {
             popupContainer.style.display = 'none';
         }
 
-        function saveUserConsent() {
-            // Set the flag variable in sessionStorage to hide the "Get Started" button
+        function saveUserConsent(button) {
             try {
                 sessionStorage.setItem('hideGetStartedBtn', 'show');
-                tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': 'getStartedBtn'});
+                tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': button});
             } catch (error) {
-                // Handle any errors related to saving data in sessionStorage
                 console.error('Error saving data in sessionStorage:', error);
             }
         }
-
-        // end of get started consent save
-
     });
-
-    function selectLanguage(locale) {
-        console.log('language', locale);
-        $('.language-button').removeClass('selected-language');
-        $('#' + locale + 'Button').addClass('selected-language');
-        setSavedLocale(locale);
-    }
-
 </script>

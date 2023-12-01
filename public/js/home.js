@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function enterReason(title, message, audioFile) {
-        const popupAudio = new Audio(`/uploads/prompts/${audioFile}.mp3`);
+        const popupAudio = new Audio(`/uploads/prompts/${audioFile}.m4a`);
         popupAudio.play();
 
         return Swal.fire({
@@ -1686,7 +1686,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let textToDisplay = text;
 
         if (voiceToPlay === null || voiceToPlay === undefined || voiceToPlay.trim() === "") {
-            voiceToPlay = "/uploads/prompts/call-for-help.mp3";
+            voiceToPlay = "/uploads/prompts/call-for-help.m4a";
         }
         if (textToDisplay === null || textToDisplay === undefined || textToDisplay.trim() === "") {
             textToDisplay = "To avail the service please call our call center at " + helpCenterNumber + ".";
@@ -1696,7 +1696,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let textToDisplay = text;
 
         if (typeof voiceToPlay !== 'string' || voiceToPlay.trim() === "") {
-            voiceToPlay = "/uploads/prompts/call-for-help.mp3";
+            voiceToPlay = "/uploads/prompts/common/call-for-help-bn.m4a";
         }
 
         if (typeof textToDisplay !== 'string' || textToDisplay.trim() === "") {

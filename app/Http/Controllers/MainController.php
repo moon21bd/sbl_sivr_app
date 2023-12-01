@@ -31,9 +31,13 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $prompt = (app()->getLocale() === 'en') ? "home/get-started-en" : "home/get-started-bn";
+
+        Log::info('Prompt: ' . $prompt);
+
         $data = [
             'title' => 'Home',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto,
         ];
@@ -368,18 +372,22 @@ class MainController extends Controller
 
     public function sendOtp()
     {
+        $prompt = (app()->getLocale() === 'en') ? "otp/input-phone-number-en" : "otp/input-phone-number-bn";
+
         $data = [
             'title' => 'Send OTP',
-            'prompt' => getPromptPath("default-send-otp"),
+            'prompt' => getPromptPath($prompt),
         ];
         return view('front.send-otp')->with($data);
     }
 
     public function verifyOtp()
     {
+        $prompt = (app()->getLocale() === 'en') ? "otp/input-otp-code-en" : "otp/input-otp-code-bn";
+
         $data = [
             'title' => 'Verify OTP',
-            'prompt' => getPromptPath("default-verify-otp"),
+            'prompt' => getPromptPath($prompt),
         ];
         return view('front.verify-otp')->with($data);
     }

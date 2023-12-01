@@ -17,10 +17,8 @@
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-12 lg:col-span-4 lg:col-start-5 z-10">
                     <div class="flex flex-col gap-6">
-                        <h2 class="[font-size:var(--font-size-title)] font-bold text-white text-center">Mobile
-                            Number</h2>
-                        <p class="text-white text-base text-center">Please enter your phone number. We will send you
-                            6-digits code to verify your account.</p>
+                        <h2 class="[font-size:var(--font-size-title)] font-bold text-white text-center">{{ __('messages.send-otp-mobile-number-text') }}</h2>
+                        <p class="text-white text-base text-center">{{ __('messages.send-otp-input-phone-text') }}</p>
 
                         <div class="flex flex-col">
                             <div class="flex gap-3 w-full px-4 py-3 rounded-md bg-white">
@@ -49,7 +47,7 @@
 
                         <button id="btnPhoneSubmit"
                                 class="text-[color:var(--brand-color-blue)] text-lg rounded-md w-full py-2 mt-5 bg-white"
-                                type="submit">Send Code
+                                type="submit">{{ __('messages.send-otp-send-code-text') }}
                         </button>
 
                         {{--<div class="flex gap-3 items-center bg-white rounded-full px-3">

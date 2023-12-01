@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LocaleController extends Controller
 {
@@ -12,6 +13,8 @@ class LocaleController extends Controller
         // Get the selected locale from the request data
         $locale = $request->input('locale');
 
+        Log::info('locale: ' . $locale);
+
         // Set the application locale
         App::setLocale($locale);
 
@@ -19,6 +22,9 @@ class LocaleController extends Controller
         $request->session()->put('locale', $locale);
 
         // Return a response with the redirect URL
-        return response()->json(['redirect' => url()->previous()]);
+        $url = url()->previous();
+        $url = url('/');
+
+        return response()->json(['redirect' => $url]);
     }
 }

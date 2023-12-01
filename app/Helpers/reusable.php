@@ -7,9 +7,9 @@
  */
 
 if (!function_exists('getPromptPath')) {
-    function getPromptPath($name): string
+    function getPromptPath($name, $format = ".m4a"): string
     {
-        return asset('uploads/prompts/' . $name . '.mp3');
+        return asset('uploads/prompts/' . $name . $format);
     }
 }
 

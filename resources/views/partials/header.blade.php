@@ -15,7 +15,7 @@
     {{-- Script ends from here --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ isset($title) ? $title . ' | Sonali Bank Smart IVR' : 'Sonali Bank Smart IVR' }}</title>
+    <title>{{ isset($title) ? $title . ' | Sonali Bank VIVR' : 'Sonali Bank VIVR' }}</title>
     <script>
         // Configure Axios to include the CSRF token in the headers of all requests
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
@@ -24,7 +24,14 @@
             defaultContactOurCallCenter = "{{ __('scripts.default-contact-our-call-center') }}",
             defaultCallCenterText = "{{ __('scripts.default-contact-our-call-center') }}",
             defaultConfirmButtonText = "{{ __('scripts.default-confirm-button-text') }}",
-            defaultCancelButtonText = "{{ __('scripts.default-cancel-button-text') }}";
+            defaultCancelButtonText = "{{ __('scripts.default-cancel-button-text') }}",
+            defaultVerificationText = "{{ __('scripts.default-verification-button-text') }}",
+            defaultVerificationCancelText = "{{ __('scripts.default-verification-cancel-button-text') }}",
+            verificationTextEn = "{{ config('voices.defaultVerification.text.en') }}",
+            verificationTextBn = "{{ config('voices.defaultVerification.text.bn') }}",
+            verificationTitleEn = "{{ config('voices.defaultVerification.title.en') }}",
+            verificationTitleBn = "{{ config('voices.defaultVerification.title.bn') }}"
+        ;
     </script>
 
     <style>
@@ -128,7 +135,7 @@
 </div>
 
 <audio id="playMedia" controls style="display: none;">
-    <source src="{{ $prompt ?? "" }}" type="audio/mpeg">
+    <source src="{{ $prompt ?? "" }}" type="audio/mp4">
 </audio>
 
 

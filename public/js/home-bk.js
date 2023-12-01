@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function enterReason(title, message, audioFile) {
-        const popupAudio = new Audio(`/uploads/prompts/${audioFile}.mp3`);
+        const popupAudio = new Audio(`/uploads/prompts/${audioFile}.m4a`);
         popupAudio.play();
 
         return Swal.fire({
@@ -1219,7 +1219,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideLoader();
 
         // Play the error audio
-        playErrorAudio('/uploads/prompts/call-for-help.mp3');
+        playErrorAudio('/uploads/prompts/common/call-for-help-bn.m4a');
 
         // Show the message for help with the "Call" button
         const result = await Swal.fire({
