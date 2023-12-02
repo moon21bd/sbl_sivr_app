@@ -241,50 +241,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     const getOptionsHtml = (options) => {
         return Object.entries(options).map(([value, text]) => `<option value="${value}">${text}</option>`).join('');
     };
 
-
-    /* async function handleCreateIssueClick() {
-        try {
-            // const isLoggedIn = await checkLoginStatus();
-            // if (isLoggedIn) {
-            const reason = await enterReason('Reason for creating the issue?', "Please enter the reason for creating an issue.", 'enter-reason-creating-issue');
-
-            if (reason.isConfirmed) {
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'createIssue', 'page': 'home', 'button': 'btnCreateIssue', 'reason': reason.value
-                });
-                console.log('apiResponse', apiResponse)
-
-                const issueId = apiResponse.data?.issueId;
-                const issue = issueId ? issueId : null;
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    text: "IssueId: " + issue
-                });
-                playErrorAudio(apiResponse.prompt);
-            }
-            // } else {
-            //     showVerificationAlert();
-            // }
-        } catch (error) {
-            console.error('Error in btnCreateIssue click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
-
-    // console.log('currentPath: ' + currentPath)
-    if (currentPath === '/') {
+    if (currentPath === '/') { // home/root path
 
         const btnCards = document.getElementById('btnCards');
         btnCards.addEventListener('click', handleCardsButtonClick);
@@ -292,18 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const accountOrLoan = document.getElementById('btnAccountAndLoan');
         accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
 
-        /*const btnAgentBanking = document.getElementById('btnAgentBanking');
-        btnAgentBanking.addEventListener('click', handleAgentBankingClick);*/
-
-        // addClickEventWithAsyncHandler('btnAgentBanking', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnAgentBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*const btnESheba = document.getElementById('btnESheba');
-        btnESheba.addEventListener('click', handleEShebaClick);*/
-
-        /*const btnESheba = document.getElementById('btnESheba');
-        btnESheba.addEventListener('click', handleEShebaClickToAppStore);*/
 
         addClickEventWithAsyncHandler('btnESheba', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
@@ -313,58 +263,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnIslamiBanking = document.getElementById('btnIslamiBanking');
         btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
 
-        // const btnSonaliBankProduct = document.getElementById('btnSonaliBankProduct');
-        // btnSonaliBankProduct.addEventListener('click', handleSonaliBankProductClick);
-
-        // addClickEventWithAsyncHandler('btnSonaliBankProduct', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnSonaliBankProduct', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // const btnSPG = document.getElementById('btnSPG');
-        // btnSPG.addEventListener('click', handleSPGClick);
-
-        // addClickEventWithAsyncHandler('btnSPG', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnSPG', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        // addClickEventWithAsyncHandler('btnAccountOrLoan', showMessageForHelp);
 
         // Event listener for creation issue button
         const btnCreateIssue = document.getElementById('btnCreateIssue');
         btnCreateIssue.addEventListener('click', handleCreateIssueClick);
 
-        // Handle click events on the buttons
-
-
-        // addClickEventWithAsyncHandler('btnIslamiBanking', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnEWallet', showMessageForHelp);
-
-        // addClickEventWithAsyncHandler('btnESheba', showMessageForHelp);
-
-        /*// Event listener for create issue button
-        const btnLockWallet = document.getElementById('btnLockWallet');
-        btnLockWallet.addEventListener('click', handleLockWalletClick);
-
-        // Event listener for device binding button
-        const btnDeviceBind = document.getElementById('btnDeviceBind');
-        btnDeviceBind.addEventListener('click', handleDeviceBindClick);
-
-        // Event listener for reset PIN button
-        const btnResetPin = document.getElementById('btnResetPin');
-        btnResetPin.addEventListener('click', handleResetPin);
-
-        // Event listener for card activation button
-        const btnCardActivate = document.getElementById('btnCardActivate');
-        btnCardActivate.addEventListener('click', handleCardActivateClick);
-
-        // Handle click events on the buttons
-        addClickEventWithAsyncHandler('btnPaymentInfo', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnStatement', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnCardDetails', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnAgentAssist', showMessageForHelp);*/
-
-
-    } // end of pathname detect and conditionally assign event listener
+    } // end of pathname detects and conditionally assigns event listener
     else if (currentPath === '/cards') {
 
         const btnDebitCardActivate = document.getElementById('btnDebitCard');
@@ -435,55 +342,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     } else if (currentPath === '/account-dps') {
 
-        // addClickEventWithAsyncHandler('btnALAccountDPSAvailableBalance', showMessageForHelp);
-
         addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSAvailableBalance', (event, dataset) => handleALAccountDPSAvailableBalanceClick(dataset.voice, dataset.text, dataset.title));
-
-        // addClickEventWithAsyncHandler('btnALDPSDetails', showMessageForHelp);
 
         addClickEventWithAsyncHandlerForApiCalling('btnALDPSDetails', (event, dataset) => handleALDPSDetailsClick(dataset.voice, dataset.text, dataset.title));
 
-        // addClickEventWithAsyncHandler('btnALAccountDPSEncashmentProcess', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnALAccountDPSEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        // addClickEventWithAsyncHandler('btnALAccountDPSInstalmentDetails', showMessageForHelp);
 
         addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSInstalmentDetails', (event, dataset) => handleALAccountDPSInstalmentDetailsClick(dataset.voice, dataset.text, dataset.title));
 
 
     } else if (currentPath === '/ib-account-related') {
 
-
-        /*const btnIBARChequeBookLeaf = document.getElementById('btnIBARChequeBookLeaf');
-        btnIBARChequeBookLeaf.addEventListener('click', handleIBARChequeBookLeafClick);*/
-
         addClickEventWithAsyncHandler('btnIBARChequeBookLeaf', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnIBARAccountClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnIBARActivateSmsBanking', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnIBARActivateSmsBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        // addClickEventWithAsyncHandler('btnIBARAvailableBalance', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnIBARAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnIBARFundTransferServices', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnIBARFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
 
         addClickEventWithAsyncHandler('btnIBARMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnIBARMiniStatement', showMessageForHelp);
-
-        // addClickEventWithAsyncHandler('btnIBARChequeBookRequisition', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnIBARChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        // addClickEventWithAsyncHandler('btnIBARIslamicBankingProducts', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnIBARIslamicBankingProducts', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
@@ -502,12 +384,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnEWUnlockOrActive = document.getElementById('btnEWUnlockOrActive');
         btnEWUnlockOrActive.addEventListener('click', handleEWUnlockOrActiveClick);
 
-        // addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnEWApproveOrReject', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnEWEWalletClose', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnEWEWalletClose', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
@@ -518,16 +397,6 @@ document.addEventListener('DOMContentLoaded', function () {
         addClickEventWithAsyncHandler('btnESOtherServices', showMessageForHelp);
 
     } else if (currentPath === '/credit-card') {
-
-        // addClickEventWithAsyncHandler('btnCCreditCardActivation', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditCardBlock', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditChangeOrResetPIN', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditECommerceActivationOrDeactivation', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditGreenPINGeneration', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditMiniStatement', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditOutstandingBDT', showMessageForHelp)
-        // addClickEventWithAsyncHandler('btnCCreditOutstandingUSD', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCCreditCardPayment', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnCCreditCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
@@ -548,12 +417,6 @@ document.addEventListener('DOMContentLoaded', function () {
         addClickEventWithAsyncHandler('btnCCreditCardPayment', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
     } else if (currentPath === '/debit-card') {
-        // addClickEventWithAsyncHandler('btnDCDebitCardActivation', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnDCDebitCardBlock', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnDCDebitChangeOrResetPIN', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCDebitECommerceActivationOrDeactivation', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCDebitGreenPINGeneration', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCDebitMiniStatement', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnDCDebitCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
@@ -568,85 +431,46 @@ document.addEventListener('DOMContentLoaded', function () {
         addClickEventWithAsyncHandler('btnCDebitMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
     } else if (currentPath === '/prepaid-card') {
-        // addClickEventWithAsyncHandler('btnCPrepaidCardActivation', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCPrepaidCardBlock', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCPrepaidChangeOrResetPIN', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCPrepaidECommerceActivationOrDeactivation', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCPrepaidGreenPINGeneration', showMessageForHelp);
-        // addClickEventWithAsyncHandler('btnCPrepaidMiniStatement', showMessageForHelp);
-
 
         addClickEventWithAsyncHandler('btnCPrepaidCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnCPrepaidCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-
         addClickEventWithAsyncHandler('btnCPrepaidChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnCPrepaidECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
 
         addClickEventWithAsyncHandler('btnCPrepaidMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnCPrepaidGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-
     } else if (currentPath === '/agent-banking') {
         addClickEventWithAsyncHandler('btnABAgentBankingServices', showMessageForHelp);
     } else if (currentPath === '/casasnd') {
 
-        /*const btnChequeBookLeaf = document.getElementById('btnChequeBookLeaf');
-        btnChequeBookLeaf.addEventListener('click', handleChequeBookLeafClick);*/
-
         addClickEventWithAsyncHandler('btnChequeBookLeaf', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*const btnCASAActivateSMSBanking = document.getElementById('btnCASAActivateSMSBanking');
-        btnCASAActivateSMSBanking.addEventListener('click', handleCASAActivateSMSBankingClick);*/
 
         addClickEventWithAsyncHandler('btnCASAActivateSMSBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnCASAMiniStatement', showMessageForHelp);
-
-        // addClickEventWithAsyncHandler('btnCASAMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
         addClickEventWithAsyncHandlerForApiCalling('btnCASAMiniStatement', (event, dataset) => handleCASAMiniStatementClick(dataset.voice, dataset.text, dataset.title));
-
-
-        // addClickEventWithAsyncHandler('btnFundTransferServices', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnCASAAvailableBalance', showMessageForHelp);
-        // const CASAAvailableBalanceElement = document.getElementById('btnCASAAvailableBalance');
-
         addClickEventWithAsyncHandlerForApiCalling('btnCASAAvailableBalance', (event, dataset) => handleCASAAvailableBalanceClick(dataset.voice, dataset.text, dataset.title));
-
-        // btnCASAAvailableBalance.addEventListener('click', handleCASAAvailableBalanceClick);
-
-        // addClickEventWithAsyncHandler('btnChequeBookRequisition', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnAccountClosureProcess', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnAccountClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
 
     } else if (currentPath === '/ib-loans-advances') {
 
-        // addClickEventWithAsyncHandler('btnIBLALoanClosureProcess', showMessageForHelp);
-
         addClickEventWithAsyncHandler('btnIBLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        // addClickEventWithAsyncHandler('btnIBLALoanDetails', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnIBLALoanDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnIBLAOutstandingLoanBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnIBLAOutstandingLoanBalance', showMessageForHelp);
     }
-
 
     async function handleEWChangeOrResetEWalletPINClick() {
         try {
@@ -1191,40 +1015,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    /*async function handleLAOutstandingLoanBalanceClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Please enter loan amount.', "Please enter Sanction/Renewed/Re-Schedule loan amount here.", 'enter-outstanding-loan-amount-due-date-installment');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'LA-OUTSTANDING-LOAN-BALANCE',
-                        'page': 'btnLAOutstandingLoanBalance',
-                        'button': 'handleLAOutstandingLoanBalanceClick',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLAOutstandingLoanBalance click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
-
     async function handleIBARChequeBookLeafClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -1400,7 +1190,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
 
     async function handleLAOutstandingLoanBalanceClick(voice = "", text = "", title = "") {
 
@@ -1708,28 +1497,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     async function showMessageForHelp(voice = "", text = "") {
-        // console.log('voice', voice, 'text', text)
-        // return false;
-
-        // Show the loader while the async operation is in progress
         showLoader();
-
-        // Simulate an async operation (e.g., API call or any other processing)
-        // Here; we use setTimeout to simulate the async operation
         await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Close the loader
         hideLoader();
-
-        /*let voiceToPlay = voice;
-        let textToDisplay = text;
-
-        if (voiceToPlay === null || voiceToPlay === undefined || voiceToPlay.trim() === "") {
-            voiceToPlay = "/uploads/prompts/call-for-help.m4a";
-        }
-        if (textToDisplay === null || textToDisplay === undefined || textToDisplay.trim() === "") {
-            textToDisplay = "To avail the service please call our call center at " + helpCenterNumber + ".";
-        }*/
 
         let voiceToPlay = voice;
         let textToDisplay = text;
@@ -1743,8 +1513,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         playErrorAudio(voiceToPlay);
-
-        // Show the message for help with the "Call" button
         const result = await Swal.fire({
             icon: 'info',
             title: defaultContactOurCallCenter,
@@ -1755,16 +1523,11 @@ document.addEventListener('DOMContentLoaded', function () {
             reverseButtons: true,
         });
 
-        // Call the "goTo" function if the user clicked the "Call" button
         if (result.isConfirmed) {
             goTo('tel:' + helpCenterNumber);
         }
     }
 
-    // Helper function to add click event listener with async function
-    /*function addClickEventWithAsyncHandler(elementId, asyncHandler) {
-        document.getElementById(elementId).addEventListener('click', asyncHandler);
-    }*/
 
     function addClickEventWithAsyncHandler(elementId, asyncHandler) {
         const element = document.getElementById(elementId);
@@ -1884,7 +1647,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     async function handleEWalletClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -1941,6 +1703,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return {title, text, voice};
     }
-
 
 });

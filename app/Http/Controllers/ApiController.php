@@ -114,7 +114,7 @@ class ApiController extends ResponseController
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
                         'message' => 'Apologies, something went wrong. Please try again later.',
-                        'prompt' => getPromptPath('apologies-error')
+                        'prompt' => getPromptPath('common/request-failed-en')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
@@ -124,7 +124,7 @@ class ApiController extends ResponseController
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
                     'message' => 'Null response',
-                    'prompt' => getPromptPath('apologies-error')
+                    'prompt' => getPromptPath('common/request-failed-en')
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
@@ -137,7 +137,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => 'Apologies, something went wrong. Please try again later.',
-                'prompt' => getPromptPath('apologies-error')
+                'prompt' => getPromptPath('common/request-failed-en')
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
@@ -172,7 +172,7 @@ class ApiController extends ResponseController
             'code' => $statusCode,
             'status' => 'success',
             'message' => 'Verification successful. Please proceed with your previous service request.',
-            'prompt' => getPromptPath('account-verification-success'),
+            'prompt' => null,
             'pn' => $mobileNo,
             'an' => $getAccountList['data']['accountName'] ?? null,
             'acn' => $getAccountList['data']['accountNo'] ?? null,
@@ -209,7 +209,7 @@ class ApiController extends ResponseController
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
                         'message' => 'Apologies, something went wrong. Please try again later.',
-                        'prompt' => getPromptPath('apologies-error')
+                        'prompt' => getPromptPath('common/request-failed-en')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 } else { // success
@@ -261,7 +261,7 @@ class ApiController extends ResponseController
                         'code' => $statusCode,
                         'status' => 'success',
                         'message' => 'Verification successful. Please proceed with your previous service request.',
-                        'prompt' => getPromptPath('account-verification-success'),
+                        'prompt' => null,
                         'pn' => $mobileNo,
                         'an' => $getAccountList['data']['accountName'] ?? null,
                         'acn' => $getAccountList['data']['accountNo'] ?? null,
@@ -279,7 +279,7 @@ class ApiController extends ResponseController
                     'code' => $statusCode,
                     'status' => 'error',
                     'message' => 'Apologies, something went wrong. Please try again later.',
-                    'prompt' => getPromptPath('apologies-error')
+                    'prompt' => getPromptPath('common/request-failed-en')
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
@@ -292,7 +292,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => 'Apologies, something went wrong. Please try again later.',
-                'prompt' => getPromptPath('apologies-error')
+                'prompt' => getPromptPath('common/request-failed-en')
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
@@ -428,7 +428,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => 'Your account activation request was successful.',
-                    'prompt' => getPromptPath('account-activation-successful')
+                    'prompt' => null
                 ];
             }
         }
@@ -437,7 +437,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('account-activation-failed')
+            'prompt' => null
         ];
     }
 

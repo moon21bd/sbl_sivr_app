@@ -36,7 +36,7 @@ class UserJourneyController extends Controller
             session(['api_calling' => [
                 'purpose' => $purpose,
                 'api' => 'cardActivate',
-                'prompt' => getPromptPath("account-activate-send-otp")
+                'prompt' => null
             ]]);
         }
 
