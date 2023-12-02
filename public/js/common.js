@@ -59,11 +59,6 @@ function showVerificationAlert() {
     const getLocaleFromLS = getSavedLocale();
     playErrorAudio(`/uploads/prompts/common/verify-your-account-${getLocaleFromLS}.m4a`); // Play the error audio
 
-    // let verificationTextEn;
-    // let verificationTextBn;
-    // let verificationTitleEn;
-    // let verificationTitleBn;
-
     let titleHere = verificationTitleBn;
     let textHere = verificationTextBn;
     if (getLocaleFromLS === 'en') {

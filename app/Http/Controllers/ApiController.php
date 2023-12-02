@@ -693,19 +693,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingLADueDateInstallment($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your Due date installment request was successful.',
-            'prompt' => getPromptPath('voice-for-la-due-date-installment-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Due date installment request failed.',
-            'prompt' => getPromptPath('voice-for-la-due-date-installment-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -743,19 +749,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingLALoanDetails($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-la-loan-details-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Your request has failed.',
-            'prompt' => getPromptPath('voice-for-la-loan-details-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -793,19 +805,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingLAOutstandingLoanBalance($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your Outstanding loan balance request was successful.',
-            'prompt' => getPromptPath('voice-for-la-loan-details-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Outstanding loan balance request failed.',
-            'prompt' => getPromptPath('voice-for-la-loan-details-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -843,19 +861,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingFDFixedDepositDetails($data)
     {
+
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-fd-fixed-deposit-details-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Outstanding loan balance request failed.',
-            'prompt' => getPromptPath('voice-for-fd-fixed-deposit-details-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -893,19 +917,24 @@ class ApiController extends ResponseController
 
     public static function processApiCallingFDMaturityDate($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-fd-maturity-date-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Your request has failed.',
-            'prompt' => getPromptPath('voice-for-fd-maturity-date-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -943,19 +972,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingEWChangeOrResetEWalletPIN($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your change or reset PIN request was successful.',
-            'prompt' => getPromptPath('ew-change-reset-pin-request-successful')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'change or reset PIN request failed.',
-            'prompt' => getPromptPath('ew-change-reset-pin-request-failed')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -993,19 +1028,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingEWDeviceBind($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your device bind request was successful.',
-            'prompt' => getPromptPath('ew-device-bind-request-successful')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'change or reset PIN request failed.',
-            'prompt' => getPromptPath('ew-device-bind-request-failed')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -1043,19 +1084,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingEWLockBlock($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your eWallet Lock or Block request was successful.',
-            'prompt' => getPromptPath('ew-lock-block-request-successful')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'eWallet Lock or Block request failed.',
-            'prompt' => getPromptPath('ew-lock-block-request-failed')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -1093,19 +1140,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingEWUnlockActive($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your eWallet Unlock/Active request was successful.',
-            'prompt' => getPromptPath('ew-unlock-active-request-successful')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'eWallet Unlock/Active request failed.',
-            'prompt' => getPromptPath('ew-unlock-active-request-failed')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -1193,19 +1246,24 @@ class ApiController extends ResponseController
 
     public static function processApiCallingCASAMiniStatement($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-casa-mini-statement-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Your has request failed.',
-            'prompt' => getPromptPath('voice-for-casa-mini-statement-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -1243,19 +1301,24 @@ class ApiController extends ResponseController
 
     public static function processApiCallingALAccountDPSAvailableBalance($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-al-account-dps-available-balance-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Your has request failed.',
-            'prompt' => getPromptPath('voice-for-al-account-dps-available-balance-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -1293,19 +1356,25 @@ class ApiController extends ResponseController
 
     public static function processApiCallingALDPSDetails($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-al-dps-details-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Your request has failed.',
-            'prompt' => getPromptPath('voice-for-al-dps-details-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -1343,19 +1412,24 @@ class ApiController extends ResponseController
 
     public static function processApiCallingALAccountDPSInstalmentDetails($data)
     {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
         // will be removed later
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
-            'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-al-account-dps-instalment-details-request-successful-en')
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => 'Your request has failed.',
-            'prompt' => getPromptPath('voice-for-al-account-dps-instalment-details-request-failed-en')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
 
@@ -2479,8 +2553,6 @@ class ApiController extends ResponseController
                 return self::processApiCallingALDPSDetails($data);
             case 'AL-ACCOUNT-DPS-INSTALMENT-DETAILS':
                 return self::processApiCallingALAccountDPSInstalmentDetails($data);
-//            case 'LA-DUE-DATE-INSTALLMENT':
-//                return self::processApiCallingLADueDateInstallment($data);
             case 'IB-AR-CHEQUE-BOOK-LEAF-STOP-PAYMENT':
                 return self::processApiCallingIBARChequeBookLeafStopPaymentClick($data);
             case 'GET-DROP-DOWN-VALUES':

@@ -30,7 +30,12 @@
             verificationTextEn = "{{ config('voices.defaultVerification.text.en') }}",
             verificationTextBn = "{{ config('voices.defaultVerification.text.bn') }}",
             verificationTitleEn = "{{ config('voices.defaultVerification.title.en') }}",
-            verificationTitleBn = "{{ config('voices.defaultVerification.title.bn') }}"
+            verificationTitleBn = "{{ config('voices.defaultVerification.title.bn') }}",
+            defaultNIDScriptTextEn = "{{ config('voices.defaultNIDScript.text.en') }}",
+            defaultNIDScriptTextBn = "{{ config('voices.defaultNIDScript.text.bn') }}"
+            defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}"
+            defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}"
+
         ;
     </script>
 

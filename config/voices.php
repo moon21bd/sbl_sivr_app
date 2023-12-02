@@ -34,13 +34,27 @@ return [
             'bn' => 'এই সেবাটি গ্রহণ করার জন্য অনুগ্রহ করে আমাদের কল সেন্টার ১৬৬৩৯ এ কল করুন।'
         ],
     ],
-    "voiceForCASAAvailableBalance" => [
+    "defaultNIDScript" => [
         'voice' => [
-            'en' => 'voice-for-casa-available-balance-en',
-            'bn' => 'voice-for-casa-available-balance-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
+            'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
+        ],
+        'title' => [
+            'en' => 'Please enter the NID Card number.',
+            'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান।'
+        ]
+    ],
+    "voiceForCASAAvailableBalance" => [
+        'voice' => [
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
+        ],
+        'text' => [
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -50,11 +64,11 @@ return [
     ],
     "voiceForCASAMiniStatement" => [
         'voice' => [
-            'en' => 'voice-for-casa-mini-statement-en',
-            'bn' => 'voice-for-casa-mini-statement-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -64,11 +78,11 @@ return [
     ],
     "voiceForALAccountDPSAvailableBalance" => [
         'voice' => [
-            'en' => 'voice-for-al-account-dps-available-balance-en',
-            'bn' => 'voice-for-al-account-dps-available-balance-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -78,11 +92,11 @@ return [
     ],
     "voiceForALDPSDetails" => [
         'voice' => [
-            'en' => 'voice-for-al-dps-details-en',
-            'bn' => 'voice-for-al-dps-details-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -92,11 +106,11 @@ return [
     ],
     "voiceForALAccountDPSInstalmentDetails" => [
         'voice' => [
-            'en' => 'voice-for-al-account-dps-instalment-details-en',
-            'bn' => 'voice-for-al-account-dps-instalment-details-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -106,11 +120,11 @@ return [
     ],
     "voiceForLADueDateInstallment" => [
         'voice' => [
-            'en' => 'voice-for-la-due-date-installment-en',
-            'bn' => 'voice-for-la-due-date-installment-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -120,11 +134,11 @@ return [
     ],
     "voiceForLALoanDetails" => [
         'voice' => [
-            'en' => 'voice-for-la-loan-details-en',
-            'bn' => 'voice-for-la-loan-details-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -134,11 +148,11 @@ return [
     ],
     "voiceForLAOutstandingLoanBalance" => [
         'voice' => [
-            'en' => 'voice-for-la-outstanding-loan-balance-en',
-            'bn' => 'voice-for-la-outstanding-loan-balance-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -148,11 +162,11 @@ return [
     ],
     "voiceForFDFixedDepositDetails" => [
         'voice' => [
-            'en' => 'voice-for-fd-fixed-deposit-details-en',
-            'bn' => 'voice-for-fd-fixed-deposit-details-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -162,11 +176,11 @@ return [
     ],
     "voiceForFDMaturityDate" => [
         'voice' => [
-            'en' => 'voice-for-fd-maturity-date-en',
-            'bn' => 'voice-for-fd-maturity-date-bn',
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
         ],
         'text' => [
-            'en' => 'Please enter the NID Card number which is registered with your account and PRESS SUBMIT.',
+            'en' => 'Please enter the NID Card number which is registered with your account and Press Submit.',
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান এবং "Submit" অপশনে ক্লিক করুন।'
         ],
         'title' => [
@@ -174,4 +188,5 @@ return [
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান।'
         ]
     ],
+
 ];

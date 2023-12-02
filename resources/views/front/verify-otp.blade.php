@@ -21,7 +21,7 @@
                     <div class="flex flex-col gap-4 text-center">
                         <h2 class="[font-size:var(--font-size-title)] font-bold text-white">{{ __('messages.verify-otp-verify-account-text') }}</h2>
                         <p class="text-white text-base">{{ __('messages.verify-otp-verify-message-text') }}
-                            number @if(Session::has('otp.phone_masked'))
+                             @if(Session::has('otp.phone_masked'))
                                 :<b>+88{{ Session::get('otp.phone_masked') }}</b>
                             @endif.</p>
 

@@ -417,36 +417,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     } else if (currentPath === '/loans-advances') {
 
-        // addClickEventWithAsyncHandler('btnLALoanClosureProcess', showMessageForHelp);
         addClickEventWithAsyncHandler('btnLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnLALoanDetails', showMessageForHelp);
-
         addClickEventWithAsyncHandlerForApiCalling('btnLALoanDetails', (event, dataset) => handleLALoanDetailsClick(dataset.voice, dataset.text, dataset.title));
-
-        /*const btnLADueDateInstallment = document.getElementById('btnLADueDateInstallment');
-        btnLADueDateInstallment.addEventListener('click', handleLADueDateInstallmentClick);*/
 
         addClickEventWithAsyncHandlerForApiCalling('btnLADueDateInstallment', (event, dataset) => handleLADueDateInstallmentClick(dataset.voice, dataset.text, dataset.title));
 
         addClickEventWithAsyncHandlerForApiCalling('btnLAOutstandingLoanBalance', (event, dataset) => handleLAOutstandingLoanBalanceClick(dataset.voice, dataset.text, dataset.title));
 
-        /*const btnLAOutstandingLoanBalance = document.getElementById('btnLAOutstandingLoanBalance');
-        btnLAOutstandingLoanBalance.addEventListener('click', handleLAOutstandingLoanBalanceClick);*/
-
     } else if (currentPath === '/fixed-deposit') {
-
-        // addClickEventWithAsyncHandler('btnFDEncashmentProcess', showMessageForHelp);
 
         addClickEventWithAsyncHandler('btnFDEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        // addClickEventWithAsyncHandler('btnFDFixedDepositDetails', showMessageForHelp);
-
         addClickEventWithAsyncHandlerForApiCalling('btnFDFixedDepositDetails', (event, dataset) => handleFDFixedDepositDetailsClick(dataset.voice, dataset.text, dataset.title));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnFDMaturityDate', (event, dataset) => handleFDFixedDepositDetailsClick(dataset.voice, dataset.text, dataset.title));
-
-        // addClickEventWithAsyncHandler('btnFDMaturityDate', showMessageForHelp);
+        addClickEventWithAsyncHandlerForApiCalling('btnFDMaturityDate', (event, dataset) => handleFDMaturityDateClick(dataset.voice, dataset.text, dataset.title));
 
     } else if (currentPath === '/account-dps') {
 
@@ -522,7 +507,9 @@ document.addEventListener('DOMContentLoaded', function () {
         addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnEWApproveOrReject', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnEWEWalletClose', showMessageForHelp);
+        // addClickEventWithAsyncHandler('btnEWEWalletClose', showMessageForHelp);
+
+        addClickEventWithAsyncHandler('btnEWEWalletClose', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
     } else if (currentPath === '/esheba') {
 
@@ -665,7 +652,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
-                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-change-reset-pin');
+                let {title, text, voice} = getLocalWiseNIDContent();
+                const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
                     const apiResponse = await callDynamicAPI({
@@ -699,7 +687,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
-                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-device-bind');
+                let {title, text, voice} = getLocalWiseNIDContent();
+                const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
                     const apiResponse = await callDynamicAPI({
@@ -733,7 +722,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
-                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-lock-block');
+                let {title, text, voice} = getLocalWiseNIDContent();
+                const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
                     const apiResponse = await callDynamicAPI({
@@ -767,7 +757,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
-                const reason = await enterReason('Enter your NID number.', "Please enter your NID number here.", 'enter-nid-for-ew-unlock-active');
+                let {title, text, voice} = getLocalWiseNIDContent();
+                const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
                     const apiResponse = await callDynamicAPI({
@@ -1307,6 +1298,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1342,6 +1334,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1377,6 +1370,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1413,6 +1407,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1448,6 +1443,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1484,6 +1481,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1519,6 +1518,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1554,6 +1554,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
@@ -1584,16 +1586,53 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function handleFDMaturityDateClick(voice = "", text = "", title = "") {
+
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
+                const reason = await enterReason(title, text, voice);
+
+                if (reason.isConfirmed) {
+                    const apiResponse = await callDynamicAPI({
+                        'purpose': 'FD-MATURITY-DATE',
+                        'page': 'fixed-deposit',
+                        'button': 'btnFDMaturityDate',
+                        'reason': reason.value
+                    });
+
+                    Swal.fire({
+                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    });
+                    playErrorAudio(apiResponse.prompt);
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnFDMaturityDate click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
     async function handleFDFixedDepositDetailsClick(voice = "", text = "", title = "") {
 
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
                 if (reason.isConfirmed) {
                     const apiResponse = await callDynamicAPI({
-                        'purpose': 'FD-Maturity-Date',
+                        'purpose': 'FD-FIXED-DEPOSIT-DETAILS',
                         'page': 'fixed-deposit',
                         'button': 'btnFDMaturityDate',
                         'reason': reason.value
@@ -1892,6 +1931,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function isIOS() {
         return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
+    function getLocalWiseNIDContent() {
+        const locale = getSavedLocale();
+        const title = (locale === 'en') ? defaultNIDScriptTitleEn : defaultNIDScriptTitleBn;
+        const text = (locale === 'en') ? defaultNIDScriptTextEn : defaultNIDScriptTextBn;
+        const voice = `common/enter-nid-${locale}`;
+
+        return {title, text, voice};
     }
 
 

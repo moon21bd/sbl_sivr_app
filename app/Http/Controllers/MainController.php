@@ -56,7 +56,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Cards',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -75,7 +75,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Account & Loan',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -94,7 +94,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'CASASND',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -113,7 +113,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Fixed Deposit',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -132,7 +132,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'DPS',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -151,7 +151,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Loans & Advances',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -170,7 +170,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Agent Banking',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -189,7 +189,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Credit Card',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -208,7 +208,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Debit Card',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -227,7 +227,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Pre-Paid Card',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -246,7 +246,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'eSheba',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -265,7 +265,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'eWallet',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -285,7 +285,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Islami Banking',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -304,7 +304,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Account Related',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -324,7 +324,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Loans & Advances',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -343,7 +343,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Sonali Bank Products',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
@@ -362,7 +362,7 @@ class MainController extends Controller
 
         $data = [
             'title' => 'Sonali Payment Gateway',
-            'prompt' => getPromptPath("get-started"),
+            'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
         ];
