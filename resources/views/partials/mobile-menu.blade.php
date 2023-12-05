@@ -16,14 +16,14 @@
                 <div class="flex flex-col py-4">
                     {{--<a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">Profile</a>
                     <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">Settings</a>--}}
-                    <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">Support</a>
-                    <a class="text-red-600 text-lg font-bold py-1 my-1" href="javascript:void(0)" id="btnLogout">Log
-                        Out</a>
+                    <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">{{ __('messages.support') }}</a>
+                    <a class="text-red-600 text-lg font-bold py-1 my-1" href="javascript:void(0)"
+                       id="btnLogout">{{ __('messages.log-out') }}</a>
                 </div>
             </div>
 
             <div class="div mt-8">
-                <a href="javascript:void(0)" class="text-white text-lg" onclick="closeNav()">Cancel</a>
+                <a href="javascript:void(0)" class="text-white text-lg" onclick="closeNav()">{{ __('messages.cancel') }}</a>
             </div>
         </div>
     </div>

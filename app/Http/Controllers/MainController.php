@@ -36,7 +36,7 @@ class MainController extends Controller
         Log::info('Prompt: ' . $prompt);
 
         $data = [
-            'title' => 'Home',
+            'title' => __('messages.home'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto,
@@ -55,7 +55,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Cards',
+            'title' => __('messages.cards'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -74,7 +74,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Account & Loan',
+            'title' => __('messages.account-loans'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -93,7 +93,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'CASASND',
+            'title' => __('messages.CASASND-btn'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -112,7 +112,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Fixed Deposit',
+            'title' => __('messages.fixed-deposit'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -131,7 +131,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'DPS',
+            'title' => __('messages.DPS-btn'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -150,7 +150,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Loans & Advances',
+            'title' => __('messages.loans-advances'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -169,7 +169,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Agent Banking',
+            'title' => __('messages.agent-banking'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -188,7 +188,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Credit Card',
+            'title' => __('messages.credit-card'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -207,7 +207,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Debit Card',
+            'title' => __('messages.debit-card'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -226,7 +226,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Pre-Paid Card',
+            'title' => __('messages.prepaid-card'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -245,7 +245,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'eSheba',
+            'title' => __('messages.eSheba-btn'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -264,7 +264,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'eWallet',
+            'title' => __('messages.eWallet-btn'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -284,7 +284,7 @@ class MainController extends Controller
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
         $data = [
-            'title' => 'Islami Banking',
+            'title' => __('messages.islami-banking'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -353,7 +353,6 @@ class MainController extends Controller
 
     public function sonaliPaymentGateway()
     {
-
         $logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', "Guest User");
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
@@ -375,7 +374,7 @@ class MainController extends Controller
         $prompt = (app()->getLocale() === 'en') ? "otp/input-phone-number-en" : "otp/input-phone-number-bn";
 
         $data = [
-            'title' => 'Send OTP',
+            'title' => __('messages.send-otp'),
             'prompt' => getPromptPath($prompt),
         ];
         return view('front.send-otp')->with($data);
@@ -386,7 +385,7 @@ class MainController extends Controller
         $prompt = (app()->getLocale() === 'en') ? "otp/input-otp-code-en" : "otp/input-otp-code-bn";
 
         $data = [
-            'title' => 'Verify OTP',
+            'title' => __('messages.verify-otp'),
             'prompt' => getPromptPath($prompt),
         ];
         return view('front.verify-otp')->with($data);

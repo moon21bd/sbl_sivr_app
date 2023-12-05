@@ -55,9 +55,11 @@
             <div class=" z-10">
                 <h2 class="text-xl text-[color:var(--brand-color-blue)] font-bold mb-1">{{ $name ?? "Guest User" }}</h2>
                 <button id="balance-button" class="px-2 py-1 rounded-full w-36 bg-[color:var(--brand-color-blue)]">
-                    <div id="balance-container" class="flex gap-2 items-center">
+                    <div id="balance-container" class="flex gap-2 items-center"
+                         data-text="{{ app()->getLocale() === 'en' ? config('voices.tapForBalance.text.en') : config('voices.tapForBalance.text.bn') }}"
+                    >
                         <img src="{{ asset('img/icon/taka.svg') }}" alt="">
-                        <span id="balance-text" class="text-white text-sm">Tap for Balance</span>
+                        <span id="balance-text" class="text-white text-sm">{{ __('messages.tap-for-balance') }}</span>
                     </div>
                 </button>
             </div>

@@ -386,9 +386,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandler('btnEWApproveOrReject', showMessageForHelp);
+        const btnEWApproveOrReject = document.getElementById('btnEWApproveOrReject');
+        btnEWApproveOrReject.addEventListener('click', handleEWApproveOrRejectClick);
 
-        addClickEventWithAsyncHandler('btnEWEWalletClose', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+        /*addClickEventWithAsyncHandler('btnEWEWalletClose', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
+
+        const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
+        btnEWEWalletClose.addEventListener('click', handleEWCloseWalletClick);
 
     } else if (currentPath === '/esheba') {
 
@@ -476,6 +480,41 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+
+                showLoader();
+
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'EW-CHANGE-OR-RESET-PIN',
+                    'page': 'ewallet',
+                    'button': 'btnEWChangeOrResetEWalletPIN',
+                    'reason': 'PIN Change or Reset request received.'
+                });
+
+                hideLoader();
+                Swal.fire({
+                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                });
+                playErrorAudio(apiResponse.prompt);
+
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWApproveOrReject click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    /*async function handleEWChangeOrResetEWalletPINClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
                 let {title, text, voice} = getLocalWiseNIDContent();
                 const reason = await enterReason(title, text, voice);
 
@@ -505,9 +544,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
+    }*/
+
+    async function handleEWApproveOrRejectClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                showLoader();
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'EW-APPROVE-OR-REJECT',
+                    'page': 'ewallet',
+                    'button': 'btnEWApproveOrReject',
+                    'reason': 'Approve wallet request received.'
+                });
+                hideLoader();
+
+                Swal.fire({
+                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                });
+                playErrorAudio(apiResponse.prompt);
+
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWApproveOrReject click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
     }
 
-    async function handleEWDeviceBindClick() {
+    /*async function handleEWDeviceBindClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
@@ -540,9 +613,106 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
+    }*/
+
+    async function handleEWDeviceBindClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                showLoader();
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'EW-DEVICE-BIND',
+                    'page': 'ewallet',
+                    'button': 'btnEWDeviceBind',
+                    'reason': 'Device Bind request received.'
+                });
+                hideLoader();
+                Swal.fire({
+                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                });
+                playErrorAudio(apiResponse.prompt);
+
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnLAOutstandingLoanBalance click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    async function handleEWCloseWalletClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                showLoader();
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'EW-CLOSE-WALLET',
+                    'page': 'ewallet',
+                    'button': 'btnEWEWalletClose',
+                    'reason': 'Wallet closing request received.'
+                });
+                hideLoader();
+                Swal.fire({
+                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                });
+                playErrorAudio(apiResponse.prompt);
+
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWEWalletClose click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
     }
 
     async function handleEWLockOrBlockClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+
+                showLoader();
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'EW-LOCK-BLOCK',
+                    'page': 'ewallet',
+                    'button': 'btnEWLockOrBlock',
+                    'reason': 'Wallet Lock Or Block request received.'
+                });
+                hideLoader();
+                Swal.fire({
+                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                });
+                playErrorAudio(apiResponse.prompt);
+
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWLockOrBlock click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    /*async function handleEWLockOrBlockClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
@@ -575,9 +745,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
-    }
+    }*/
 
     async function handleEWUnlockOrActiveClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                showLoader();
+                const apiResponse = await callDynamicAPI({
+                    'purpose': 'EW-UNLOCK-ACTIVE',
+                    'page': 'ewallet',
+                    'button': 'btnEWUnlockOrActive',
+                    'reason': 'Wallet Lock or Active request received.'
+                });
+                hideLoader();
+
+                Swal.fire({
+                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                });
+                playErrorAudio(apiResponse.prompt);
+
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in btnEWUnlockOrActive click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error'
+                });
+                playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    /*async function handleEWUnlockOrActiveClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
@@ -610,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
-    }
+    }*/
 
     async function handleIBAccountRelatedClick() {
         try {

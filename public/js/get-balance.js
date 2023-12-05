@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const balanceContainer = document.getElementById('balance-container');
+    let dataTextValue = "";
     const balanceText = document.getElementById('balance-text');
     const btnTapForBalance = document.getElementById('balance-button');
     const balanceImage = document.querySelector('#balance-container img');
@@ -24,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     btnTapForBalance.addEventListener('click', () => {
+
+        dataTextValue = balanceContainer.getAttribute('data-text');
+        console.log('dataTextValue', dataTextValue)
         checkLoginStatus()
             .then(isLoggedIn => {
                 if (isLoggedIn) {
@@ -44,8 +48,11 @@ document.addEventListener('DOMContentLoaded', function () {
         balanceContainer.classList.remove('slide-out');
         balanceContainer.classList.add('slide-in');
 
-        setTimeout(resetAnimation, resetAnimationTimeout);
+        setTimeout(() => {
+            resetAnimation(dataTextValue)
+        }, resetAnimationTimeout);
     }
+
 
     function handleError(error) {
         console.error('Failed to fetch balance from API', error);
@@ -54,12 +61,14 @@ document.addEventListener('DOMContentLoaded', function () {
         balanceContainer.classList.remove('slide-out');
         balanceContainer.classList.add('slide-in');
 
-        setTimeout(resetAnimation, resetAnimationTimeout);
+        setTimeout(() => {
+            resetAnimation(dataTextValue)
+        }, resetAnimationTimeout);
     }
 
-    function resetAnimation() {
+    function resetAnimation(text) {
         balanceContainer.classList.remove('slide-in');
-        balanceText.textContent = 'Tap for Balance';
+        balanceText.textContent = text;
         balanceImage.style.opacity = 1;
         balanceContainer.classList.add('slide-in-reverse');
 

@@ -11,8 +11,10 @@ return [
     'get_account_list_url' => 'api/callcenter/GetAccountList',
     'active_wallet_url' => 'api/callcenter/activeWallet',
     'get_wallet_details_url' => 'api/callcenter/getWalletDetails',
+    'approve_wallet_request_url' => 'api/callcenter/approveWalletRequest',
     'get_pin_reset_url' => 'api/callcenter/pinReset',
     'device_bind_url' => 'api/callcenter/deviceBind',
+    'close_wallet_url' => 'api/callcenter/closeWallet',
     'create_issue_url' => 'api/callcenter/createIssue',
     'lock_wallet_url' => 'api/callcenter/lockWallet',
     'crm_ticket_base_url' => 'https://10.249.3.201/', // Sandbox base URL

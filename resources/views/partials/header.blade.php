@@ -15,7 +15,7 @@
     {{-- Script ends from here --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ isset($title) ? $title . ' | Sonali Bank VIVR' : 'Sonali Bank VIVR' }}</title>
+    <title>{{ isset($title) ? $title . ' | ' . __('messages.sonali-bank-vivr') : __('messages.sonali-bank-vivr') }}</title>
     <script>
         // Configure Axios to include the CSRF token in the headers of all requests
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
@@ -33,8 +33,8 @@
             verificationTitleBn = "{{ config('voices.defaultVerification.title.bn') }}",
             defaultNIDScriptTextEn = "{{ config('voices.defaultNIDScript.text.en') }}",
             defaultNIDScriptTextBn = "{{ config('voices.defaultNIDScript.text.bn') }}"
-            defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}"
-            defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}"
+        defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}"
+        defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}"
 
         ;
     </script>

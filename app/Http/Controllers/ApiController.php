@@ -171,7 +171,7 @@ class ApiController extends ResponseController
         $responseOut = [
             'code' => $statusCode,
             'status' => 'success',
-            'message' => 'Verification successful. Please proceed with your previous service request.',
+            'message' => __('messages.verification-success-after-login'),
             'prompt' => null,
             'pn' => $mobileNo,
             'an' => $getAccountList['data']['accountName'] ?? null,
@@ -994,13 +994,14 @@ class ApiController extends ResponseController
         ];
         // will be removed later
 
-        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        /*$reason = $data['reason'];
+        $url = config('api.base_url') . config('api.get_pin_reset_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
-            "requestDetails" => "for lost and reback customer",
+            "requestDetails" => $reason,
             "refId" => $mobileNo . randomDigits()
         ]);
 
@@ -1012,8 +1013,8 @@ class ApiController extends ResponseController
                 return [
                     'code' => $response['statusCode'],
                     'status' => 'success',
-                    'message' => 'Your credit card activation request was successful.',
-                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt)
                 ];
             }
         }
@@ -1021,8 +1022,65 @@ class ApiController extends ResponseController
         return [
             'code' => $response['statusCode'],
             'status' => 'error',
-            'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];*/
+    }
+
+    public static function processApiCallingEWApproveOrReject($data)
+    {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedText = __('messages.common-request-failed-text');
+
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];
+        // will be removed later
+
+        /*$reason = $data['reason'];
+        $url = config('api.base_url') . config('api.approve_wallet_request_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => $reason,
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt)
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];*/
     }
 
@@ -1050,13 +1108,14 @@ class ApiController extends ResponseController
         ];
         // will be removed later
 
-        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        /*$reason = $data['reason'];
+        $url = config('api.base_url') . config('api.device_bind_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
-            "requestDetails" => "for lost and reback customer",
+            "requestDetails" => $reason,
             "refId" => $mobileNo . randomDigits()
         ]);
 
@@ -1068,8 +1127,8 @@ class ApiController extends ResponseController
                 return [
                     'code' => $response['statusCode'],
                     'status' => 'success',
-                    'message' => 'Your credit card activation request was successful.',
-                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt)
                 ];
             }
         }
@@ -1077,8 +1136,66 @@ class ApiController extends ResponseController
         return [
             'code' => $response['statusCode'],
             'status' => 'error',
-            'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];*/
+    }
+
+    public static function processApiCallingEWCloseWallet($data)
+    {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
+        // will be removed later
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => $successText,
+            'prompt' => getPromptPath($successPrompt)
+        ];
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];
+        // will be removed later
+
+        /*$reason = $data['reason'];
+        $url = config('api.base_url') . config('api.close_wallet_url');
+        $apiHandler = new APIHandler();
+        $mobileNo = $data['mobile_no'];
+        $response = $apiHandler->postCall($url, [
+            "mobileNo" => $mobileNo,
+            "userId" => "Agx01254",
+            "requestDetails" => $reason,
+            "OtpCode" => "",
+            "refId" => $mobileNo . randomDigits()
+        ]);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+            $data = json_decode($response['data'], true);
+            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
+            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
+
+                return [
+                    'code' => $response['statusCode'],
+                    'status' => 'success',
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt)
+                ];
+            }
+        }
+
+        return [
+            'code' => $response['statusCode'],
+            'status' => 'error',
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
         ];*/
     }
 
@@ -1105,14 +1222,15 @@ class ApiController extends ResponseController
             'prompt' => getPromptPath($failedPrompt)
         ];
         // will be removed later
-
-        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $reason = $data['reason'];
+        $url = config('api.base_url') . config('api.lock_wallet_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
-            "requestDetails" => "for lost and reback customer",
+            "reason" => $reason,
+            "OtpCode" => "",
             "refId" => $mobileNo . randomDigits()
         ]);
 
@@ -1124,8 +1242,8 @@ class ApiController extends ResponseController
                 return [
                     'code' => $response['statusCode'],
                     'status' => 'success',
-                    'message' => 'Your credit card activation request was successful.',
-                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt)
                 ];
             }
         }
@@ -1133,9 +1251,9 @@ class ApiController extends ResponseController
         return [
             'code' => $response['statusCode'],
             'status' => 'error',
-            'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
-        ];*/
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];
     }
 
     public static function processApiCallingEWUnlockActive($data)
@@ -1162,13 +1280,14 @@ class ApiController extends ResponseController
         ];
         // will be removed later
 
-        /*$url = config('api.base_url') . config('api.active_wallet_url');
+        $reason = $data['reason'];
+        $url = config('api.base_url') . config('api.active_wallet_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
-            "requestDetails" => "for lost and reback customer",
+            "requestDetails" =>$reason,
             "refId" => $mobileNo . randomDigits()
         ]);
 
@@ -1180,8 +1299,8 @@ class ApiController extends ResponseController
                 return [
                     'code' => $response['statusCode'],
                     'status' => 'success',
-                    'message' => 'Your credit card activation request was successful.',
-                    'prompt' => getPromptPath('prepaid-card-activation-successful')
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt)
                 ];
             }
         }
@@ -1189,9 +1308,9 @@ class ApiController extends ResponseController
         return [
             'code' => $response['statusCode'],
             'status' => 'error',
-            'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
-        ];*/
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];
     }
 
     public static function processApiCallingCASAAvailableBalance($data)
@@ -2537,8 +2656,12 @@ class ApiController extends ResponseController
                 return self::processApiCallingFDMaturityDate($data);
             case 'EW-CHANGE-OR-RESET-PIN':
                 return self::processApiCallingEWChangeOrResetEWalletPIN($data);
+            case 'EW-APPROVE-OR-REJECT':
+                return self::processApiCallingEWApproveOrReject($data);
             case 'EW-DEVICE-BIND':
                 return self::processApiCallingEWDeviceBind($data);
+            case 'EW-CLOSE-WALLET':
+                return self::processApiCallingEWCloseWallet($data);
             case 'EW-LOCK-BLOCK':
                 return self::processApiCallingEWLockBlock($data);
             case 'EW-UNLOCK-ACTIVE':

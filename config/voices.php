@@ -188,5 +188,33 @@ return [
             'bn' => 'অনুগ্রহ করে আপনার NID নম্বরটি প্রবেশ করান।'
         ]
     ],
+    "tapForBalance" => [
+        'voice' => [
+            'en' => '',
+            'bn' => '',
+        ],
+        'text' => [
+            'en' => 'Tap for Balance',
+            'bn' => 'ব্যালেন্স দেখি',
+        ],
+        'title' => [
+            'en' => '',
+            'bn' => ''
+        ]
+    ],
+    "EWApproveOrReject" => [
+        'voice' => [
+            'en' => 'enter-nid-en',
+            'bn' => 'enter-nid-bn',
+        ],
+        'text' => [
+            'en' => 'Enter the reason and press Submit.',
+            'bn' => 'অনুগ্রহ করে কারণ লিখুন এবং "Submit" অপশনে ক্লিক করুন।'
+        ],
+        'title' => [
+            'en' => '',
+            'bn' => ''
+        ]
+    ],
 
 ];
