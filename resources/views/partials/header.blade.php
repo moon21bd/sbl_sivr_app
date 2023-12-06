@@ -32,14 +32,13 @@
             verificationTitleEn = "{{ config('voices.defaultVerification.title.en') }}",
             verificationTitleBn = "{{ config('voices.defaultVerification.title.bn') }}",
             defaultNIDScriptTextEn = "{{ config('voices.defaultNIDScript.text.en') }}",
-            defaultNIDScriptTextBn = "{{ config('voices.defaultNIDScript.text.bn') }}"
-        defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}"
-        defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}"
-
-        ;
+            defaultNIDScriptTextBn = "{{ config('voices.defaultNIDScript.text.bn') }}",
+            defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}",
+            defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}";
     </script>
 
     <style>
+
         /*@media (max-width: 600px) {
             .swal2-popup {
                 width: 100% !important;

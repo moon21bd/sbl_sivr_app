@@ -139,5 +139,5 @@ return [
     'verify-otp-verify-message-text' => 'Please enter the 6 digits OTP code that we have send to your registered phone number and press Submit.',
     'common-request-successful-text' => "Your request has been successfully received, Thank you.",
     'common-request-failed-text' => "Sorry! Your request has not been successful. Please try again.",
-    'verification-success-after-login' => 'Verification successful. Thanks!'
+    'verification-success-after-login' => 'Verification successful. Thanks!',
 ];

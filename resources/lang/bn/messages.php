@@ -141,6 +141,6 @@ return [
     'verify-otp-verify-message-text' => 'অনুগ্রহ করে আপনার রেজিস্টার্ড ফোন নম্বরে পাঠানো ৬ সংখ্যার ওটিপি কোড প্রবেশ করান এবং সাবমিট অপশনে ক্লিক করুন।',
     'common-request-successful-text' => "আপনার অনুরোধটি সফলভাবে গ্রহণ করা হয়েছে, ধন্যবাদ।",
     'common-request-failed-text' => "দুঃখিত! আপনার অনুরোধটি সফল হয়নি। অনুগ্রহ করে পুনরায় চেষ্টা করুন।",
-    'verification-success-after-login' => 'যাচাইকরণ সফল হয়েছে। ধন্যবাদ!'
+    'verification-success-after-login' => 'যাচাইকরণ সফল হয়েছে। ধন্যবাদ!',
 
 ];
