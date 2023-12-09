@@ -2453,65 +2453,17 @@ class ApiController extends ResponseController
         ];
 
         $apiResponse = self::processToCreateTicketInCRM($appParamsData);
-        $ticketId = $apiResponse['data']['ticketId'];
-        $ticketMessage = $apiResponse['data']['ticketMessage'];
+        $ticketId = $apiResponse['data']['ticketId'] ?? "";
+        $ticketMessage = $apiResponse['data']['ticketMessage'] ?? "";
 
-        // will be removed later
         return [
-            'code' => Response::HTTP_OK,
-            'status' => 'success',
-            'message' => 'Your issue has been successfully submitted.',
-            'prompt' => getPromptPath('issue-submission-success'),
+            'code' => $apiResponse['code'],
+            'status' => $apiResponse['status'],
+            'message' => $apiResponse['message'],
+            'prompt' => $apiResponse['prompt'],
             'data' => [
                 'issueId' => $ticketId,
             ]
-        ];
-
-        return [
-            'code' => Response::HTTP_EXPECTATION_FAILED,
-            'status' => 'error',
-            'message' => 'Your issue submission has failed. Please try again later.',
-            'prompt' => getPromptPath('issue-submission-failed'),
-            'issueId' => null
-        ];
-
-        // will be removed later
-
-        $url = config('api.base_url') . config('api.create_issue_url');
-        $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
-        $response = $apiHandler->postCall($url, [
-            "mobileNo" => $mobileNo,
-            "userId" => "Agx01254",
-            "reason" => $data['reason'] ?? "Having a problem with my phone.",
-            // "OtpCode" => "",
-            "refId" => randomDigits(5)
-        ]);
-
-        if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
-            $data = json_decode($response['data'], true);
-            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
-            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
-
-                return [
-                    'code' => $response['statusCode'],
-                    'status' => 'success',
-                    'message' => 'Your issue has been successfully submitted...',
-                    'prompt' => getPromptPath('issue-submission-success'),
-                    'data' => [
-                        'issueId' => $data['issueId'] ?? null
-                    ]
-                ];
-
-            }
-        }
-
-        return [
-            'code' => $response['statusCode'],
-            'status' => 'error',
-            'message' => 'Your issue submission has failed. Please try again later.',
-            'prompt' => getPromptPath('issue-submission-failed'),
-            'issueId' => null
         ];
     }
 
