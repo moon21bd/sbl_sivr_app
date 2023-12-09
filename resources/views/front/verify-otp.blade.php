@@ -21,38 +21,38 @@
                     <div class="flex flex-col gap-4 text-center">
                         <h2 class="[font-size:var(--font-size-title)] font-bold text-white">{{ __('messages.verify-otp-verify-account-text') }}</h2>
                         <p class="text-white text-base">{{ __('messages.verify-otp-verify-message-text') }}
-                             @if(Session::has('otp.phone_masked'))
+                            @if(Session::has('otp.phone_masked'))
                                 :<b>+88{{ Session::get('otp.phone_masked') }}</b>
                             @endif.</p>
 
                         <div class="flex gap-3 justify-between items-center">
                             <div
-                                    class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
+                                class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
                                 <input type="number" maxlength="1" autocomplete="off"
                                        class="w-10 h-10 text-center bg-transparent focus:outline-none">
                             </div>
                             <div
-                                    class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
+                                class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
                                 <input type="number" maxlength="1" autocomplete="off"
                                        class="w-10 h-10 text-center bg-transparent focus:outline-none">
                             </div>
                             <div
-                                    class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
+                                class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
                                 <input type="number" maxlength="1" autocomplete="off"
                                        class="w-10 h-10 text-center bg-transparent focus:outline-none">
                             </div>
                             <div
-                                    class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
+                                class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
                                 <input type="number" maxlength="1" autocomplete="off"
                                        class="w-10 h-10 text-center bg-transparent focus:outline-none">
                             </div>
                             <div
-                                    class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
+                                class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
                                 <input type="number" maxlength="1" autocomplete="off"
                                        class="w-10 h-10 text-center bg-transparent focus:outline-none">
                             </div>
                             <div
-                                    class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
+                                class="flex w-10 h-10 text-2xl text-white font-bold items-center justify-center relative after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-0 after:bg-white/60">
                                 <input type="number" maxlength="1" autocomplete="off"
                                        class="w-10 h-10 text-center bg-transparent focus:outline-none">
                             </div>
@@ -68,8 +68,8 @@
                         </div>--}}
 
                         <button
-                                class="text-[color:var(--brand-color-blue)] text-lg rounded-md w-full py-2 mt-10 bg-white"
-                                type="submit">Submit
+                            class="text-[color:var(--brand-color-blue)] text-lg rounded-md w-full py-2 mt-10 bg-white"
+                            type="submit">Submit
                         </button>
                     </div>
 
@@ -90,6 +90,7 @@
         const inputs = document.querySelectorAll('input[type="number"]');
         const errorMessageDiv = document.getElementById('error_message');
         const submitButton = document.querySelector('button[type="submit"]');
+        let locale = getSavedLocale();
 
         submitButton.addEventListener('click', function (event) {
             event.preventDefault();
@@ -130,7 +131,7 @@
                 } else {
                     buttonDisable(submitButton, true);
                     if (code.length !== 6) {
-                        displayErrorMessage('Please enter all 6 digits of the number.', errorMessageDiv);
+                        displayErrorMessage((locale === 'en') ? "Please enter all 6 digits of the number." : "দয়া করে, ৬ সংখ্যার কোড লিখুন।", errorMessageDiv);
                     } else {
                         clearErrorMessage(errorMessageDiv);
                     }
@@ -151,7 +152,7 @@
 
         function handleInvalidCode() {
             hideLoader();
-            displayErrorMessage('Please enter all 6 digits of the number.', errorMessageDiv);
+            displayErrorMessage((locale === 'en') ? "Please enter all 6 digits of the number." : "দয়া করে, ৬ সংখ্যার কোড লিখুন।", errorMessageDiv);
         }
 
         function handleResponse(response) {

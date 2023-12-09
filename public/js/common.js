@@ -259,17 +259,18 @@ function clearErrorMessage(errorDisplay) {
 
 function handlePhoneNumberInput(phoneInput, errorDisplay, submitButton) {
     const phoneVal = phoneInput.value;
+    let locale = getSavedLocale();
 
     if (phoneVal === '') {
         clearErrorMessage(errorDisplay);
         buttonDisable(submitButton, true);
     } else if (!validatePhoneNumber(phoneVal)) {
         buttonDisable(submitButton, true);
-        displayErrorMessage('Mobile number is invalid.', errorDisplay);
+        displayErrorMessage((locale === 'en') ? "Mobile number is invalid." : "মোবাইল নাম্বার সঠিক নয়।", errorDisplay);
         phoneInput.focus();
     } else if (phoneVal.length !== 11) {
         buttonDisable(submitButton, true);
-        displayErrorMessage('Phone number must be 10 digits.', errorDisplay);
+        displayErrorMessage((locale === 'en') ? "Mobile number must be 10 digits." : "মোবাইল নাম্বার কমপক্ষে ১০ ডিজিট হতে হবে ।", errorDisplay);
         phoneInput.focus();
     } else {
         clearErrorMessage(errorDisplay);

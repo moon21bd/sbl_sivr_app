@@ -166,28 +166,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function handleCreateIssueClick() {
+        let locale = getSavedLocale();
         try {
+            showLoader();
             // Fetch dropdown values from the API
             const dropdownValuesResponse = await callDynamicAPI({
                 'purpose': 'GET-DROP-DOWN-VALUES', 'page': 'home', 'button': 'createIssue',
             });
 
             const dropdownValues = dropdownValuesResponse.data;
+            hideLoader();
 
+            let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
+            let textCallCategory = (locale === 'en') ? "Call Category" : "কল ক্যাটাগরি";
+            let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
+            let textSelectCallCategory = (locale === 'en') ? "Select Category" : "ক্যাটাগরি নির্বাচন করুন";
+            let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
+            let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
             const {value: selectedValues, dismiss, inputValue: reasonInput} = await Swal.fire({
-                title: 'Create Complaint',
-                html: `<label for="callTypeSelect">Call Type:</label>
-                <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="Call Type" required>
-                    <option value="" disabled selected>Select an option</option>
+                title: textSubmitComplaint,
+                html: `<label for="callTypeSelect">${textCallType}:</label>
+                <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
+                    <option value="" disabled selected>${textSelectCallType}</option>
                     ${getOptionsHtml(dropdownValues.callType)}
                 </select>
-                <label for="callCategorySelect">Call Category:</label>
-                <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="Select Call Category" required>
-                    <option value="" disabled selected>Select an option</option>
+                <label for="callCategorySelect">${textCallCategory}:</label>
+                <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
+                    <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(dropdownValues.callCategory)}
                 </select>
-                <label for="reasonInput">Reason:</label>
-                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="Type the reason" required />`,
+                <label for="reasonInput">${textReason}:</label>
+                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
                 focusConfirm: false,
                 preConfirm: () => {
                     const callTypeOpts = document.getElementById('callTypeSelect').value;
@@ -196,14 +205,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Validate that all required fields are filled
                     if (!callTypeOpts || !callCategoryOpts || !reason) {
-                        Swal.showValidationMessage('Please fill in all required fields');
+                        Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
                     }
 
                     return {
                         callTypeOpts, callCategoryOpts, reason
                     };
                 },
-                showCancelButton: true
+                showCancelButton: true,
+                confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
+                cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল"
             });
 
             if (selectedValues && !dismiss) {
@@ -326,29 +337,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addClickEventWithAsyncHandler('btnLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnLALoanDetails', (event, dataset) => handleLALoanDetailsClick(dataset.voice, dataset.text, dataset.title));
+        addClickEventWithAsyncHandler('btnLALoanDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnLADueDateInstallment', (event, dataset) => handleLADueDateInstallmentClick(dataset.voice, dataset.text, dataset.title));
+        /*addClickEventWithAsyncHandlerForApiCalling('btnLALoanDetails', (event, dataset) => handleLALoanDetailsClick(dataset.voice, dataset.text, dataset.title));*/
 
-        addClickEventWithAsyncHandlerForApiCalling('btnLAOutstandingLoanBalance', (event, dataset) => handleLAOutstandingLoanBalanceClick(dataset.voice, dataset.text, dataset.title));
+        /*addClickEventWithAsyncHandlerForApiCalling('btnLADueDateInstallment', (event, dataset) => handleLADueDateInstallmentClick(dataset.voice, dataset.text, dataset.title));*/
+
+        addClickEventWithAsyncHandler('btnLADueDateInstallment', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+        addClickEventWithAsyncHandler('btnLAOutstandingLoanBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+        /*addClickEventWithAsyncHandlerForApiCalling('btnLAOutstandingLoanBalance',
+        (event, dataset) => handleLAOutstandingLoanBalanceClick(dataset.voice, dataset.text, dataset.title));*/
 
     } else if (currentPath === '/fixed-deposit') {
 
         addClickEventWithAsyncHandler('btnFDEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnFDFixedDepositDetails', (event, dataset) => handleFDFixedDepositDetailsClick(dataset.voice, dataset.text, dataset.title));
+        /*addClickEventWithAsyncHandlerForApiCalling('btnFDFixedDepositDetails', (event, dataset) => handleFDFixedDepositDetailsClick(dataset.voice, dataset.text, dataset.title));*/
+        addClickEventWithAsyncHandler('btnFDFixedDepositDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnFDMaturityDate', (event, dataset) => handleFDMaturityDateClick(dataset.voice, dataset.text, dataset.title));
+        addClickEventWithAsyncHandler('btnFDMaturityDate', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+        /*addClickEventWithAsyncHandlerForApiCalling('btnFDMaturityDate',
+        (event, dataset) => handleFDMaturityDateClick(dataset.voice, dataset.text, dataset.title));*/
 
     } else if (currentPath === '/account-dps') {
 
-        addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSAvailableBalance', (event, dataset) => handleALAccountDPSAvailableBalanceClick(dataset.voice, dataset.text, dataset.title));
+        /*
+        // for nid input, use this.
+        addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSAvailableBalance',
+        (event, dataset) => handleALAccountDPSAvailableBalanceClick(dataset.voice,
+        dataset.text, dataset.title));*/
 
-        addClickEventWithAsyncHandlerForApiCalling('btnALDPSDetails', (event, dataset) => handleALDPSDetailsClick(dataset.voice, dataset.text, dataset.title));
+        addClickEventWithAsyncHandler('btnALAccountDPSAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+        /*addClickEventWithAsyncHandlerForApiCalling('btnALDPSDetails', (event, dataset) => handleALDPSDetailsClick(dataset.voice, dataset.text, dataset.title));*/
+
+        addClickEventWithAsyncHandler('btnALDPSDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         addClickEventWithAsyncHandler('btnALAccountDPSEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSInstalmentDetails', (event, dataset) => handleALAccountDPSInstalmentDetailsClick(dataset.voice, dataset.text, dataset.title));
+        addClickEventWithAsyncHandler('btnALAccountDPSInstalmentDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+        /*addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSInstalmentDetails',
+        (event, dataset) => handleALAccountDPSInstalmentDetailsClick(dataset.voice, dataset.text, dataset.title));*/
 
 
     } else if (currentPath === '/ib-account-related') {
@@ -456,11 +489,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addClickEventWithAsyncHandler('btnCASAActivateSMSBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnCASAMiniStatement', (event, dataset) => handleCASAMiniStatementClick(dataset.voice, dataset.text, dataset.title));
+        /*
+        // for nid input, use this.
+        addClickEventWithAsyncHandlerForApiCalling('btnCASAMiniStatement',
+        (event, dataset) => handleCASAMiniStatementClick(dataset.voice, dataset.text, dataset.title));*/
+
+        addClickEventWithAsyncHandler('btnCASAMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
 
         addClickEventWithAsyncHandler('btnFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandlerForApiCalling('btnCASAAvailableBalance', (event, dataset) => handleCASAAvailableBalanceClick(dataset.voice, dataset.text, dataset.title));
+
+        addClickEventWithAsyncHandler('btnCASAAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+        /*
+        // for nid input, use this.
+        addClickEventWithAsyncHandlerForApiCalling('btnCASAAvailableBalance',
+        (event, dataset) => handleCASAAvailableBalanceClick(dataset.voice, dataset.text, dataset.title));*/
 
         addClickEventWithAsyncHandler('btnChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 

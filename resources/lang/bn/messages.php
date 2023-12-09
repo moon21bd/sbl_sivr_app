@@ -136,11 +136,13 @@ return [
     'spg-sonali-bank-account-to-bkash' => 'সোনালী অ্যাকাউন্ট টু বিকাশ',
     'send-otp-input-phone-text' => 'অনুগ্রহ করে আপনার একাউন্টের রেজিস্ট্রার্ড ফোন নাম্বারটি প্রবেশ করান। আপনার একাউন্ট যাচাই করার জন্য আমরা আপনার রেজিস্ট্রার্ড  ফোন নাম্বারে একটি ছয় সংখ্যার ওটিপি কোড পাঠাবো।',
     'send-otp-mobile-number-text' => 'মোবাইল নম্বর',
-    'send-otp-send-code-text' => 'কোড পাঠাও',
+    'send-otp-send-code-text' => 'সাবমিট',
     'verify-otp-verify-account-text' => 'অ্যাকাউন্ট যাচাইকরণ!',
     'verify-otp-verify-message-text' => 'অনুগ্রহ করে আপনার রেজিস্টার্ড ফোন নম্বরে পাঠানো ৬ সংখ্যার ওটিপি কোড প্রবেশ করান এবং সাবমিট অপশনে ক্লিক করুন।',
     'common-request-successful-text' => "আপনার অনুরোধটি সফলভাবে গ্রহণ করা হয়েছে, ধন্যবাদ।",
     'common-request-failed-text' => "দুঃখিত! আপনার অনুরোধটি সফল হয়নি। অনুগ্রহ করে পুনরায় চেষ্টা করুন।",
     'verification-success-after-login' => 'যাচাইকরণ সফল হয়েছে। ধন্যবাদ!',
+    'entered-phone-number-invalid' => 'আপনার দেয়া ফোন নাম্বারটি সঠিক নয়।',
+    'apologies-something-went-wrong' => 'দুঃখিত, কোন সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন।',
 
 ];

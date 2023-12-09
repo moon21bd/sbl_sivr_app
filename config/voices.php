@@ -216,5 +216,19 @@ return [
             'bn' => ''
         ]
     ],
+    "commonRequestFailed" => [
+        'voice' => [
+            'en' => 'common/request-failed-en',
+            'bn' => 'common/request-failed-bn',
+        ],
+        'text' => [
+            'en' => 'Apologies, something went wrong. Please try again later.',
+            'bn' => 'দুঃখিত, কোন সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন।'
+        ],
+        'title' => [
+            'en' => 'Apologies, something went wrong.',
+            'bn' => 'দুঃখিত, কোন সমস্যা হয়েছে।'
+        ]
+    ],
 
 ];

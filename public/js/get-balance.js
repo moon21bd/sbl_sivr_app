@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const balanceImage = document.querySelector('#balance-container img');
     const resetAnimationTimeout = 3000; // Change this value to configure the timeout
 
-    function handleButtonClick() {
+    function handleBalanceButtonClick() {
         balanceContainer.classList.add('slide-out');
         showLoader();
         tUj('tap-for-balance', {
@@ -27,12 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
     btnTapForBalance.addEventListener('click', () => {
 
         dataTextValue = balanceContainer.getAttribute('data-text');
-        console.log('dataTextValue', dataTextValue)
+        // console.log('dataTextValue', dataTextValue)
         checkLoginStatus()
             .then(isLoggedIn => {
                 if (isLoggedIn) {
                     // User is logged in, proceed with the file upload
-                    handleButtonClick();
+                    handleBalanceButtonClick();
                 } else {
                     // User is not logged in, show the verification alert
                     showVerificationAlert();

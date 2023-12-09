@@ -24,6 +24,13 @@
         color: #fff;
     }
 
+    @media (max-width: 768px) {
+        .popup-container {
+            font-size: 14px;
+        }
+
+    }
+
 </style>
 
 

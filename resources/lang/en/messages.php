@@ -44,7 +44,7 @@ return [
     'islami-banking-btn' => 'Islami Banking',
     'agent-banking-btn' => 'Agent Banking',
     'sonali-bank-product-btn' => 'SBL Product',
-    'my-complain-btn' => 'My Complain',
+    'my-complain-btn' => 'My Complaint',
     'CASASND-btn' => 'CASASND',
     'DPS-btn' => 'DPS',
     'fixed-deposit-btn' => 'Fixed Deposit',
@@ -140,4 +140,6 @@ return [
     'common-request-successful-text' => "Your request has been successfully received, Thank you.",
     'common-request-failed-text' => "Sorry! Your request has not been successful. Please try again.",
     'verification-success-after-login' => 'Verification successful. Thanks!',
+    'entered-phone-number-invalid' => 'The entered phone number is invalid.',
+    'apologies-something-went-wrong' => 'Apologies, something went wrong. Please try again later.',
 ];

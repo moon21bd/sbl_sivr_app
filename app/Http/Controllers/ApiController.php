@@ -37,7 +37,7 @@ class ApiController extends ResponseController
         if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
             $responseOut['code'] = Response::HTTP_OK;
             $responseOut['status'] = 'success';
-            $responseOut['balance'] = number_format($response['data']['balanceAmount'], 2);
+            $responseOut['balance'] = number_format($response['data']['balanceAmount'] ?? 0, 2);
         }
 
         return $this->sendResponse($responseOut, $responseOut['code']);
@@ -52,7 +52,7 @@ class ApiController extends ResponseController
         $mobileNo = $request->input('mobile_no');
 
         // will be removed later
-        $mobileNo = '01710455990';
+        /*$mobileNo = '01710455990';
         $strRefId = $mobileNo . randomDigits();
         Session::put('otp', [
             'phone_masked' => $this->hidePhoneNumber($mobileNo),
@@ -66,9 +66,8 @@ class ApiController extends ResponseController
             'message' => 'Success.',
             'url' => url('verify-otp')
         ];
-        return $this->sendResponse($responseOut, $responseOut['code']);
+        return $this->sendResponse($responseOut, $responseOut['code']);*/
         // will be removed later
-
 
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.send_otp_url');
@@ -89,8 +88,8 @@ class ApiController extends ResponseController
                     $responseOut = [
                         'code' => $statusCode,
                         'status' => 'error',
-                        'message' => 'The phone number entered is invalid or an unexpected error has occurred.',
-                        'prompt' => getPromptPath('phone-number-invalid')
+                        'message' => __('messages.entered-phone-number-invalid'),
+                        'prompt' => null
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
 
@@ -113,7 +112,7 @@ class ApiController extends ResponseController
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
-                        'message' => 'Apologies, something went wrong. Please try again later.',
+                        'message' => __('messages.apologies-something-went-wrong'),
                         'prompt' => getPromptPath('common/request-failed-en')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
@@ -123,7 +122,7 @@ class ApiController extends ResponseController
                 $responseOut = [
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
-                    'message' => 'Null response',
+                    'message' => __('messages.apologies-something-went-wrong'), // Null response
                     'prompt' => getPromptPath('common/request-failed-en')
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
@@ -136,7 +135,7 @@ class ApiController extends ResponseController
             $responseOut = [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => 'Apologies, something went wrong. Please try again later.',
+                'message' => __('messages.apologies-something-went-wrong'),
                 'prompt' => getPromptPath('common/request-failed-en')
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
@@ -155,7 +154,7 @@ class ApiController extends ResponseController
         $strRefId = Session::get('otp.strRefId');
 
         // WILL BE REMOVED LATER
-        // call api to get user account name.
+        /*// call api to get user account name.
         $otpInfo = Session::get('otp');
         $statusCode = Response::HTTP_OK;
         $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
@@ -183,7 +182,7 @@ class ApiController extends ResponseController
         session()->flash('status', $responseOut['status']);
         session()->flash('message', $responseOut['message']);
 
-        return $this->sendResponse($responseOut, $responseOut['code']);
+        return $this->sendResponse($responseOut, $responseOut['code']);*/
 
         // will be removed later
 
@@ -204,19 +203,22 @@ class ApiController extends ResponseController
 
             if ($statusCode === Response::HTTP_OK) {
                 if ($apiStatus === false) {
-                    // Verification failed
+                    // Verification failed. Possible reason, OTP expired.
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
-                        'message' => 'Apologies, something went wrong. Please try again later.',
+                        'message' => __('messages.apologies-something-went-wrong'),
                         'prompt' => getPromptPath('common/request-failed-en')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 } else { // success
+
                     // After Verification
                     // Make the user as logged-in user, set flag to verify user.
                     // call api to get user account name.
+
                     $otpInfo = Session::get('otp');
+
                     /*$getAccountList = self::fetchSavingsDeposits($otpInfo['otp_phone']);
                     Session::put('logInfo', [
                         'is_logged' => base64_encode(true),
@@ -260,7 +262,7 @@ class ApiController extends ResponseController
                     $responseOut = [
                         'code' => $statusCode,
                         'status' => 'success',
-                        'message' => 'Verification successful. Please proceed with your previous service request.',
+                        'message' => __('messages.verification-success-after-login'),
                         'prompt' => null,
                         'pn' => $mobileNo,
                         'an' => $getAccountList['data']['accountName'] ?? null,
@@ -278,7 +280,7 @@ class ApiController extends ResponseController
                 $responseOut = [
                     'code' => $statusCode,
                     'status' => 'error',
-                    'message' => 'Apologies, something went wrong. Please try again later.',
+                    'message' => __('messages.apologies-something-went-wrong'),
                     'prompt' => getPromptPath('common/request-failed-en')
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
@@ -291,7 +293,7 @@ class ApiController extends ResponseController
             $responseOut = [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => 'Apologies, something went wrong. Please try again later.',
+                'message' => __('messages.apologies-something-went-wrong'),
                 'prompt' => getPromptPath('common/request-failed-en')
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
@@ -329,7 +331,7 @@ class ApiController extends ResponseController
     {
 
         // will be removed this later
-        return [
+        /*return [
             'status' => 'success',
             'message' => 'Data Received',
             'code' => Response::HTTP_OK,
@@ -345,7 +347,7 @@ class ApiController extends ResponseController
                     'accountNo' => '5158242353328',
                 ],
             ]
-        ];
+        ];*/
 
         $url = config('api.base_url') . config('api.get_wallet_details_url');
         $apiHandler = new APIHandler();
@@ -359,7 +361,7 @@ class ApiController extends ResponseController
 
                 return [
                     'status' => 'success',
-                    'message' => 'Data Received',
+                    'message' => 'Data Received.',
                     'code' => Response::HTTP_OK,
                     'data' => [
                         'name' => $data['name'] ?? null,
@@ -377,7 +379,7 @@ class ApiController extends ResponseController
 
             'status' => 'error',
             'code' => Response::HTTP_EXPECTATION_FAILED,
-            'message' => 'Data not found',
+            'message' => 'Data not found.',
             'data' => [
                 'name' => null,
                 'accountName' => null,
@@ -979,7 +981,7 @@ class ApiController extends ResponseController
         $failedText = __('messages.common-request-failed-text');
 
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
@@ -991,10 +993,10 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];
+        ];*/
         // will be removed later
 
-        /*$reason = $data['reason'];
+        $reason = $data['reason'];
         $url = config('api.base_url') . config('api.get_pin_reset_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
@@ -1024,7 +1026,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];*/
+        ];
     }
 
     public static function processApiCallingEWApproveOrReject($data)
@@ -1036,7 +1038,7 @@ class ApiController extends ResponseController
         $failedText = __('messages.common-request-failed-text');
 
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
@@ -1048,10 +1050,10 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];
+        ];*/
         // will be removed later
 
-        /*$reason = $data['reason'];
+        $reason = $data['reason'];
         $url = config('api.base_url') . config('api.approve_wallet_request_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
@@ -1081,7 +1083,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];*/
+        ];
     }
 
     public static function processApiCallingEWDeviceBind($data)
@@ -1093,7 +1095,7 @@ class ApiController extends ResponseController
         $failedText = __('messages.common-request-failed-text');
 
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
@@ -1105,10 +1107,10 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];
+        ];*/
         // will be removed later
 
-        /*$reason = $data['reason'];
+        $reason = $data['reason'];
         $url = config('api.base_url') . config('api.device_bind_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
@@ -1138,7 +1140,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];*/
+        ];
     }
 
     public static function processApiCallingEWCloseWallet($data)
@@ -1150,7 +1152,7 @@ class ApiController extends ResponseController
         $failedText = __('messages.common-request-failed-text');
 
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
@@ -1162,10 +1164,10 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];
+        ];*/
         // will be removed later
 
-        /*$reason = $data['reason'];
+        $reason = $data['reason'];
         $url = config('api.base_url') . config('api.close_wallet_url');
         $apiHandler = new APIHandler();
         $mobileNo = $data['mobile_no'];
@@ -1196,7 +1198,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];*/
+        ];
     }
 
     public static function processApiCallingEWLockBlock($data)
@@ -1208,7 +1210,7 @@ class ApiController extends ResponseController
         $failedText = __('messages.common-request-failed-text');
 
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
@@ -1220,7 +1222,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];
+        ];*/
         // will be removed later
         $reason = $data['reason'];
         $url = config('api.base_url') . config('api.lock_wallet_url');
@@ -1265,7 +1267,7 @@ class ApiController extends ResponseController
         $failedText = __('messages.common-request-failed-text');
 
         // will be removed later
-        return [
+        /*return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
@@ -1277,7 +1279,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
-        ];
+        ];*/
         // will be removed later
 
         $reason = $data['reason'];
@@ -1287,7 +1289,7 @@ class ApiController extends ResponseController
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
-            "requestDetails" =>$reason,
+            "requestDetails" => $reason,
             "refId" => $mobileNo . randomDigits()
         ]);
 
@@ -1639,25 +1641,17 @@ class ApiController extends ResponseController
         $callType = self::getDropDownForCallTypeApi();
         $callCategory = self::getDropDownForCallCategoryApi();
 
-        // will be removed later
+        // dd($callType, $callCategory);
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Data Found.',
-            'prompt' => "",
+            'prompt' => null,
             'data' => [
-                'callType' => $callType,
-                'callCategory' => $callCategory,
+                'callType' => $callType ?? [],
+                'callCategory' => $callCategory ?? [],
             ]
         ];
-
-        return [
-            'code' => Response::HTTP_EXPECTATION_FAILED,
-            'status' => 'error',
-            'message' => 'eWallet Unlock/Active request failed.',
-            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-failed')
-        ];
-        // will be removed later
 
         /*$url = config('api.base_url') . config('api.active_wallet_url');
         $apiHandler = new APIHandler();
@@ -1693,7 +1687,13 @@ class ApiController extends ResponseController
 
     public static function processToCreateTicketInCRM($data)
     {
-        self::defaultResponseForProcessToCreateTicketInCRM();
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $successText = __('messages.common-request-successful-text');
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $failedText = __('messages.common-request-failed-text');
+
+        // self::defaultResponseForProcessToCreateTicketInCRM();
 
         $accessToken = Cache::get('crm_access_token');
 
@@ -1703,8 +1703,8 @@ class ApiController extends ResponseController
                 return [
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'failed',
-                    'message' => 'Data not found.',
-                    'prompt' => getPromptPath('issue-submission-failed'),
+                    'message' => $failedText,
+                    'prompt' => getPromptPath($failedPrompt),
                     'data' => [
                         'ticketId' => null,
                         'ticketMessage' => null,
@@ -1722,14 +1722,14 @@ class ApiController extends ResponseController
         if ($response['statusCode'] >= 200 && $response['statusCode'] <= 299) {
             $responseData = json_decode($response['data'], true);
 
-            $ticketId = $responseData['data']['id'];
-            $message = $responseData['data']['message'];
+            $ticketId = $responseData['data']['id'] ?? "NA";
+            $message = $responseData['data']['message'] ?? "NA";
 
             return [
                 'code' => Response::HTTP_OK,
                 'status' => 'success',
-                'message' => 'Data Found.',
-                'prompt' => getPromptPath('issue-submission-success'),
+                'message' => $successText,
+                'prompt' => getPromptPath($successPrompt),
                 'data' => [
                     'ticketId' => $ticketId,
                     'ticketMessage' => $message,
@@ -1745,14 +1745,14 @@ class ApiController extends ResponseController
                     'Authorization' => 'Bearer ' . $accessToken,
                 ]);
                 $responseData = json_decode($response['data'], true);
-                $ticketId = $responseData['data']['id'];
-                $message = $responseData['data']['message'];
+                $ticketId = $responseData['data']['id'] ?? "NA";
+                $message = $responseData['data']['message'] ?? "";
 
                 return [
                     'code' => Response::HTTP_OK,
                     'status' => 'success',
-                    'message' => 'Data Found.',
-                    'prompt' => getPromptPath('issue-submission-success'),
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt),
                     'data' => [
                         'ticketId' => $ticketId,
                         'ticketMessage' => $message,
@@ -1764,8 +1764,8 @@ class ApiController extends ResponseController
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'failed',
-            'message' => 'Data not found.',
-            'prompt' => getPromptPath('issue-submission-failed'),
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt),
             'data' => [
                 'ticketId' => null,
                 'ticketMessage' => null,
@@ -1803,7 +1803,7 @@ class ApiController extends ResponseController
     public static function getDropDownForCallCategoryApi()
     {
         // will be removed later
-        self::dummyResponseForGetDropDownForCallCategoryApi();
+        // return self::dummyResponseForGetDropDownForCallCategoryApi();
 
         $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_category_url');
         $apiHandler = new APIHandler();
@@ -2251,7 +2251,7 @@ class ApiController extends ResponseController
     public static function getDropDownForCallTypeApi()
     {
         // will be removed later
-        self::dummyResponseForGetDropDownForCallTypeApi();
+        // return self::dummyResponseForGetDropDownForCallTypeApi();
 
         $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_type_url');
         $apiHandler = new APIHandler();
@@ -2630,8 +2630,6 @@ class ApiController extends ResponseController
                 return self::processApiCallingResetPin($data);
             case 'DEVICEBIND':
                 return self::processApiCallingDeviceBind($data);
-            case 'CREATEISSUE':
-                return self::processApiCallingCreateIssue($data);
             case 'LOCKWALLET':
                 return self::processApiCallingLockWallet($data);
             case 'DEBITCARDACTIVATION':
@@ -2680,6 +2678,8 @@ class ApiController extends ResponseController
                 return self::processApiCallingIBARChequeBookLeafStopPaymentClick($data);
             case 'GET-DROP-DOWN-VALUES':
                 return self::processGetDropDownValues($data);
+            case 'CREATEISSUE':
+                return self::processApiCallingCreateIssue($data);
             default:
                 // Code to be executed if $purpose is different from all cases;
                 return false;
