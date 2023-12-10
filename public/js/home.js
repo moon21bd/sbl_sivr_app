@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: textSubmitComplaint,
                 html: `<label for="callTypeSelect">${textCallType}:</label>
                 <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="" disabled selected>${textSelectCallType}</option>${getOptionsHtml(dropdownValues, 'eWallet')}
+                    <option value="" disabled selected>${textSelectCallType}</option>${getOptionsHtml(dropdownValues)}
                 </select>
                 <label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
@@ -587,10 +587,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }*/
 
-    /*const getOptionsHtml = (options) => {
+    const getOptionsHtml = (options) => {
         return Object.entries(options).map(([value, text]) => `<option value="${value}">${text}</option>`).join('');
-    };*/
-    const getOptionsHtml = (options, purpose = 'default') => {
+    };
+
+    /*const getOptionsHtml = (options, purpose = 'default') => {
         return Object.entries(options)
             .map(([value, text]) => {
                 if (purpose === 'eWallet' && value === 4 && text === 'Request') {
@@ -600,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .join('');
-    };
+    };*/
 
     if (currentPath === '/') { // home/root path
 
