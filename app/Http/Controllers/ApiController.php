@@ -5574,6 +5574,7 @@ class ApiController extends ResponseController
         $callCategoryIdInfo = $data['callCategoryOpts'];
         $callSubCategoryInfo = $data['callSubCategoryOpts'];
         $callSubSubCategoryInfo = $data['callSubSubCategoryOpts'];
+        $remarks = $data['reason'];
 
         $logInfo = Session::get('logInfo');
         $userName = trim(data_get($logInfo, 'account_info.accountName', "Guest-User-From-VIVR"));
@@ -5586,8 +5587,9 @@ class ApiController extends ResponseController
             'cus_contact_no' => $userPhone,
             'call_type' => $callTypeId,
             'call_category' => $callCategoryIdInfo,
-            'call_sub_category' => $callSubCategoryInfo, // will be dynamic
-            'call_sub_subcategory' => $callSubSubCategoryInfo, // will be dynamic
+            'call_sub_category' => $callSubCategoryInfo,
+            'call_sub_subcategory' => $callSubSubCategoryInfo,
+            'remarks' => $remarks,
             'account_no' => null, // or you can set a default value if needed
         ];
 
