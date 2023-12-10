@@ -60,7 +60,7 @@ class APIHandler
 
         $responseTime = microtime(true) - $startTime;
 
-        $this->storeApiLog(getIPAddress(), $url, $options, base64_encode($responseData), $responseTime, $this->getServerInfo());
+        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
 
         return $responseData;
     }
@@ -106,7 +106,7 @@ class APIHandler
 
         $responseTime = microtime(true) - $startTime;
 
-        $this->storeApiLog(getIPAddress(), $url, $options, base64_encode($responseData), $responseTime, $this->getServerInfo());
+        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
 
         return $responseData;
     }
@@ -150,7 +150,7 @@ class APIHandler
 
         $responseTime = microtime(true) - $startTime;
 
-        $this->storeApiLog(getIPAddress(), $url, $options, base64_encode($responseData), $responseTime, $this->getServerInfo());
+        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
 
         return $responseData;
     }
@@ -193,7 +193,7 @@ class APIHandler
             'url' => $url,
             'status_code' => $response['statusCode'] ?? Response::HTTP_EXPECTATION_FAILED,
             'request' => json_encode($request),
-            'response' => $response['data'] ?? null,
+            'response' => base64_encode(json_encode($response['data'])),
             'exception_type' => $response['exceptionType'] ?? null,
             'server_info' => $serverInfo,
             'response_time' => $responseTime,
