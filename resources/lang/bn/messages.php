@@ -43,7 +43,7 @@ return [
     'spg-btn' => 'এসপিজি',
     'islami-banking-btn' => 'ইসলামী ব্যাংকিং',
     'agent-banking-btn' => 'এজেন্ট ব্যাংকিং',
-    'sonali-bank-product-btn' => 'সোনালী ব্যাংক পিএলসি প্রোডাক্ট',
+    'sonali-bank-product-btn' => 'সোনালী ব্যাংক প্রোডাক্ট',
     'my-complain-btn' => 'আমার অভিযোগ',
     'CASASND-btn' => 'CASASND',
     'DPS-btn' => 'ডিপিএস',

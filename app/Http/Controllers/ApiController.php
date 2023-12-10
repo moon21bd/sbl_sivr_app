@@ -1636,53 +1636,31 @@ class ApiController extends ResponseController
         ];*/
     }
 
-    public static function processGetDropDownValues($data)
+    public static function processGetCallTypesDropDownValues($data)
     {
         $callType = self::getDropDownForCallTypeApi();
-        $callCategory = self::getDropDownForCallCategoryApi();
-
-        // dd($callType, $callCategory);
         return [
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Data Found.',
             'prompt' => null,
-            'data' => [
-                'callType' => $callType ?? [],
-                'callCategory' => $callCategory ?? [],
-            ]
+            'data' => $callType
         ];
 
-        /*$url = config('api.base_url') . config('api.active_wallet_url');
-        $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
-        $response = $apiHandler->postCall($url, [
-            "mobileNo" => $mobileNo,
-            "userId" => "Agx01254",
-            "requestDetails" => "for lost and reback customer",
-            "refId" => $mobileNo . randomDigits()
-        ]);
+    }
 
-        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
-            $data = json_decode($response['data'], true);
-            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
-            if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
-
-                return [
-                    'code' => $response['statusCode'],
-                    'status' => 'success',
-                    'message' => 'Your credit card activation request was successful.',
-                    'prompt' => getPromptPath('prepaid-card-activation-successful')
-                ];
-            }
-        }
-
+    public static function processGetCallCategoryDropDownValues($data)
+    {
+        $callCategory = self::getDropDownForCallCategoryApi($data);
+        // dd($callCategory);
         return [
-            'code' => $response['statusCode'],
-            'status' => 'error',
-            'message' => 'Your account activation request has failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
-        ];*/
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Data Found.',
+            'prompt' => null,
+            'data' => $callCategory
+        ];
+
     }
 
     public static function processToCreateTicketInCRM($data)
@@ -1800,12 +1778,21 @@ class ApiController extends ResponseController
         ];
     }
 
-    public static function getDropDownForCallCategoryApi()
+    public static function getDropDownForCallCategoryApi($data)
     {
-        // will be removed later
-        // return self::dummyResponseForGetDropDownForCallCategoryApi();
+        /*// will be removed later
+        $responseData['status'] = 'success';
+        $responseData['statusCode'] = 200;
+        $responseData['data'] = self::dummyResponseForGetDropDownForCallCategoryApi();
+        // will be removed later*/
 
-        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_category_url');
+
+        $selectedValues = $data['selectedValues']['callType'];
+        $url = config('api.crm_ticket_base_url') .
+            config('api.crm_ticket_call_category_url') . "?" . http_build_query([
+                "call_type_id" => $selectedValues
+            ]);
+
         $apiHandler = new APIHandler();
         $responseData = $apiHandler->doGetCall($url, [], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
@@ -1818,7 +1805,9 @@ class ApiController extends ResponseController
             if ($response['success']) {
                 $callCategories = $response['data'] ?? [];
                 foreach ($callCategories as $category) {
-                    $options[$category['id'] . "|" . $category['call_type_id']] = $category['name'];
+                    // if ($category['call_type_id'] === $selectedValues) {
+                    $options[$category['id']] = $category['name'];
+                    // }
                 }
             }
 
@@ -2236,6 +2225,7 @@ class ApiController extends ResponseController
     ],
     "message": null
 }';
+        return $dummyResponse;
         $response = json_decode($dummyResponse, true);
 
         $callCategories = $response['data'] ?? [];
@@ -2250,19 +2240,21 @@ class ApiController extends ResponseController
 
     public static function getDropDownForCallTypeApi()
     {
-        // will be removed later
-        // return self::dummyResponseForGetDropDownForCallTypeApi();
-
         $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_type_url');
         $apiHandler = new APIHandler();
         $responseData = $apiHandler->doGetCall($url, [], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
         ]);
 
+        /*// will be removed later
+        $responseData['status'] = 'success';
+        $responseData['statusCode'] = 200;
+        $responseData['data'] = self::dummyResponseForGetDropDownForCallTypeApi();
+        // will be removed later*/
+
         $options = [];
         if ($responseData['status'] === 'success' && $responseData['statusCode'] === 200) {
             $response = json_decode($responseData['data'], true);
-
             if ($response['success']) {
                 $callTypes = $response['data'] ?? [];
                 foreach ($callTypes as $type) {
@@ -2273,6 +2265,118 @@ class ApiController extends ResponseController
             return $options;
         }
         return $options;
+
+    }
+
+
+    public static function processGetSubCategoryDropDownValues($data)
+    {
+        $callSubCategory = self::getSubCategoryDropDownValues($data);
+        // dd($callCategory);
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Data Found.',
+            'prompt' => null,
+            'data' => $callSubCategory
+        ];
+
+
+    }
+
+    public static function getSubCategoryDropDownValues($data)
+    {
+        /*// will be removed later
+        $responseData['status'] = 'success';
+        $responseData['statusCode'] = 200;
+        $responseData['data'] = self::dummyResponseForGetSubCategoryDropDownForCallCategpryApi();
+        // will be removed later*/
+
+        $callTypeValue = $data['selectedValues']['callType'];
+        $callCategoryValue = $data['selectedValues']['callCategory'];
+
+        $url = config('api.crm_ticket_base_url') .
+            config('api.crm_ticket_call_sub_category_url') . "?" . http_build_query([
+                "call_type_id" => $callTypeValue,
+                "call_category_id" => $callCategoryValue
+            ]);
+
+        $apiHandler = new APIHandler();
+        $responseData = $apiHandler->doGetCall($url, [], [
+            'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
+        ]);
+
+        $options = [];
+        if ($responseData['status'] === 'success' && $responseData['statusCode'] === 200) {
+            $response = json_decode($responseData['data'], true);
+
+            if ($response['success']) {
+                $callCategories = $response['data'] ?? [];
+                foreach ($callCategories as $category) {
+                    // if ($category['call_category_id'] === $callCategoryValue && $category['call_type_id'] === $callTypeValue) {
+                    $options[$category['id']] = $category['name'];
+                    // }
+                }
+            }
+
+            return $options;
+        }
+        return $options;
+
+    }
+
+    public static function getSubSubCategoryDropDownValues($data)
+    {
+        /*// will be removed later
+        $responseData['status'] = 'success';
+        $responseData['statusCode'] = 200;
+        $responseData['data'] = self::dummyResponseForGetSubSubCategoryDropDownForCallCategoryApi();
+        // will be removed later*/
+
+        $callTypeValue = $data['selectedValues']['callType'];
+        $callCategoryValue = $data['selectedValues']['callCategory'];
+        $callSubCategoryValue = $data['selectedValues']['callSubCategory'];
+
+        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_sub_sub_category_url') .
+            "?" . http_build_query([
+                "call_type_id" => $callTypeValue,
+                "call_category_id" => $callCategoryValue,
+                "call_sub_category_id" => $callSubCategoryValue,
+            ]);
+        $apiHandler = new APIHandler();
+        $responseData = $apiHandler->doGetCall($url, [], [
+            'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
+        ]);
+
+        $options = [];
+        if ($responseData['status'] === 'success' && $responseData['statusCode'] === 200) {
+            $response = json_decode($responseData['data'], true);
+
+            if ($response['success']) {
+                $callSubSubCategories = $response['data'] ?? [];
+                foreach ($callSubSubCategories as $category) {
+                    // if ($category['call_category_id'] === $callCategoryValue && $category['call_type_id'] === $callTypeValue && $category['call_sub_category_id'] === $callSubCategoryValue) {
+                    $options[$category['id']] = $category['name'];
+                    // }
+                }
+            }
+
+            return $options;
+        }
+        return $options;
+    }
+
+    public static function processGetSubSubCategoryDropDownValues($data)
+    {
+        $callSubSubCategory = self::getSubSubCategoryDropDownValues($data);
+        // dd($callSubSubCategory);
+        return [
+            'code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Data Found.',
+            'prompt' => null,
+            'data' => $callSubSubCategory
+        ];
 
     }
 
@@ -2304,6 +2408,3025 @@ class ApiController extends ResponseController
     ],
     "message": null
 }';
+        return $dummyResponse;
+        $response = json_decode($dummyResponse, true);
+
+        $callTypes = $response['data'] ?? [];
+        $options = [];
+        foreach ($callTypes as $type) {
+            $options[$type['id']] = $type['name'];
+        }
+
+        return $options;
+    }
+
+    public static function dummyResponseForGetSubCategoryDropDownForCallCategpryApi()
+    {
+        $dummyResponse = '{
+    "success": true,
+    "data": [
+        {
+            "id": "1",
+            "call_category_id": "1",
+            "call_type_id": "4",
+            "name": "Prepaid Card"
+        },
+        {
+            "id": "2",
+            "call_category_id": "2",
+            "call_type_id": "3",
+            "name": "BACH"
+        },
+        {
+            "id": "3",
+            "call_category_id": "2",
+            "call_type_id": "3",
+            "name": "RTGS"
+        },
+        {
+            "id": "4",
+            "call_category_id": "1",
+            "call_type_id": "4",
+            "name": "Debit Card"
+        },
+        {
+            "id": "5",
+            "call_category_id": "2",
+            "call_type_id": "3",
+            "name": "BEFTN"
+        },
+        {
+            "id": "6",
+            "call_category_id": "1",
+            "call_type_id": "4",
+            "name": "Credit Card"
+        },
+        {
+            "id": "7",
+            "call_category_id": "2",
+            "call_type_id": "3",
+            "name": "NPSB"
+        },
+        {
+            "id": "8",
+            "call_category_id": "3",
+            "call_type_id": "2",
+            "name": "BACH"
+        },
+        {
+            "id": "9",
+            "call_category_id": "3",
+            "call_type_id": "2",
+            "name": "BEFTN"
+        },
+        {
+            "id": "10",
+            "call_category_id": "3",
+            "call_type_id": "2",
+            "name": "RTGS"
+        },
+        {
+            "id": "11",
+            "call_category_id": "3",
+            "call_type_id": "2",
+            "name": "NPSB"
+        },
+        {
+            "id": "12",
+            "call_category_id": "4",
+            "call_type_id": "1",
+            "name": "RTGS"
+        },
+        {
+            "id": "13",
+            "call_category_id": "4",
+            "call_type_id": "1",
+            "name": "NPSB"
+        },
+        {
+            "id": "14",
+            "call_category_id": "5",
+            "call_type_id": "3",
+            "name": "Agent Banking"
+        },
+        {
+            "id": "15",
+            "call_category_id": "5",
+            "call_type_id": "3",
+            "name": "Agent Banking  Entrepreneur"
+        },
+        {
+            "id": "16",
+            "call_category_id": "6",
+            "call_type_id": "2",
+            "name": "Agent Banking"
+        },
+        {
+            "id": "17",
+            "call_category_id": "8",
+            "call_type_id": "1",
+            "name": "Agent Banking"
+        },
+        {
+            "id": "18",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Widow Allowance"
+        },
+        {
+            "id": "19",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Social Safety Net Account"
+        },
+        {
+            "id": "20",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Freedom Fighter A/C & Allowance"
+        },
+        {
+            "id": "21",
+            "call_category_id": "10",
+            "call_type_id": "4",
+            "name": "e-Wallet"
+        },
+        {
+            "id": "22",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Freedom Fighter Allowance"
+        },
+        {
+            "id": "23",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Salary Disbursement"
+        },
+        {
+            "id": "24",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Disabled Allowance"
+        },
+        {
+            "id": "25",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Disabled Students Stipend"
+        },
+        {
+            "id": "26",
+            "call_category_id": "11",
+            "call_type_id": "3",
+            "name": "Credit Card"
+        },
+        {
+            "id": "27",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Transgender Allowance"
+        },
+        {
+            "id": "28",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Dalit/Harijan/Vede Allowance"
+        },
+        {
+            "id": "29",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Old Age Allowance"
+        },
+        {
+            "id": "30",
+            "call_category_id": "9",
+            "call_type_id": "3",
+            "name": "Tea Worker Allowance"
+        },
+        {
+            "id": "31",
+            "call_category_id": "12",
+            "call_type_id": "3",
+            "name": "A Challan"
+        },
+        {
+            "id": "32",
+            "call_category_id": "12",
+            "call_type_id": "3",
+            "name": "City Corporation Bills/Taxes"
+        },
+        {
+            "id": "33",
+            "call_category_id": "12",
+            "call_type_id": "3",
+            "name": "GTS Challan"
+        },
+        {
+            "id": "34",
+            "call_category_id": "12",
+            "call_type_id": "3",
+            "name": "IRC Challan"
+        },
+        {
+            "id": "35",
+            "call_category_id": "12",
+            "call_type_id": "3",
+            "name": "NBR Vat & Tax"
+        },
+        {
+            "id": "36",
+            "call_category_id": "12",
+            "call_type_id": "3",
+            "name": "Travel Tax"
+        },
+        {
+            "id": "37",
+            "call_category_id": "13",
+            "call_type_id": "2",
+            "name": "A Challan"
+        },
+        {
+            "id": "38",
+            "call_category_id": "14",
+            "call_type_id": "1",
+            "name": "Travel Tax"
+        },
+        {
+            "id": "39",
+            "call_category_id": "14",
+            "call_type_id": "1",
+            "name": "IRC Challan"
+        },
+        {
+            "id": "40",
+            "call_category_id": "14",
+            "call_type_id": "1",
+            "name": "A Challan"
+        },
+        {
+            "id": "41",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "BJMC worker Account"
+        },
+        {
+            "id": "42",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "BMEB Account"
+        },
+        {
+            "id": "43",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Branch/ Agent/ATM location"
+        },
+        {
+            "id": "44",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Current Account"
+        },
+        {
+            "id": "45",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "DDP"
+        },
+        {
+            "id": "46",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Double Benefit Scheme (DBS)"
+        },
+        {
+            "id": "47",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Education Deposit Scheme"
+        },
+        {
+            "id": "48",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Farmer Account"
+        },
+        {
+            "id": "49",
+            "call_category_id": "11",
+            "call_type_id": "3",
+            "name": "Debit Card"
+        },
+        {
+            "id": "50",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Fixed Deposit"
+        },
+        {
+            "id": "51",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Freedom Fighter Account"
+        },
+        {
+            "id": "52",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Garments Worker A/C"
+        },
+        {
+            "id": "53",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Locker service"
+        },
+        {
+            "id": "54",
+            "call_category_id": "11",
+            "call_type_id": "3",
+            "name": "Prepaid Card"
+        },
+        {
+            "id": "55",
+            "call_category_id": "16",
+            "call_type_id": "1",
+            "name": "Credit Card"
+        },
+        {
+            "id": "56",
+            "call_category_id": "16",
+            "call_type_id": "1",
+            "name": "Debit Card"
+        },
+        {
+            "id": "57",
+            "call_category_id": "16",
+            "call_type_id": "1",
+            "name": "Prepaid Card"
+        },
+        {
+            "id": "58",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Marriage Savings Scheme"
+        },
+        {
+            "id": "59",
+            "call_category_id": "17",
+            "call_type_id": "2",
+            "name": "Credit Card"
+        },
+        {
+            "id": "60",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Medicare Deposit Scheme"
+        },
+        {
+            "id": "61",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Monthly Earning Scheme(MES)"
+        },
+        {
+            "id": "62",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Non-Resident Deposit Scheme"
+        },
+        {
+            "id": "63",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Poor Women Account"
+        },
+        {
+            "id": "64",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Railway Account"
+        },
+        {
+            "id": "65",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Rural Deposit Scheme"
+        },
+        {
+            "id": "66",
+            "call_category_id": "17",
+            "call_type_id": "2",
+            "name": "Debit Card"
+        },
+        {
+            "id": "67",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Retail Banking"
+        },
+        {
+            "id": "68",
+            "call_category_id": "17",
+            "call_type_id": "2",
+            "name": "Prepaid Card"
+        },
+        {
+            "id": "69",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Savings Account"
+        },
+        {
+            "id": "70",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "SBRSS"
+        },
+        {
+            "id": "71",
+            "call_category_id": "18",
+            "call_type_id": "3",
+            "name": "Prank Call"
+        },
+        {
+            "id": "72",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "School Banking"
+        },
+        {
+            "id": "73",
+            "call_category_id": "19",
+            "call_type_id": "3",
+            "name": "Non SBL Related"
+        },
+        {
+            "id": "74",
+            "call_category_id": "20",
+            "call_type_id": "3",
+            "name": "Complaint Status"
+        },
+        {
+            "id": "75",
+            "call_category_id": "5",
+            "call_type_id": "3",
+            "name": "Shadheen Sanchay Scheme"
+        },
+        {
+            "id": "76",
+            "call_category_id": "21",
+            "call_type_id": "3",
+            "name": "No Response Call"
+        },
+        {
+            "id": "77",
+            "call_category_id": "21",
+            "call_type_id": "3",
+            "name": "Silent call"
+        },
+        {
+            "id": "78",
+            "call_category_id": "5",
+            "call_type_id": "3",
+            "name": "Shadheen Sanchay Scheme"
+        },
+        {
+            "id": "79",
+            "call_category_id": "21",
+            "call_type_id": "3",
+            "name": "Call Drop Before Issue Identify"
+        },
+        {
+            "id": "80",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Shadheen Sanchay Scheme"
+        },
+        {
+            "id": "81",
+            "call_category_id": "22",
+            "call_type_id": "3",
+            "name": "Right Information Act"
+        },
+        {
+            "id": "82",
+            "call_category_id": "23",
+            "call_type_id": "3",
+            "name": "Mobile banking"
+        },
+        {
+            "id": "83",
+            "call_category_id": "24",
+            "call_type_id": "3",
+            "name": "LGSP"
+        },
+        {
+            "id": "84",
+            "call_category_id": "25",
+            "call_type_id": "3",
+            "name": "Internet Banking (Upcoming)"
+        },
+        {
+            "id": "85",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "SND Account"
+        },
+        {
+            "id": "86",
+            "call_category_id": "26",
+            "call_type_id": "3",
+            "name": "Digital Banking"
+        },
+        {
+            "id": "87",
+            "call_category_id": "27",
+            "call_type_id": "3",
+            "name": "Corporate Banking"
+        },
+        {
+            "id": "88",
+            "call_category_id": "28",
+            "call_type_id": "3",
+            "name": "Civil Scheme"
+        },
+        {
+            "id": "89",
+            "call_category_id": "28",
+            "call_type_id": "3",
+            "name": "Army Scheme"
+        },
+        {
+            "id": "90",
+            "call_category_id": "29",
+            "call_type_id": "3",
+            "name": "BTCL Fees"
+        },
+        {
+            "id": "91",
+            "call_category_id": "30",
+            "call_type_id": "1",
+            "name": "BTCL Fees"
+        },
+        {
+            "id": "92",
+            "call_category_id": "31",
+            "call_type_id": "2",
+            "name": "International Trade Finance"
+        },
+        {
+            "id": "93",
+            "call_category_id": "32",
+            "call_type_id": "3",
+            "name": "Loan Rescheduling & Restructuring"
+        },
+        {
+            "id": "94",
+            "call_category_id": "33",
+            "call_type_id": "3",
+            "name": "Internal"
+        },
+        {
+            "id": "95",
+            "call_category_id": "33",
+            "call_type_id": "3",
+            "name": "Imported"
+        },
+        {
+            "id": "96",
+            "call_category_id": "34",
+            "call_type_id": "3",
+            "name": "SMS Banking"
+        },
+        {
+            "id": "97",
+            "call_category_id": "35",
+            "call_type_id": "1",
+            "name": "SMS Banking"
+        },
+        {
+            "id": "98",
+            "call_category_id": "36",
+            "call_type_id": "2",
+            "name": "SMS Banking"
+        },
+        {
+            "id": "99",
+            "call_category_id": "37",
+            "call_type_id": "3",
+            "name": "Jakat Fund"
+        },
+        {
+            "id": "100",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Sonali Bank Daily Profit scheme"
+        },
+        {
+            "id": "101",
+            "call_category_id": "37",
+            "call_type_id": "3",
+            "name": "Hajj Fund"
+        },
+        {
+            "id": "102",
+            "call_category_id": "38",
+            "call_type_id": "3",
+            "name": "IPFD"
+        },
+        {
+            "id": "103",
+            "call_category_id": "38",
+            "call_type_id": "3",
+            "name": "Entrepreneurship Support Fund"
+        },
+        {
+            "id": "104",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Sonali Bank Millionaire Scheme"
+        },
+        {
+            "id": "105",
+            "call_category_id": "39",
+            "call_type_id": "2",
+            "name": "Industrial Project Financing"
+        },
+        {
+            "id": "106",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Sonali Deposite Scheme"
+        },
+        {
+            "id": "107",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Student Savings Account"
+        },
+        {
+            "id": "108",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Triple Benefit Scheme(TBS)"
+        },
+        {
+            "id": "109",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "BJMC worker Account"
+        },
+        {
+            "id": "110",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "BMEB Account"
+        },
+        {
+            "id": "111",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Current Account"
+        },
+        {
+            "id": "112",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Double Benefit Scheme (DBS)"
+        },
+        {
+            "id": "113",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Education Deposit Scheme"
+        },
+        {
+            "id": "114",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Farmer Account"
+        },
+        {
+            "id": "115",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Fixed Deposit"
+        },
+        {
+            "id": "116",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Freedom Fighter Account"
+        },
+        {
+            "id": "117",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Kallyan Bhata (DDP) Account"
+        },
+        {
+            "id": "118",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Marriage Savings Scheme"
+        },
+        {
+            "id": "119",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Medicare Deposit Scheme"
+        },
+        {
+            "id": "120",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Monthly Earning Scheme(MES)"
+        },
+        {
+            "id": "121",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Non-Resident Deposit Scheme"
+        },
+        {
+            "id": "122",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Poor Women Account"
+        },
+        {
+            "id": "123",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Railway Account"
+        },
+        {
+            "id": "124",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "RMG Workers Account"
+        },
+        {
+            "id": "125",
+            "call_category_id": "41",
+            "call_type_id": "3",
+            "name": "BKash Link"
+        },
+        {
+            "id": "126",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Rural Deposit Scheme"
+        },
+        {
+            "id": "127",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Savings Account"
+        },
+        {
+            "id": "128",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "SBL Retirement Savings Scheme"
+        },
+        {
+            "id": "129",
+            "call_category_id": "42",
+            "call_type_id": "1",
+            "name": "BKash Link"
+        },
+        {
+            "id": "130",
+            "call_category_id": "43",
+            "call_type_id": "2",
+            "name": "BKash Link"
+        },
+        {
+            "id": "131",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "School Banking Account"
+        },
+        {
+            "id": "132",
+            "call_category_id": "44",
+            "call_type_id": "3",
+            "name": "Govt Investment SUKUK"
+        },
+        {
+            "id": "133",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Shadheen Sanchay Scheme"
+        },
+        {
+            "id": "134",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "SND Account"
+        },
+        {
+            "id": "135",
+            "call_category_id": "44",
+            "call_type_id": "3",
+            "name": "Govt T-Bill/Bond"
+        },
+        {
+            "id": "136",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Sonali Bank Daily Profit scheme"
+        },
+        {
+            "id": "137",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Sonali Bank Millionaire Scheme"
+        },
+        {
+            "id": "138",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Sonali Deposite Scheme"
+        },
+        {
+            "id": "139",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Student Savings Account"
+        },
+        {
+            "id": "140",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Triple Benefit Scheme(TBS)"
+        },
+        {
+            "id": "141",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "CC Hypo"
+        },
+        {
+            "id": "142",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Export"
+        },
+        {
+            "id": "143",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Firm Contract Export Policy"
+        },
+        {
+            "id": "144",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "CC Pledge"
+        },
+        {
+            "id": "145",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Export Bill Negotiation"
+        },
+        {
+            "id": "146",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Unrepatriated Export bill"
+        },
+        {
+            "id": "147",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Usance Export Bill"
+        },
+        {
+            "id": "148",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Exchange Risk"
+        },
+        {
+            "id": "149",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Import"
+        },
+        {
+            "id": "150",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Education Loan"
+        },
+        {
+            "id": "151",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Letter Of Credit"
+        },
+        {
+            "id": "152",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Pre Import Loan"
+        },
+        {
+            "id": "153",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Foreign Education Loan Program"
+        },
+        {
+            "id": "154",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Post Import Loan"
+        },
+        {
+            "id": "155",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Post Import Financing"
+        },
+        {
+            "id": "156",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Online Real Time Banking System"
+        },
+        {
+            "id": "157",
+            "call_category_id": "46",
+            "call_type_id": "3",
+            "name": "Loan Against Inland Bill"
+        },
+        {
+            "id": "158",
+            "call_category_id": "47",
+            "call_type_id": "3",
+            "name": "Sanchaypatra"
+        },
+        {
+            "id": "159",
+            "call_category_id": "48",
+            "call_type_id": "2",
+            "name": "Sanchaypatra"
+        },
+        {
+            "id": "160",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Foreign Employment Loan"
+        },
+        {
+            "id": "161",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Freedom Fighter Loan"
+        },
+        {
+            "id": "162",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL BPDB"
+        },
+        {
+            "id": "163",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL Construction"
+        },
+        {
+            "id": "164",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL Flat Purchase"
+        },
+        {
+            "id": "165",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL Govt Employee"
+        },
+        {
+            "id": "166",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL Justice Sir"
+        },
+        {
+            "id": "167",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL Public University"
+        },
+        {
+            "id": "168",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "HBL Sonali Neer"
+        },
+        {
+            "id": "169",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Personal Loan"
+        },
+        {
+            "id": "170",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Secured Overdraft"
+        },
+        {
+            "id": "171",
+            "call_category_id": "49",
+            "call_type_id": "3",
+            "name": "USD Investment Bond"
+        },
+        {
+            "id": "172",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Small Business Loan"
+        },
+        {
+            "id": "173",
+            "call_category_id": "45",
+            "call_type_id": "3",
+            "name": "Special Small Credit"
+        },
+        {
+            "id": "174",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Education Loan"
+        },
+        {
+            "id": "175",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Foreign Education Loan Program"
+        },
+        {
+            "id": "176",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Foreign Employment Loan"
+        },
+        {
+            "id": "177",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Freedom Fighter Loan"
+        },
+        {
+            "id": "178",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL BPDB"
+        },
+        {
+            "id": "179",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL Construction"
+        },
+        {
+            "id": "180",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL Flat Purchase"
+        },
+        {
+            "id": "181",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL Govt Employee"
+        },
+        {
+            "id": "182",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL Justice Sir"
+        },
+        {
+            "id": "183",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL Public University"
+        },
+        {
+            "id": "184",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "HBL Sonali Neer"
+        },
+        {
+            "id": "185",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Personal Loan"
+        },
+        {
+            "id": "186",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Small Business Loan"
+        },
+        {
+            "id": "187",
+            "call_category_id": "50",
+            "call_type_id": "2",
+            "name": "Special Small Credit"
+        },
+        {
+            "id": "188",
+            "call_category_id": "49",
+            "call_type_id": "3",
+            "name": "USD Premium Bond"
+        },
+        {
+            "id": "189",
+            "call_category_id": "49",
+            "call_type_id": "3",
+            "name": "Wage Earner Development Bond"
+        },
+        {
+            "id": "190",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "10/50/100TK Refinance Scheme"
+        },
+        {
+            "id": "191",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Bicycle Loan"
+        },
+        {
+            "id": "192",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "BRDB Loan"
+        },
+        {
+            "id": "193",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Covid-19 Re-finance"
+        },
+        {
+            "id": "194",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "CUMED"
+        },
+        {
+            "id": "195",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Online Service"
+        },
+        {
+            "id": "196",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "7 Colleges Fees"
+        },
+        {
+            "id": "197",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "BHBFC"
+        },
+        {
+            "id": "198",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Daridro Bimochon Loan"
+        },
+        {
+            "id": "199",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Ghore Fera Refinance Scheme"
+        },
+        {
+            "id": "200",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Gramin Khudro Babsa Loan"
+        },
+        {
+            "id": "201",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Jago Nari"
+        },
+        {
+            "id": "202",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Lobon Loan"
+        },
+        {
+            "id": "203",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "NGO Linkage Revolving"
+        },
+        {
+            "id": "204",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "NGO Linkage Wholesale"
+        },
+        {
+            "id": "205",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Protibondhi Loan"
+        },
+        {
+            "id": "206",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "BTEB Admission"
+        },
+        {
+            "id": "207",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Small Farming Loan"
+        },
+        {
+            "id": "208",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "BTEB Institute Payment"
+        },
+        {
+            "id": "209",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Swanirvor Loan"
+        },
+        {
+            "id": "210",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Unmesh Loan"
+        },
+        {
+            "id": "211",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "BUET Fees"
+        },
+        {
+            "id": "212",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "BUTEX Fees"
+        },
+        {
+            "id": "213",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Customs Bond Dhaka"
+        },
+        {
+            "id": "214",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Customs Duty"
+        },
+        {
+            "id": "215",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Customs duty e-Payment"
+        },
+        {
+            "id": "216",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Swanirvor Loan"
+        },
+        {
+            "id": "217",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Dhaka Polytechnic Fees"
+        },
+        {
+            "id": "218",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Small Farming Loan"
+        },
+        {
+            "id": "219",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Education"
+        },
+        {
+            "id": "220",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "HSC Fees"
+        },
+        {
+            "id": "221",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "10/50/100TK Refinance Scheme"
+        },
+        {
+            "id": "222",
+            "call_category_id": "51",
+            "call_type_id": "3",
+            "name": "Bicycle Loan"
+        },
+        {
+            "id": "223",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "BRDB-UCC"
+        },
+        {
+            "id": "224",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Covid-19 Re-finance"
+        },
+        {
+            "id": "225",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "CUMED"
+        },
+        {
+            "id": "226",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Daridro Bimochon Loan"
+        },
+        {
+            "id": "227",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Ghore Fera Refinance Scheme"
+        },
+        {
+            "id": "228",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Gramin Khudro Babsa Loan"
+        },
+        {
+            "id": "229",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Jago Nari"
+        },
+        {
+            "id": "230",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Lobon Loan"
+        },
+        {
+            "id": "231",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "NGO Linkage Revolving"
+        },
+        {
+            "id": "232",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "NGO Linkage Wholesale"
+        },
+        {
+            "id": "233",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Protibondhi Loan"
+        },
+        {
+            "id": "234",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Swanirvor Loan"
+        },
+        {
+            "id": "235",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Unmesh Loan"
+        },
+        {
+            "id": "236",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "BB Start Up Fund"
+        },
+        {
+            "id": "237",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Cluster Financing"
+        },
+        {
+            "id": "238",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "CMS Credit Guarantee Scheme"
+        },
+        {
+            "id": "239",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "CMSME"
+        },
+        {
+            "id": "240",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "CMSME COVID-19 Finance"
+        },
+        {
+            "id": "241",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "CMSME Credit Guarantee"
+        },
+        {
+            "id": "242",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "CMSME Refinance Credit Guarantee"
+        },
+        {
+            "id": "243",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "CMSME Refinance Scheme"
+        },
+        {
+            "id": "244",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Covid-19 Incentives"
+        },
+        {
+            "id": "245",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Good Borrower"
+        },
+        {
+            "id": "246",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Interest Waiver"
+        },
+        {
+            "id": "247",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Loan Classification"
+        },
+        {
+            "id": "248",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "New Entrepreneur"
+        },
+        {
+            "id": "249",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Nipuna"
+        },
+        {
+            "id": "250",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Project Loans"
+        },
+        {
+            "id": "251",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Refinance scheme green product"
+        },
+        {
+            "id": "252",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "SBL Startup Fund"
+        },
+        {
+            "id": "253",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Single Borrower & Large Loan Limit"
+        },
+        {
+            "id": "254",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Sonali Alo"
+        },
+        {
+            "id": "255",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Women Entrepreneurs"
+        },
+        {
+            "id": "256",
+            "call_category_id": "54",
+            "call_type_id": "3",
+            "name": "Working Capital Loan"
+        },
+        {
+            "id": "257",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "SND Account"
+        },
+        {
+            "id": "258",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "7 Colleges Fees"
+        },
+        {
+            "id": "259",
+            "call_category_id": "56",
+            "call_type_id": "3",
+            "name": "Floriculture Loan"
+        },
+        {
+            "id": "260",
+            "call_category_id": "56",
+            "call_type_id": "3",
+            "name": "Farming Off Farming Loan"
+        },
+        {
+            "id": "261",
+            "call_category_id": "57",
+            "call_type_id": "2",
+            "name": "Small Farming Loan"
+        },
+        {
+            "id": "262",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "BB Start Up Fund"
+        },
+        {
+            "id": "263",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "CMSME"
+        },
+        {
+            "id": "264",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "CMSME Cluster Loan"
+        },
+        {
+            "id": "265",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "CMSME COVID-19 Finance"
+        },
+        {
+            "id": "266",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "CMSME COVID-19 Re-Finance"
+        },
+        {
+            "id": "267",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "CMSME Refinance Scheme"
+        },
+        {
+            "id": "268",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "Nari Uddokta"
+        },
+        {
+            "id": "269",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "New Entrepreneur"
+        },
+        {
+            "id": "270",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "Nipuna"
+        },
+        {
+            "id": "271",
+            "call_category_id": "56",
+            "call_type_id": "3",
+            "name": "Social Forestry Loan"
+        },
+        {
+            "id": "272",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "Refinance scheme green product"
+        },
+        {
+            "id": "273",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "SBL Start Up Fund"
+        },
+        {
+            "id": "274",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "SME Women"
+        },
+        {
+            "id": "275",
+            "call_category_id": "58",
+            "call_type_id": "2",
+            "name": "Sonali Alo"
+        },
+        {
+            "id": "276",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "BHBFC"
+        },
+        {
+            "id": "277",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "BTEB Admission"
+        },
+        {
+            "id": "278",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "BTEB Institute Payment"
+        },
+        {
+            "id": "279",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "BUET Fees"
+        },
+        {
+            "id": "280",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "BUTEX Fees"
+        },
+        {
+            "id": "281",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "Customs Bond Dhaka"
+        },
+        {
+            "id": "282",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "Customs Duty"
+        },
+        {
+            "id": "283",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "Customs duty e-Payment"
+        },
+        {
+            "id": "284",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "Dhaka Polytechnic Fees"
+        },
+        {
+            "id": "285",
+            "call_category_id": "56",
+            "call_type_id": "3",
+            "name": "Krishi Khamar Loan"
+        },
+        {
+            "id": "286",
+            "call_category_id": "56",
+            "call_type_id": "3",
+            "name": "Pukure Motso Chash Loan"
+        },
+        {
+            "id": "287",
+            "call_category_id": "56",
+            "call_type_id": "3",
+            "name": "RCD Policy"
+        },
+        {
+            "id": "288",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "HSC Fees"
+        },
+        {
+            "id": "289",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Income Tax"
+        },
+        {
+            "id": "290",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "JKKNIU Fees"
+        },
+        {
+            "id": "291",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "Income Tax"
+        },
+        {
+            "id": "293",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "JKKNIU Fees"
+        },
+        {
+            "id": "294",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "National University College Fees"
+        },
+        {
+            "id": "295",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "National University College Fees"
+        },
+        {
+            "id": "296",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "NBR Sonali Bank e-Payment Portal"
+        },
+        {
+            "id": "297",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "NBR Sonali Bank e-Payment Portal"
+        },
+        {
+            "id": "298",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Police Clearance"
+        },
+        {
+            "id": "299",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "Police Clearance"
+        },
+        {
+            "id": "300",
+            "call_category_id": "60",
+            "call_type_id": "2",
+            "name": "Sonali Payment Gateway"
+        },
+        {
+            "id": "301",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "TTC Fees"
+        },
+        {
+            "id": "302",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "TTC Fees"
+        },
+        {
+            "id": "303",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "VAT Online"
+        },
+        {
+            "id": "304",
+            "call_category_id": "55",
+            "call_type_id": "1",
+            "name": "VAT Online"
+        },
+        {
+            "id": "305",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "XI Class Admission"
+        },
+        {
+            "id": "306",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Agrani Exchange Singapore"
+        },
+        {
+            "id": "307",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Agrani Remittance Malaysia"
+        },
+        {
+            "id": "308",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Bahrain Financing Company"
+        },
+        {
+            "id": "309",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "CBL Money Transfer Malaysia"
+        },
+        {
+            "id": "310",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Exchange House List"
+        },
+        {
+            "id": "311",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "FC Account"
+        },
+        {
+            "id": "312",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "First Security Islami Exchange Italy"
+        },
+        {
+            "id": "313",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Global Money Exchange Company LLC Oman"
+        },
+        {
+            "id": "314",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Hello Paisa Pty Ltd South Africa"
+        },
+        {
+            "id": "315",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Instant Cash FZE UAE"
+        },
+        {
+            "id": "316",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Merchantrade Asia Malaysia"
+        },
+        {
+            "id": "317",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "MoneyGram International"
+        },
+        {
+            "id": "318",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "National Exchange Company"
+        },
+        {
+            "id": "319",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "NBL Money Transfer Malaysia"
+        },
+        {
+            "id": "320",
+            "call_category_id": "57",
+            "call_type_id": "2",
+            "name": "Floriculture Loan"
+        },
+        {
+            "id": "321",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "NBL Money Transfer Pte Ltd Singapore"
+        },
+        {
+            "id": "322",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "NEC Money Transfer Ltd UK"
+        },
+        {
+            "id": "323",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "NRB Account"
+        },
+        {
+            "id": "324",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Placid Express Malaysia"
+        },
+        {
+            "id": "325",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Prabhu Money Transfer USA"
+        },
+        {
+            "id": "326",
+            "call_category_id": "57",
+            "call_type_id": "2",
+            "name": "Farming-Off Farming Loan"
+        },
+        {
+            "id": "327",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Prime Exchange Co Pte Ltd"
+        },
+        {
+            "id": "328",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Purushottam Kanij Exchange Co. L.L.C Muscat Oman"
+        },
+        {
+            "id": "329",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "RIA Financial Services"
+        },
+        {
+            "id": "330",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "SAMBA Financial Group KSA"
+        },
+        {
+            "id": "331",
+            "call_category_id": "57",
+            "call_type_id": "2",
+            "name": "Social Forestry Loan"
+        },
+        {
+            "id": "332",
+            "call_category_id": "57",
+            "call_type_id": "2",
+            "name": "Krishi Khamar Loan"
+        },
+        {
+            "id": "333",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Student File"
+        },
+        {
+            "id": "334",
+            "call_category_id": "57",
+            "call_type_id": "2",
+            "name": "Pukure Motso Chash Loan"
+        },
+        {
+            "id": "335",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Tap Tap Send UK Limited"
+        },
+        {
+            "id": "336",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Tranglo Sdn Bhd Malaysia"
+        },
+        {
+            "id": "337",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Trans Fast"
+        },
+        {
+            "id": "338",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Transcash International Pty Ltd Australia (Trading as iPay)"
+        },
+        {
+            "id": "339",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "U Remit International Corporation Canada"
+        },
+        {
+            "id": "340",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Western Union"
+        },
+        {
+            "id": "341",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Worldwide West 2 East Service Ltd UK (Trading as SHA Global)"
+        },
+        {
+            "id": "342",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Xpress Money"
+        },
+        {
+            "id": "343",
+            "call_category_id": "62",
+            "call_type_id": "3",
+            "name": "eSheba"
+        },
+        {
+            "id": "344",
+            "call_category_id": "63",
+            "call_type_id": "2",
+            "name": "eSheba"
+        },
+        {
+            "id": "345",
+            "call_category_id": "64",
+            "call_type_id": "1",
+            "name": "eSheba"
+        },
+        {
+            "id": "346",
+            "call_category_id": "62",
+            "call_type_id": "3",
+            "name": "e-Wallet"
+        },
+        {
+            "id": "347",
+            "call_category_id": "63",
+            "call_type_id": "2",
+            "name": "e-Wallet"
+        },
+        {
+            "id": "348",
+            "call_category_id": "64",
+            "call_type_id": "1",
+            "name": "e-Wallet"
+        },
+        {
+            "id": "349",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Mudaraba Savings Account"
+        },
+        {
+            "id": "350",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "AL-Wadia Current Account"
+        },
+        {
+            "id": "351",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Mudaraba Short Notice Deposit"
+        },
+        {
+            "id": "352",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Hire Purchase Under Shirkatul Milk"
+        },
+        {
+            "id": "353",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Bai Muajjal HDS"
+        },
+        {
+            "id": "354",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Mudaraba Hajj Savings Scheme"
+        },
+        {
+            "id": "355",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Sonali Monthly Dowry Deposit Scheme"
+        },
+        {
+            "id": "356",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Sonali Monthly Deposit Scheme"
+        },
+        {
+            "id": "357",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Mudaraba Monthly Profit Scheme"
+        },
+        {
+            "id": "358",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Mudaraba Term Deposit Receipt"
+        },
+        {
+            "id": "359",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "AL-Wadia Current Account"
+        },
+        {
+            "id": "361",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Bai Muajjal Hypothication"
+        },
+        {
+            "id": "362",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Bai Muajjal-Household Durables Scheme"
+        },
+        {
+            "id": "363",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Foreign Remittance"
+        },
+        {
+            "id": "364",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Hire Purchase Under Shirkatul Milk"
+        },
+        {
+            "id": "365",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Mudaraba Hajj Savings Scheme"
+        },
+        {
+            "id": "366",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Mudaraba Monthly Profit Scheme"
+        },
+        {
+            "id": "367",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Mudaraba Savings Account"
+        },
+        {
+            "id": "368",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Mudaraba Short Notice Deposit"
+        },
+        {
+            "id": "369",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Mudaraba Term Deposit Receipt"
+        },
+        {
+            "id": "370",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Sonali Monthly Deposit Scheme"
+        },
+        {
+            "id": "371",
+            "call_category_id": "66",
+            "call_type_id": "2",
+            "name": "Sonali Monthly Dowry Deposit Scheme"
+        },
+        {
+            "id": "372",
+            "call_category_id": "53",
+            "call_type_id": "2",
+            "name": "Bicycle Loan"
+        },
+        {
+            "id": "373",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "BB Startup Fund"
+        },
+        {
+            "id": "374",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Cluster Financing"
+        },
+        {
+            "id": "375",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "CMSME"
+        },
+        {
+            "id": "376",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "CMSME COVID-19 Finance"
+        },
+        {
+            "id": "377",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "CMSME Refinance Scheme"
+        },
+        {
+            "id": "378",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "New Entrepreneurs"
+        },
+        {
+            "id": "379",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Nipuna"
+        },
+        {
+            "id": "380",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Project Loans"
+        },
+        {
+            "id": "381",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Refinance scheme green products"
+        },
+        {
+            "id": "382",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "SBL Startup Fund"
+        },
+        {
+            "id": "383",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Sonali Alo"
+        },
+        {
+            "id": "384",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Women Entrepreneurs"
+        },
+        {
+            "id": "385",
+            "call_category_id": "67",
+            "call_type_id": "5",
+            "name": "Working Capital Loan"
+        },
+        {
+            "id": "386",
+            "call_category_id": "68",
+            "call_type_id": "5",
+            "name": "Agent Banking  Entrepreneur"
+        },
+        {
+            "id": "387",
+            "call_category_id": "69",
+            "call_type_id": "5",
+            "name": "Credit Card"
+        },
+        {
+            "id": "388",
+            "call_category_id": "69",
+            "call_type_id": "5",
+            "name": "Prepaid Card"
+        },
+        {
+            "id": "389",
+            "call_category_id": "69",
+            "call_type_id": "5",
+            "name": "Debit Card"
+        },
+        {
+            "id": "390",
+            "call_category_id": "70",
+            "call_type_id": "5",
+            "name": "Loan Against Inland Bill"
+        },
+        {
+            "id": "391",
+            "call_category_id": "70",
+            "call_type_id": "5",
+            "name": "Pre Import Loan"
+        },
+        {
+            "id": "392",
+            "call_category_id": "70",
+            "call_type_id": "5",
+            "name": "Post Import Loan"
+        },
+        {
+            "id": "393",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "AL-Wadia Current Account"
+        },
+        {
+            "id": "394",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Bai Muajjal HDS"
+        },
+        {
+            "id": "395",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Hire Purchase Under Shirkatul Milk"
+        },
+        {
+            "id": "396",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Mudaraba Hajj Savings Scheme"
+        },
+        {
+            "id": "397",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Mudaraba Monthly Profit Scheme"
+        },
+        {
+            "id": "398",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Mudaraba Savings Account"
+        },
+        {
+            "id": "399",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Mudaraba Short Notice Deposit"
+        },
+        {
+            "id": "400",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Mudaraba Term Deposit Receipt"
+        },
+        {
+            "id": "401",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Sonali Monthly Deposit Scheme"
+        },
+        {
+            "id": "402",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Sonali Monthly Dowry Deposit Scheme"
+        },
+        {
+            "id": "403",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "CC Hypo"
+        },
+        {
+            "id": "404",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "CC Hypo"
+        },
+        {
+            "id": "405",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "CC Pledge"
+        },
+        {
+            "id": "406",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Education Loan"
+        },
+        {
+            "id": "407",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Foreign Education Loan Program"
+        },
+        {
+            "id": "408",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Foreign Employment Loan"
+        },
+        {
+            "id": "409",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Freedom Fighter Loan"
+        },
+        {
+            "id": "410",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL BPDB"
+        },
+        {
+            "id": "411",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL Construction"
+        },
+        {
+            "id": "412",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL Flat Purchase"
+        },
+        {
+            "id": "413",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL Govt EMP"
+        },
+        {
+            "id": "414",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL Justice Sir"
+        },
+        {
+            "id": "415",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL Public University"
+        },
+        {
+            "id": "416",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "HBL Sonali Neer"
+        },
+        {
+            "id": "417",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "IPFD"
+        },
+        {
+            "id": "418",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "NGO Linkage Revolving"
+        },
+        {
+            "id": "419",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Personal Loan"
+        },
+        {
+            "id": "420",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Secured Overdraft"
+        },
+        {
+            "id": "421",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Small Business Loan"
+        },
+        {
+            "id": "422",
+            "call_category_id": "72",
+            "call_type_id": "5",
+            "name": "Special Small Credit"
+        },
+        {
+            "id": "423",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "BJMC worker A/C"
+        },
+        {
+            "id": "424",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "BMEB teacher A/C"
+        },
+        {
+            "id": "425",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Current Account"
+        },
+        {
+            "id": "426",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "DDP"
+        },
+        {
+            "id": "427",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Doubble Benefit Scheme"
+        },
+        {
+            "id": "428",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Education Deposit Scheme"
+        },
+        {
+            "id": "429",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Farmer A/C"
+        },
+        {
+            "id": "430",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Fixed Deposit Receipt"
+        },
+        {
+            "id": "431",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Freedom Fighter A/C"
+        },
+        {
+            "id": "432",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Garments Worker A/C"
+        },
+        {
+            "id": "433",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Marriage Savings Scheme"
+        },
+        {
+            "id": "434",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Medicare Deposit Scheme"
+        },
+        {
+            "id": "435",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Monthly Earning Scheme"
+        },
+        {
+            "id": "436",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "NRDS"
+        },
+        {
+            "id": "437",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Poor Women A/C"
+        },
+        {
+            "id": "438",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Railway A/C"
+        },
+        {
+            "id": "439",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Rural Deposit Scheme"
+        },
+        {
+            "id": "440",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Savings Account"
+        },
+        {
+            "id": "441",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "SB Daily Profit Scheme"
+        },
+        {
+            "id": "442",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "SB Millionaire Scheme"
+        },
+        {
+            "id": "443",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "SBRSS"
+        },
+        {
+            "id": "444",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "School Banking"
+        },
+        {
+            "id": "445",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Shadheen Sanchay Scheme"
+        },
+        {
+            "id": "446",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "SND Account"
+        },
+        {
+            "id": "447",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Sonali Deposit Scheme"
+        },
+        {
+            "id": "448",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "10/50/100 TK Refinance Loan"
+        },
+        {
+            "id": "449",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Bicycle Loan"
+        },
+        {
+            "id": "450",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "BRDB Loan"
+        },
+        {
+            "id": "451",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Daridro Bimochon Loan"
+        },
+        {
+            "id": "452",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Farming Off Farming Loan"
+        },
+        {
+            "id": "453",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Floriculture Loan"
+        },
+        {
+            "id": "454",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Ghore Fira Loan"
+        },
+        {
+            "id": "455",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Gramin Khudro Babsa Loan"
+        },
+        {
+            "id": "456",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Jago Nari"
+        },
+        {
+            "id": "457",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Krishi Khamar Loan"
+        },
+        {
+            "id": "458",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Lobon Loan"
+        },
+        {
+            "id": "459",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "MCD Covid-19 Refinance"
+        },
+        {
+            "id": "460",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "NGO Linkage Wholesale"
+        },
+        {
+            "id": "461",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Protibondhi Loan"
+        },
+        {
+            "id": "462",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Pukure Motso Chash Loan"
+        },
+        {
+            "id": "463",
+            "call_category_id": "71",
+            "call_type_id": "5",
+            "name": "Small Farming Loan"
+        },
+        {
+            "id": "464",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Social Forestry Loan"
+        },
+        {
+            "id": "465",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Swanirvor Loan"
+        },
+        {
+            "id": "466",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Unmesh Loan"
+        },
+        {
+            "id": "467",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Student Account"
+        },
+        {
+            "id": "468",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Triple Benefit Scheme"
+        },
+        {
+            "id": "469",
+            "call_category_id": "75",
+            "call_type_id": "2",
+            "name": "Foreign Remittance"
+        },
+        {
+            "id": "470",
+            "call_category_id": "76",
+            "call_type_id": "2",
+            "name": "PO"
+        },
+        {
+            "id": "471",
+            "call_category_id": "76",
+            "call_type_id": "2",
+            "name": "DD"
+        },
+        {
+            "id": "472",
+            "call_category_id": "76",
+            "call_type_id": "2",
+            "name": "FDD"
+        },
+        {
+            "id": "473",
+            "call_category_id": "77",
+            "call_type_id": "2",
+            "name": "Complaint Against Branch"
+        },
+        {
+            "id": "474",
+            "call_category_id": "77",
+            "call_type_id": "2",
+            "name": "Complaint Against Agent"
+        },
+        {
+            "id": "475",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Garments Worker A/C"
+        },
+        {
+            "id": "476",
+            "call_category_id": "78",
+            "call_type_id": "2",
+            "name": "Issuing Certificates"
+        },
+        {
+            "id": "477",
+            "call_category_id": "79",
+            "call_type_id": "2",
+            "name": "Schedule Payment Request"
+        },
+        {
+            "id": "478",
+            "call_category_id": "80",
+            "call_type_id": "2",
+            "name": "Auto debit loan repayment"
+        },
+        {
+            "id": "479",
+            "call_category_id": "74",
+            "call_type_id": "5",
+            "name": "Small Farming Loan"
+        },
+        {
+            "id": "480",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Foreign currency"
+        },
+        {
+            "id": "481",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Sonali Lakhpoti Deposit Scheme"
+        },
+        {
+            "id": "482",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Sonali Lakhpoti Deposit Scheme"
+        },
+        {
+            "id": "483",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "DPS Info"
+        },
+        {
+            "id": "484",
+            "call_category_id": "65",
+            "call_type_id": "3",
+            "name": "Hajj and Omrah Investment"
+        },
+        {
+            "id": "485",
+            "call_category_id": "61",
+            "call_type_id": "3",
+            "name": "Bonus on Remittance"
+        },
+        {
+            "id": "486",
+            "call_category_id": "81",
+            "call_type_id": "3",
+            "name": "Pay Order"
+        },
+        {
+            "id": "487",
+            "call_category_id": "81",
+            "call_type_id": "3",
+            "name": "Demand Draft"
+        },
+        {
+            "id": "488",
+            "call_category_id": "81",
+            "call_type_id": "3",
+            "name": "Foreign Demand Draft"
+        },
+        {
+            "id": "489",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Sonali Lakhpoti Deposit Scheme"
+        },
+        {
+            "id": "490",
+            "call_category_id": "15",
+            "call_type_id": "3",
+            "name": "Sonali Ananna Deposit Scheme"
+        },
+        {
+            "id": "491",
+            "call_category_id": "73",
+            "call_type_id": "5",
+            "name": "Sonali Ananna Deposit Scheme"
+        },
+        {
+            "id": "492",
+            "call_category_id": "40",
+            "call_type_id": "2",
+            "name": "Sonali Ananna Deposit Scheme"
+        },
+        {
+            "id": "493",
+            "call_category_id": "4",
+            "call_type_id": "1",
+            "name": "BEFTN"
+        },
+        {
+            "id": "494",
+            "call_category_id": "4",
+            "call_type_id": "1",
+            "name": "BACH"
+        },
+        {
+            "id": "495",
+            "call_category_id": "82",
+            "call_type_id": "3",
+            "name": "Universal Pension Scheme"
+        },
+        {
+            "id": "496",
+            "call_category_id": "19",
+            "call_type_id": "3",
+            "name": "Sonali Bank Related"
+        },
+        {
+            "id": "497",
+            "call_category_id": "11",
+            "call_type_id": "3",
+            "name": "Taka Pay"
+        },
+        {
+            "id": "498",
+            "call_category_id": "62",
+            "call_type_id": "3",
+            "name": "Sonali Exchange Mobile App"
+        },
+        {
+            "id": "499",
+            "call_category_id": "52",
+            "call_type_id": "3",
+            "name": "Probashi Kallyan Bank"
+        }
+    ],
+    "message": null
+}';
+        return $dummyResponse;
+
+        $response = json_decode($dummyResponse, true);
+
+        $callTypes = $response['data'] ?? [];
+        $options = [];
+        foreach ($callTypes as $type) {
+            $options[$type['id']] = $type['name'];
+        }
+
+        return $options;
+    }
+
+    public static function dummyResponseForGetSubSubCategoryDropDownForCallCategoryApi()
+    {
+        return config('get-call-sub-sub.response');
+
         $response = json_decode($dummyResponse, true);
 
         $callTypes = $response['data'] ?? [];
@@ -2434,23 +5557,50 @@ class ApiController extends ResponseController
 
     public static function processApiCallingCreateIssue($data): array
     {
-        $callTypeId = $data['callType'];
-        $callCategoryIdInfo = $data['callCategory']; // "9|3" here the first one is category id and the second one is call_type_id
-        list($callCategoryId, $callCategoryTypeId) = explode("|", $callCategoryIdInfo);
+        // dd('data', $data);
+        /*array:9 [ // app/Http/Controllers/ApiController.php:5550
+        "mobile_no" => null
+        "purpose" => "CREATEISSUE"
+        "page" => "home"
+        "button" => "btnCreateIssue"
+        "callTypeOpts" => "1"
+        "callCategoryOpts" => "8"
+        "callSubCategoryOpts" => "17"
+        "callSubSubCategoryOpts" => "111"
+        "reason" => "asdadadad"
+        ]*/
+
+        $callTypeId = $data['callTypeOpts'];
+        $callCategoryIdInfo = $data['callCategoryOpts'];
+        $callSubCategoryInfo = $data['callSubCategoryOpts'];
+        $callSubSubCategoryInfo = $data['callSubSubCategoryOpts'];
+
+        $logInfo = Session::get('logInfo');
+        $userName = trim(data_get($logInfo, 'account_info.accountName', "Guest-User-From-VIVR"));
+        $userPhone = trim(data_get($logInfo, 'otp_info.otp_phone', "NA"));
 
         $appParamsData = [
             'channel_id' => 1,
             'idesk_agent_id' => 1,
-            'cus_name' => 'Test Development Ticket',
-            // 'cus_contact_no' => '01770430605',
+            'cus_name' => $userName,
+            'cus_contact_no' => $userPhone,
             'call_type' => $callTypeId,
-            'call_category' => $callCategoryId,
-            'call_sub_category' => 2, // Need to talk about this field
-            'call_sub_subcategory' => 2, // Need to talk about this field
+            'call_category' => $callCategoryIdInfo,
+            'call_sub_category' => $callSubCategoryInfo, // will be dynamic
+            'call_sub_subcategory' => $callSubSubCategoryInfo, // will be dynamic
             'account_no' => null, // or you can set a default value if needed
-            // 'idesk_agent_name' => 'testName',
-            // 'employee_id' => '11223344',
         ];
+
+        /*// dummy response. will be removed later.
+        return [
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Data Found.',
+            'prompt' => null,
+            'data' => [
+                'issueId' => uniqid(),
+            ]
+        ];*/
 
         $apiResponse = self::processToCreateTicketInCRM($appParamsData);
         $ticketId = $apiResponse['data']['ticketId'] ?? "";
@@ -2628,8 +5778,14 @@ class ApiController extends ResponseController
                 return self::processApiCallingALAccountDPSInstalmentDetails($data);
             case 'IB-AR-CHEQUE-BOOK-LEAF-STOP-PAYMENT':
                 return self::processApiCallingIBARChequeBookLeafStopPaymentClick($data);
-            case 'GET-DROP-DOWN-VALUES':
-                return self::processGetDropDownValues($data);
+            case 'GET-CALL-TYPES-DROPDOWN-VALUES':
+                return self::processGetCallTypesDropDownValues($data);
+            case 'GET-CALL-CATEGORY-OPTIONS':
+                return self::processGetCallCategoryDropDownValues($data);
+            case 'GET-SUB-CATEGORY-OPTIONS':
+                return self::processGetSubCategoryDropDownValues($data);
+            case 'GET-SUB-SUB-CATEGORY-OPTIONS':
+                return self::processGetSubSubCategoryDropDownValues($data);
             case 'CREATEISSUE':
                 return self::processApiCallingCreateIssue($data);
             default:

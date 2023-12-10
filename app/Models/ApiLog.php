@@ -10,6 +10,8 @@ class ApiLog extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_info',
+        'user_phone',
         'ip',
         'url',
         'status_code',

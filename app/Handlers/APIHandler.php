@@ -9,6 +9,8 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+
 
 class APIHandler
 {
@@ -185,6 +187,8 @@ class APIHandler
     protected function storeApiLog($ip, $url, $request, $response, $responseTime, $serverInfo)
     {
         return ApiLog::create([
+            'user_info' => json_encode(data_get(Session::get('logInfo'), 'account_info', [])),
+            'user_phone' => data_get(Session::get('logInfo'), 'otp_info.otp_phone', "NA"),
             'ip' => $ip,
             'url' => $url,
             'status_code' => $response['statusCode'] ?? Response::HTTP_EXPECTATION_FAILED,
