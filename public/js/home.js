@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 html: `<label for="callTypeSelect">${textCallType}:</label>
                 <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
                     <option value="" disabled selected>${textSelectCallType}</option>
-                    ${getOptionsHtml(dropdownValues, 'eWallet')}
+                    ${getOptionsHtml(dropdownValues)}
                 </select>
                 <label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
@@ -348,8 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: textSubmitComplaint,
                 html: `<label for="callTypeSelect">${textCallType}:</label>
                 <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="" disabled selected>${textSelectCallType}</option>
-                    ${getOptionsHtml(dropdownValues)}
+                    <option value="" disabled selected>${textSelectCallType}</option>${getOptionsHtml(dropdownValues, 'eWallet')}
                 </select>
                 <label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
@@ -632,8 +631,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnCreateIssue = document.getElementById('btnCreateIssue');
         btnCreateIssue.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
 
-        const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
-        btnCreateIssue.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);
 
     } // end of pathname detects and conditionally assigns event listener
     else if (currentPath === '/cards') {
@@ -779,6 +776,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
         btnEWEWalletClose.addEventListener('click', handleEWCloseWalletClick);
+
+        const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
+        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);
 
     } else if (currentPath === '/esheba') {
 
