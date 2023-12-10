@@ -60,7 +60,7 @@ class APIHandler
 
         $responseTime = microtime(true) - $startTime;
 
-        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
+        $this->storeApiLog(getIPAddress(), $url, $options, base64_encode($responseData), $responseTime, $this->getServerInfo());
 
         return $responseData;
     }
@@ -106,7 +106,7 @@ class APIHandler
 
         $responseTime = microtime(true) - $startTime;
 
-        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
+        $this->storeApiLog(getIPAddress(), $url, $options, base64_encode($responseData), $responseTime, $this->getServerInfo());
 
         return $responseData;
     }
@@ -150,7 +150,7 @@ class APIHandler
 
         $responseTime = microtime(true) - $startTime;
 
-        $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
+        $this->storeApiLog(getIPAddress(), $url, $options, base64_encode($responseData), $responseTime, $this->getServerInfo());
 
         return $responseData;
     }
