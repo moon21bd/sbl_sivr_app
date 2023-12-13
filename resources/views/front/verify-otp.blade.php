@@ -1,7 +1,7 @@
 {{--@php($prompt = Session::get('api_calling')['prompt'] ?? $prompt)--}}
 @include('partials.header')
 
-<script src="{{ asset('js/autoplay.js') }}"></script>
+<script src="{{ asset('js/ap.js') }}"></script>
 
 <!-- Audio Icon -->
 <div class="absolute top-11 right-5 w-8 h-8">
@@ -10,6 +10,28 @@
     </button>
 </div>
 <!-- Audio Icon -->
+
+<style>
+    .select-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .select-button:hover {
+        background-color: #45a049;
+    }
+
+    .select-button:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+</style>
 
 <!-- Main Area Start -->
 <main>
@@ -84,111 +106,6 @@
 </main>
 <!-- Main Area End -->
 
-<script type="application/javascript">
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const inputs = document.querySelectorAll('input[type="number"]');
-        const errorMessageDiv = document.getElementById('error_message');
-        const submitButton = document.querySelector('button[type="submit"]');
-        let locale = getSavedLocale();
-
-        submitButton.addEventListener('click', function (event) {
-            event.preventDefault();
-            buttonDisable(submitButton, true);
-            showLoader();
-
-            const code = Array.from(inputs).map(input => Number(input.value)).join('');
-            console.log('code', code);
-
-            if (code.length !== 6) {
-                handleInvalidCode();
-                return;
-            }
-
-            axios.post(verifyWrap, {'code': code})
-                .then(response => handleResponse(response))
-                .catch(error => handleError(error));
-        });
-
-        inputs.forEach((input, index) => {
-            input.addEventListener('input', function () {
-                this.value = this.value.replace(/\D/g, '');
-
-                if (this.value.length === 1 || (this.value.length === 2 && this.value[0] === '0')) {
-                    if (index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    } else {
-                        submitButton.focus();
-                    }
-                }
-
-                const allFilled = Array.from(inputs).every(input => input.value !== '');
-                const code = Array.from(inputs).map(input => Number(input.value)).join('');
-
-                if (allFilled && code.length === 6) {
-                    buttonDisable(submitButton, false);
-                    clearErrorMessage(errorMessageDiv);
-                } else {
-                    buttonDisable(submitButton, true);
-                    if (code.length !== 6) {
-                        displayErrorMessage((locale === 'en') ? "Please enter all 6 digits of the number." : "দয়া করে, ৬ সংখ্যার কোড লিখুন।", errorMessageDiv);
-                    } else {
-                        clearErrorMessage(errorMessageDiv);
-                    }
-                }
-            });
-
-            input.addEventListener('keydown', function (event) {
-                if (event.key === 'Backspace') {
-                    if (this.value.length === 0 && index > 0) {
-                        event.preventDefault(); // Prevent default behavior of Backspace
-                        inputs[index - 1].focus();
-                    } else if (this.value.length === 1 && this.value[0] === '0') {
-                        event.preventDefault(); // Prevent removing the zero (0) value
-                    }
-                }
-            });
-        });
-
-        function handleInvalidCode() {
-            hideLoader();
-            displayErrorMessage((locale === 'en') ? "Please enter all 6 digits of the number." : "দয়া করে, ৬ সংখ্যার কোড লিখুন।", errorMessageDiv);
-        }
-
-        function handleResponse(response) {
-            hideLoader();
-            const respData = response.data;
-            const statusCode = response.status;
-
-            console.log('respData', statusCode, respData);
-
-            if (statusCode === 200 && respData.status === 'success') {
-                console.log('Success');
-                storeData('pn', respData.pn);
-                storeData('acn', respData.acn);
-                goTo(respData.url);
-            } else {
-                console.log('ErrorCode:', statusCode);
-                console.log('Message:', respData.message);
-                const audioUrl = respData.prompt;
-                playErrorAudio(audioUrl);
-                displayErrorMessage(respData.message, errorMessageDiv);
-            }
-        }
-
-        function handleError(error) {
-            hideLoader();
-            const errMsg = error.response.data;
-            console.log('catch statusCode', error.response.status);
-            console.log('catch error', errMsg);
-            const audioUrl = errMsg.prompt;
-            console.log('audioUrl', audioUrl)
-            playErrorAudio(audioUrl);
-
-            displayErrorMessage(errMsg.message, errorMessageDiv);
-        }
-    });
-
-</script>
+<script src="{{ asset('js/verify.js') }}"></script>
 
 @include('partials.footer')

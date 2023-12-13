@@ -144,6 +144,96 @@ class ApiController extends ResponseController
 
     }
 
+
+    public function sendOtpWrapperNew(Request $request)
+    {
+        $request->validate([
+            'mobile_no' => $this->phoneValidationRules()
+        ], $this->phoneValidationErrorMessages());
+
+        $mobileNo = $request->input('mobile_no');
+
+        // Check OTP history for the phone number
+        $otpHistory = \DB::table('otp_history')
+            ->where('phone_number', $mobileNo)
+            ->first();
+
+        // Validate OTP sending conditions
+        if ($otpHistory && $this->isOtpSendingAllowed($otpHistory)) {
+            // Call the API to send OTP
+            $apiHandler = new APIHandler();
+            $url = config('api.base_url') . config('api.send_otp_url');
+            $strRefId = $mobileNo . randomDigits();
+            $startTime = now();
+
+            $response = $apiHandler->postCall($url, [
+                'strRefId' => $strRefId,
+                'strMobileNo' => $mobileNo,
+                'isEncPwd' => true,
+            ]);
+
+            // Capture response information
+            $responseTime = now()->diffInSeconds($startTime);
+            $otpSentSuccess = $response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK;
+
+            // Update OTP history
+            $this->updateOtpHistory($otpHistory, $otpSentSuccess, $response, $responseTime);
+
+            // Handle API response
+            if ($otpSentSuccess) {
+                // ... (existing success response code)
+            } else {
+                // Handle API error response
+                $responseOut = [
+                    'code' => Response::HTTP_EXPECTATION_FAILED,
+                    'status' => 'error',
+                    'message' => __('messages.apologies-something-went-wrong'),
+                    'prompt' => getPromptPath('common/request-failed-en')
+                ];
+                return $this->sendResponse($responseOut, $responseOut['code']);
+            }
+        } else {
+            // Handle case where OTP sending is not allowed
+            $responseOut = [
+                'code' => Response::HTTP_TOO_MANY_REQUESTS,
+                'status' => 'error',
+                'message' => 'Too many OTP requests. Please try again later.',
+                'prompt' => null
+            ];
+            return $this->sendResponse($responseOut, $responseOut['code']);
+        }
+
+        // ... (remaining existing code)
+    }
+
+    private function updateOtpHistory($otpHistory, $otpSentSuccess, $response, $responseTime)
+    {
+        // Update OTP history after successful or unsuccessful OTP sending
+        \DB::table('otp_history')
+            ->where('phone_number', $otpHistory->phone_number)
+            ->update([
+                'otp_sent_count' => $otpHistory->otp_sent_count + 1,
+                'last_sent_at' => now(),
+                'otp_sent_success' => $otpSentSuccess,
+                'response_status_code' => $response['statusCode'] ?? null,
+                'response_received_at' => now(),
+                'response_data' => json_encode($response),
+                'response_time_seconds' => $responseTime,
+            ]);
+    }
+
+
+    private function isOtpSendingAllowed($otpHistory)
+    {
+        // Implement your logic to check if OTP sending is allowed
+        $currentTime = now();
+        $lastSentAt = \Carbon::parse($otpHistory->last_sent_at);
+
+        $minutesSinceLastSent = $currentTime->diffInMinutes($lastSentAt);
+
+        return $minutesSinceLastSent >= config('otp.allowed_attempt_interval');
+    }
+
     public function verifyOtpWrapper(Request $request)
     {
         $request->validate([
@@ -183,8 +273,7 @@ class ApiController extends ResponseController
         session()->flash('message', $responseOut['message']);
 
         return $this->sendResponse($responseOut, $responseOut['code']);*/
-
-        // will be removed later
+        // WILL BE REMOVED LATER
 
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.verify_otp_url');
@@ -214,18 +303,10 @@ class ApiController extends ResponseController
                 } else { // success
 
                     // After Verification
-                    // Make the user as logged-in user, set flag to verify user.
+                    // Make the user as logged-in user, set a flag to verify the user.
                     // call api to get user account name.
 
-                    $otpInfo = Session::get('otp');
-
-                    /*$getAccountList = self::fetchSavingsDeposits($otpInfo['otp_phone']);
-                    Session::put('logInfo', [
-                        'is_logged' => base64_encode(true),
-                        'otp_info' => $otpInfo,
-                        'account_info' => $getAccountList,
-                    ]);*/
-
+                    /*$otpInfo = Session::get('otp');
                     $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
 
                     Session::put('logInfo', [
@@ -233,31 +314,7 @@ class ApiController extends ResponseController
                         'otp_info' => $otpInfo,
                         'account_info' => $getAccountList['data'],
                     ]);
-
                     Session::forget('otp');
-
-                    /*$apiCalling = Session::get('api_calling');
-                    if (isset($apiCalling['purpose'])) {
-                        $purpose = $apiCalling['purpose'];
-                        if (strtoupper($purpose) === "CARDACTIVATE") {
-                            $resp = $this->processApiCallingCardActivation($mobileNo);
-
-                            session(['api_response' => [
-                                'purpose' => $purpose,
-                                'response' => $resp
-                            ]]);
-                        }
-                    }
-
-                    $responseOut = [
-                        'code' => $statusCode,
-                        'status' => 'success',
-                        'message' => 'Success',
-                        'pn' => $mobileNo,
-                        'an' => $getAccountList[1]['AccountName'] ?? null,
-                        'acn' => $getAccountList[1]['AccountNo'] ?? null,
-                        'url' => url('/')
-                    ];*/
 
                     $responseOut = [
                         'code' => $statusCode,
@@ -272,8 +329,22 @@ class ApiController extends ResponseController
 
                     // Set the flash message
                     session()->flash('status', $responseOut['status']);
-                    session()->flash('message', $responseOut['message']);
+                    session()->flash('message', $responseOut['message']);*/
 
+                    $getAccountList = $this->fetchGetWalletDetails($mobileNo);
+                    $acLists = $getAccountList['data']['accountList'] ?? [];
+                    $acListArr = self::processMaskedAccountLists($acLists);
+
+                    // store encrypted accountList in session
+                    self::storeAcListInSession($acListArr);
+
+                    $responseOut = [
+                        'code' => $statusCode,
+                        'status' => 'success',
+                        'message' => __('messages.verification-success-after-login'),
+                        'prompt' => null,
+                        'acLists' => $acListArr,
+                    ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
             } else {
@@ -299,6 +370,107 @@ class ApiController extends ResponseController
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
 
+    }
+
+    public static function storeAcListInSession($acList)
+    {
+        $encryptedAcList = encrypt($acList);
+        Session::put('encrypted_acList', $encryptedAcList);
+    }
+
+    public static function getAcListFromSession()
+    {
+        // Retrieve and decrypt from session
+        $encryptedAcList = Session::get('encrypted_acList');
+        return decrypt($encryptedAcList);
+    }
+
+    public function saveAccountInfo(Request $request)
+    {
+        $request->validate([
+            'ac' => ['required'],
+        ]);
+
+        $selectedAccount = $request->input('ac');
+        $getSelected = self::processSelectedAccount($selectedAccount);
+        $accountAsData = self::getAccountListArray($getSelected);
+
+        if ($getSelected) {
+
+            $otpInfo = Session::get('otp');
+            Session::put('logInfo', [
+                'is_logged' => base64_encode(true),
+                'otp_info' => $otpInfo,
+                'account_info' => $accountAsData,
+            ]);
+
+            Session::forget('otp');
+
+            $mobileNo = Session::get('logInfo.otp_info.otp_phone');
+            $responseOut = [
+                'code' => Response::HTTP_OK,
+                'status' => 'success',
+                'message' => __('messages.verification-success-after-login'),
+                'prompt' => null,
+                'pn' => $mobileNo,
+                'an' => $accountAsData['accountName'] ?? null,
+                'acn' => $accountAsData['accountNo'] ?? null,
+                'url' => url('/')
+            ];
+
+            // Set the flash message
+            session()->flash('status', $responseOut['status']);
+            session()->flash('message', $responseOut['message']);
+
+            return $this->sendResponse($responseOut, $responseOut['code']);
+        }
+
+        $responseOut = [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => __('messages.apologies-something-went-wrong'),
+            'prompt' => getPromptPath('common/request-failed-en')
+        ];
+
+        return $this->sendResponse($responseOut, $responseOut['code']);
+
+    }
+
+    public static function getAccountListArray($data)
+    {
+        return [
+            'accountName' => $data['accountName'] ?? null,
+            'accountNo' => $data['accountNo'] ?? null,
+        ];
+    }
+
+    public static function processSelectedAccount($selectedAccountId)
+    {
+        $acList = data_get(decrypt(Session::get('encrypted_acList')), 'acList', []);
+
+        return collect($acList)->firstWhere('accEnc', $selectedAccountId) ?: false;
+    }
+
+    public static function processMaskedAccountLists($acLists)
+    {
+        return ['acList' => collect($acLists)->map(function ($account) {
+            return [
+                'accountNo' => self::maskAccountNumber($account['accountNo']),
+                'accountName' => trim($account['accountName']),
+                'branchCode' => openSSLEncryptDecrypt($account['branchCode']),
+                'accEnc' => openSSLEncryptDecrypt($account['accountNo']),
+            ];
+        })->values()->toArray()];
+    }
+
+    private static function maskAccountNumber($accountNo)
+    {
+        $visibleDigits = 4;
+        $maskedDigits = strlen($accountNo) - $visibleDigits - 3;
+        $maskedPart = str_repeat('*', $maskedDigits);
+        $firstDigits = substr($accountNo, 0, $visibleDigits);
+        $lastDigits = substr($accountNo, -3);
+        return "{$firstDigits}{$maskedPart}{$lastDigits}";
     }
 
     public static function fetchSavingsDeposits($phoneNumber): array
@@ -358,7 +530,6 @@ class ApiController extends ResponseController
 
             if ($data['status'] === '200' && $data['statsDetails'] === 'success' && isset($data['acList'][0])) {
                 $accountList = $data['acList'];
-
                 return [
                     'status' => 'success',
                     'message' => 'Data Received.',
@@ -376,7 +547,6 @@ class ApiController extends ResponseController
         }
 
         return [
-
             'status' => 'error',
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'message' => 'Data not found.',
@@ -388,7 +558,6 @@ class ApiController extends ResponseController
                 'walletStatus' => null,
                 'accountList' => [],
             ]
-
         ];
     }
 
@@ -5606,7 +5775,7 @@ class ApiController extends ResponseController
 
         $apiResponse = self::processToCreateTicketInCRM($appParamsData);
         $ticketId = $apiResponse['data']['ticketId'] ?? "";
-        $ticketMessage = $apiResponse['data']['ticketMessage'] ?? "";
+        // $ticketMessage = $apiResponse['data']['ticketMessage'] ?? "";
 
         return [
             'code' => $apiResponse['code'],
@@ -5683,7 +5852,6 @@ class ApiController extends ResponseController
 
         $purpose = strtoupper($request->input('purpose'));
         $phoneNumber = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
-
 
         // Prepare data for API call
         // we need to add/pass additional data to array_merge 's first param

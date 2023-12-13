@@ -221,6 +221,7 @@
                 title: message,
                 showConfirmButton: false,
                 timer: 4000, // 4 seconds
+                allowOutsideClick: false
             });
         }
     }

@@ -73,6 +73,7 @@ function showVerificationAlert() {
         showCancelButton: true,
         confirmButtonText: defaultVerificationText,
         cancelButtonText: defaultVerificationCancelText,
+        allowOutsideClick: false
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect the user to the login page
@@ -422,5 +423,6 @@ function showToast(title, message, icon, timer = 3000) {
         icon: icon,
         title: title,
         text: message,
+        allowOutsideClick: false
     });
 }

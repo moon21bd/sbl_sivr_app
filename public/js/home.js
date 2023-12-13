@@ -53,7 +53,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
+                        title: apiResponse.message,
+                        icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        allowOutsideClick: false
                     });
                     playErrorAudio(apiResponse.prompt);
                 }
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -84,7 +86,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
+                        title: apiResponse.message,
+                        icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        allowOutsideClick: false
                     });
                     playErrorAudio(apiResponse.prompt);
                 }
@@ -96,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -115,7 +119,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
+                        title: apiResponse.message,
+                        icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        allowOutsideClick: false
                     });
                     playErrorAudio(apiResponse.prompt);
                 }
@@ -127,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -146,7 +152,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        title: apiResponse.message,
+                        icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        allowOutsideClick: false
                     });
                     playErrorAudio(apiResponse.prompt);
                 }
@@ -158,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -302,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     title: apiResponse.message,
                     icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false,
                     text: "IssueId: " + issue
                 });
                 playErrorAudio(apiResponse.prompt);
@@ -313,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error in btnCreateIssue click:', error);
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -458,7 +467,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     title: apiResponse.message,
                     icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    text: "IssueId: " + issue
+                    text: "IssueId: " + issue,
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
             } else if (dismiss === Swal.DismissReason.cancel) {
@@ -469,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error in btnCreateIssue click:', error);
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -891,7 +901,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 hideLoader();
                 Swal.fire({
-                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -903,7 +915,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -960,7 +972,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 hideLoader();
 
                 Swal.fire({
-                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -972,7 +986,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -1027,7 +1041,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 hideLoader();
                 Swal.fire({
-                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -1039,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -1059,7 +1075,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 hideLoader();
                 Swal.fire({
-                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -1071,7 +1089,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -1092,7 +1110,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 hideLoader();
                 Swal.fire({
-                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -1104,7 +1124,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }
@@ -1160,7 +1180,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 hideLoader();
 
                 Swal.fire({
-                    title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    title: apiResponse.message,
+                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -1172,7 +1194,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error'
+                    title: error.message, icon: 'error', allowOutsideClick: false
                 });
                 playErrorAudio(error.prompt);
             }

@@ -22,8 +22,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         audioElement.addEventListener('pause', () => {
             console.log('audio paused 2.')
-            toggleButton.classList.remove('pause');
-            toggleButton.classList.add('play');
+            // toggleButton.classList.remove('pause');
+            //toggleButton.classList.add('play');
         });
     } else {
         console.error('Audio element not found.');

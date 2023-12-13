@@ -1,7 +1,7 @@
 @php($prompt = Session::get('api_calling')['prompt'] ?? $prompt)
 @include('partials.header')
 
-<script src="{{ asset('js/autoplay.js') }}"></script>
+<script src="{{ asset('js/ap.js') }}"></script>
 
 <!-- Audio Icon -->
 <div class="absolute top-11 right-5 w-8 h-8">
@@ -68,6 +68,6 @@
 </main>
 <!-- Main Area End -->
 
-<script src="{{ asset('js/send-otp.js') }}"></script>
+<script src="{{ asset('js/send.js') }}"></script>
 
 @include('partials.footer')

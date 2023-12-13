@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Crypt;
 Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('home');
 Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
 Route::get('/check-login', [\App\Http\Controllers\AuthController::class, 'checkLoginStatus']);
+Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
 
 Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
@@ -54,6 +55,8 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 
     Route::post('/otp-wrap', [\App\Http\Controllers\ApiController::class, 'sendOtpWrapper'])->name('sendOtpWrapper');
     Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');
+
+
     Route::post('/upload-photo', [\App\Http\Controllers\MainController::class, 'uploadUserPhoto'])->name('verifyOtpWrapper');
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
