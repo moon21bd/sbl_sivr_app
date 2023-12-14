@@ -766,30 +766,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
     } else if (currentPath === '/ewallet') {
 
+        const btnEWApproveOrReject = document.getElementById('btnEWApproveOrReject');
+        btnEWApproveOrReject.addEventListener('click', () => {
+            handleAPIRequestWithAccountVerification('EW-APPROVE-OR-REJECT', 'Approve wallet request received.', 'btnEWApproveOrReject');
+        });
+
         const btnEWChangeOrResetEWalletPIN = document.getElementById('btnEWChangeOrResetEWalletPIN');
-        btnEWChangeOrResetEWalletPIN.addEventListener('click', handleEWChangeOrResetEWalletPINClick);
+        btnEWChangeOrResetEWalletPIN.addEventListener('click', () => {
+            handleAPIRequestWithAccountVerification('EW-CHANGE-OR-RESET-PIN', 'PIN Change or Reset request received.', 'btnEWChangeOrResetEWalletPIN');
+        });
 
         const btnEWDeviceBind = document.getElementById('btnEWDeviceBind');
-        btnEWDeviceBind.addEventListener('click', handleEWDeviceBindClick);
+        btnEWDeviceBind.addEventListener('click', () => {
+            handleAPIRequestWithAccountVerification('EW-DEVICE-BIND', 'Device Bind request received.', 'btnEWDeviceBind');
+        });
 
         const btnEWLockOrBlock = document.getElementById('btnEWLockOrBlock');
-        btnEWLockOrBlock.addEventListener('click', handleEWLockOrBlockClick);
+        btnEWLockOrBlock.addEventListener('click', () => {
+            handleAPIRequestWithAccountVerification('EW-LOCK-BLOCK', 'Wallet Lock Or Block request received.', 'btnEWLockOrBlock');
+        });
+
+        const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
+        btnEWEWalletClose.addEventListener('click', () => {
+            handleAPIRequestWithAccountVerification('EW-CLOSE-WALLET', 'Wallet closing request received.', 'btnEWEWalletClose');
+        });
 
         const btnEWUnlockOrActive = document.getElementById('btnEWUnlockOrActive');
-        btnEWUnlockOrActive.addEventListener('click', handleEWUnlockOrActiveClick);
+        btnEWUnlockOrActive.addEventListener('click', () => {
+            handleAPIRequestWithAccountVerification('EW-UNLOCK-ACTIVE', 'Wallet Lock or Active request received.', 'btnEWUnlockOrActive');
+        });
 
         addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        const btnEWApproveOrReject = document.getElementById('btnEWApproveOrReject');
-        btnEWApproveOrReject.addEventListener('click', handleEWApproveOrRejectClick);
+        const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
+        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);
+
+        /*const btnEWChangeOrResetEWalletPIN = document.getElementById('btnEWChangeOrResetEWalletPIN');
+       btnEWChangeOrResetEWalletPIN.addEventListener('click', handleEWChangeOrResetEWalletPINClick);*/
+
+        /*const btnEWDeviceBind = document.getElementById('btnEWDeviceBind');
+        btnEWDeviceBind.addEventListener('click', handleEWDeviceBindClick);*/
+
+        /*const btnEWLockOrBlock = document.getElementById('btnEWLockOrBlock');
+        btnEWLockOrBlock.addEventListener('click', handleEWLockOrBlockClick);*/
+
+        /*const btnEWUnlockOrActive = document.getElementById('btnEWUnlockOrActive');
+        btnEWUnlockOrActive.addEventListener('click', handleEWUnlockOrActiveClick);*/
+
+        /*const btnEWApproveOrReject = document.getElementById('btnEWApproveOrReject');
+        btnEWApproveOrReject.addEventListener('click', handleEWApproveOrRejectClick);*/
 
         /*addClickEventWithAsyncHandler('btnEWEWalletClose', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
 
-        const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
-        btnEWEWalletClose.addEventListener('click', handleEWCloseWalletClick);
-
-        const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
-        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);
+        /*const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
+        btnEWEWalletClose.addEventListener('click', handleEWCloseWalletClick);*/
 
     } else if (currentPath === '/esheba') {
 
@@ -894,9 +924,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const apiResponse = await callDynamicAPI({
                     'purpose': 'EW-CHANGE-OR-RESET-PIN',
+                    'reason': 'PIN Change or Reset request received.',
                     'page': 'ewallet',
                     'button': 'btnEWChangeOrResetEWalletPIN',
-                    'reason': 'PIN Change or Reset request received.'
                 });
 
                 hideLoader();
@@ -957,7 +987,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }*/
 
-    async function handleEWApproveOrRejectClick() {
+    async function handleEWApproveOrRejectClick_OLD() {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
@@ -965,9 +995,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 showLoader();
                 const apiResponse = await callDynamicAPI({
                     'purpose': 'EW-APPROVE-OR-REJECT',
+                    'reason': 'Approve wallet request received.',
                     'page': 'ewallet',
                     'button': 'btnEWApproveOrReject',
-                    'reason': 'Approve wallet request received.'
                 });
                 hideLoader();
 
@@ -992,6 +1022,182 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
+    async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
+        try {
+            let locale = getSavedLocale();
+
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                const {value: nidAndDob} = await Swal.fire({
+                    title: (locale === 'en') ? "Enter NID and Date of Birth." : "NID এবং জন্ম তারিখ লিখুন ।",
+                    html: '<input id="swal-input1" class="swal2-input" placeholder="National ID">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
+                    showCancelButton: true,
+                    confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
+                    cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+                    focusConfirm: false,
+                    allowOutsideClick: false,
+                    preConfirm: () => {
+                        const nid = Swal.getPopup().querySelector('#swal-input1').value;
+                        const dob = Swal.getPopup().querySelector('#swal-input2').value;
+                        if (!nid || !/^\d{10,17}$/.test(nid)) {
+                            Swal.showValidationMessage((locale === 'en') ? "NID is required and must be a number with 10 to 17 digits." : "NID আবশ্যক এবং ১০ থেকে ১৭ সংখ্যা বিশিষ্ট হতে হবে।");
+                        }
+                        if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+                            Swal.showValidationMessage((locale === 'en') ? "Invalid date format." : "তারিখ ভুল হয়েছে ।");
+                        }
+                        return {nid, dob};
+                    }
+                });
+
+                if (!nidAndDob) {
+                    return;
+                }
+
+                const {nid, dob} = nidAndDob;
+                if (nid && dob) {
+                    showLoader();
+
+                    const verifyResp = await callDynamicAPI({
+                        'purpose': 'USER-INFO-VERIFY',
+                        'page': pageName,
+                        'button': btnName,
+                        'nid': nid,
+                        'dob': dob
+                    });
+
+                    hideLoader();
+                    // console.log('verifyResp', verifyResp);
+                    if (verifyResp.status === 'success') {
+                        const apiResponse = await callDynamicAPI({
+                            'purpose': apiPurpose,
+                            'page': 'ewallet',
+                            'button': 'btnEWApproveOrReject',
+                            'reason': apiReason
+                        });
+
+                        hideLoader();
+
+                        Swal.fire({
+                            title: apiResponse.message,
+                            icon: apiResponse.status === 'success' ? 'success' : 'error',
+                            allowOutsideClick: false
+                        });
+                        playErrorAudio(apiResponse.prompt);
+                    } else {
+                        // Handle unsuccessful verification
+                        Swal.fire({
+                            title: verifyResp.message, icon: 'error', allowOutsideClick: false
+                        });
+                        playErrorAudio(verifyResp.prompt);
+                    }
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            hideLoader();
+            // console.error('Error:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error', allowOutsideClick: false
+                });
+                // playErrorAudio(error.prompt);
+            }
+        }
+    }
+
+    /*const someButton = document.getElementById('someButton');
+    someButton.addEventListener('click', () => {
+        handleAPIRequest('SOME-PURPOSE', 'Some reason for the request');
+    });*/
+
+    async function handleEWApproveOrRejectClick() {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                // Prompt for NID and date of birth
+                const {value: nidAndDob} = await Swal.fire({
+                    title: 'Enter NID and Date of Birth',
+                    html: '<input id="swal-input1" class="swal2-input" placeholder="National ID">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancel',
+                    focusConfirm: false,
+                    allowOutsideClick: false,
+                    preConfirm: () => {
+                        const nid = Swal.getPopup().querySelector('#swal-input1').value;
+                        const dob = Swal.getPopup().querySelector('#swal-input2').value;
+                        if (!nid || !/^\d{10,17}$/.test(nid)) {
+                            Swal.showValidationMessage('National ID is required and must be a number with 10 to 17 digits');
+                        }
+                        if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+                            Swal.showValidationMessage('Invalid date format. Please use YYYY-MM-DD');
+                        }
+                        return {nid, dob};
+                    }
+                });
+
+                if (!nidAndDob) {
+                    return;
+                }
+
+                const {nid, dob} = nidAndDob;
+                if (nid && dob) {
+                    showLoader();
+                    let reqObj = {
+                        'purpose': 'USER-INFO-VERIFY',
+                        'page': 'ewallet',
+                        'button': 'btnEWApproveOrReject',
+                        'nid': nid,
+                        'dob': dob
+                    }
+
+                    const verificationResponse = await callDynamicAPI(reqObj);
+
+                    hideLoader();
+                    console.log('verificationResponse', verificationResponse);
+
+                    // Proceed with API call if verification is successful
+                    if (verificationResponse.status === 'success') {
+                        const apiResponse = await callDynamicAPI({
+                            'purpose': 'EW-APPROVE-OR-REJECT',
+                            'page': 'ewallet',
+                            'button': 'btnEWApproveOrReject',
+                            'reason': 'Approve wallet request received.'
+                        });
+                        hideLoader();
+
+                        Swal.fire({
+                            title: apiResponse.message,
+                            icon: apiResponse.status === 'success' ? 'success' : 'error',
+                            allowOutsideClick: false
+                        });
+                        playErrorAudio(apiResponse.prompt);
+                    } else {
+                        // Handle unsuccessful verification
+                        Swal.fire({
+                            title: verificationResponse.message, icon: 'error', allowOutsideClick: false
+                        });
+                        playErrorAudio(verificationResponse.prompt);
+                    }
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            hideLoader();
+            // console.error('Error in btnEWApproveOrReject click:', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error', allowOutsideClick: false
+                });
+                // playErrorAudio(error.prompt);
+            }
+        }
+    }
+
 
     /*async function handleEWDeviceBindClick() {
         try {
@@ -1035,9 +1241,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 showLoader();
                 const apiResponse = await callDynamicAPI({
                     'purpose': 'EW-DEVICE-BIND',
+                    'reason': 'Device Bind request received.',
                     'page': 'ewallet',
                     'button': 'btnEWDeviceBind',
-                    'reason': 'Device Bind request received.'
                 });
                 hideLoader();
                 Swal.fire({
@@ -1069,9 +1275,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 showLoader();
                 const apiResponse = await callDynamicAPI({
                     'purpose': 'EW-CLOSE-WALLET',
+                    'reason': 'Wallet closing request received.',
                     'page': 'ewallet',
                     'button': 'btnEWEWalletClose',
-                    'reason': 'Wallet closing request received.'
                 });
                 hideLoader();
                 Swal.fire({
@@ -1104,9 +1310,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 showLoader();
                 const apiResponse = await callDynamicAPI({
                     'purpose': 'EW-LOCK-BLOCK',
+                    'reason': 'Wallet Lock Or Block request received.',
                     'page': 'ewallet',
                     'button': 'btnEWLockOrBlock',
-                    'reason': 'Wallet Lock Or Block request received.'
                 });
                 hideLoader();
                 Swal.fire({
@@ -1173,9 +1379,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 showLoader();
                 const apiResponse = await callDynamicAPI({
                     'purpose': 'EW-UNLOCK-ACTIVE',
+                    'reason': 'Wallet Lock or Active request received.',
                     'page': 'ewallet',
                     'button': 'btnEWUnlockOrActive',
-                    'reason': 'Wallet Lock or Active request received.'
                 });
                 hideLoader();
 

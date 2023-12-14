@@ -539,7 +539,10 @@ class ApiController extends ResponseController
                         'accountName' => $accountList[0]['accountName'] ?? null,
                         'accountNo' => $accountList[0]['accountNo'] ?? null,
                         'balanceAmount' => $data['balanceAmount'] ?? 0,
-                        'walletStatus' => $data['walletStatus'] ?? null,
+                        // 'walletStatus' => $data['walletStatus'] ?? null,
+                        'PID' => $data['PID'] ?? null,
+                        'dateOfBirth' => $data['dateOfBirth'] ?? null,
+                        'email' => $data['email'] ?? null,
                         'accountList' => $accountList,
                     ]
                 ];
@@ -1253,6 +1256,41 @@ class ApiController extends ResponseController
             'message' => $failedText,
             'prompt' => getPromptPath($failedPrompt)
         ];
+    }
+
+    public static function processApiCallingUserInfoVerify($data)
+    {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $successText = __('messages.account-verify-by-nid-dob-success');
+        $failedText = __('messages.account-verify-by-nid-dob-failed');
+
+        $phoneNumber = $data['mobile_no'];
+        $nid = $data['nid'];
+        $dob = $data['dob'];
+
+        $response = self::fetchGetWalletDetails($phoneNumber);
+
+        if ($response['status'] === 'success' && $response['code'] === Response::HTTP_OK) { // success
+            if ($response['data']['PID'] === $nid && $dob === date('Y-m-d', strtotime($response['data']['dateOfBirth']))) {
+
+                return [
+                    'code' => Response::HTTP_OK,
+                    'status' => 'success',
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt),
+                ];
+            }
+        }
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];
+
     }
 
     public static function processApiCallingEWDeviceBind($data)
@@ -5872,7 +5910,7 @@ class ApiController extends ResponseController
         }
 
         // Additional handling for CARDACTIVATE purpose
-        if ($purpose === "CARDACTIVATE") {
+        /*if ($purpose === "CARDACTIVATE") {
             $responseOut = ($apiResponse['code'] === Response::HTTP_OK && $apiResponse['status'] === 'success')
                 ? [
                     'code' => $apiResponse['code'],
@@ -5886,7 +5924,7 @@ class ApiController extends ResponseController
                     'message' => 'Your account activation request has failed.',
                     'prompt' => $apiResponse['prompt']
                 ];
-        }
+        }*/
 
 
         return (new ApiController)->sendResponse($responseOut, $responseOut['code']);
@@ -5958,6 +5996,8 @@ class ApiController extends ResponseController
                 return self::processGetSubSubCategoryDropDownValues($data);
             case 'CREATEISSUE':
                 return self::processApiCallingCreateIssue($data);
+            case 'USER-INFO-VERIFY':
+                return self::processApiCallingUserInfoVerify($data);
             default:
                 // Code to be executed if $purpose is different from all cases;
                 return false;

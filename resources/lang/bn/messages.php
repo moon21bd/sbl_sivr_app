@@ -144,5 +144,6 @@ return [
     'verification-success-after-login' => 'যাচাইকরণ সফল হয়েছে। ধন্যবাদ!',
     'entered-phone-number-invalid' => 'আপনার দেয়া ফোন নাম্বারটি সঠিক নয়।',
     'apologies-something-went-wrong' => 'দুঃখিত, কোন সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন।',
-
+    'account-verify-by-nid-dob-success' => 'অ্যাকাউন্টের তথ্য যাচাই সফল হয়েছে ।',
+    'account-verify-by-nid-dob-failed' => 'অ্যাকাউন্টের তথ্য যাচাই সফল হয়নি ।',
 ];

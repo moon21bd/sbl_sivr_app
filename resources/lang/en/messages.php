@@ -142,4 +142,6 @@ return [
     'verification-success-after-login' => 'Verification successful. Thanks!',
     'entered-phone-number-invalid' => 'The entered phone number is invalid.',
     'apologies-something-went-wrong' => 'Apologies, something went wrong. Please try again later.',
+    'account-verify-by-nid-dob-success' => 'Account information verification successful.',
+    'account-verify-by-nid-dob-failed' => 'Account information verification failed.',
 ];
