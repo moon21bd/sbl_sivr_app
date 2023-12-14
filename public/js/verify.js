@@ -49,20 +49,20 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="account-option">
                 <p>${account.accountName}</p>
                 <p>${account.accountNo}</p>
-                <button class="select-button" data-account-id="${account.accEnc}">Select</button>
-            </div>`
-        ).join('');
+                <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
+            </div>`).join('');
 
         Swal.fire({
-            title: 'Select an account',
+            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
             html: accountOptions,
             showCancelButton: true,
-            cancelButtonText: 'Cancel',
+            confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
+            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
             showConfirmButton: false,
             allowOutsideClick: false
         });
 
-        document.querySelectorAll('.select-button').forEach(button => {
+        document.querySelectorAll('.ac-select-button').forEach(button => {
             button.addEventListener('click', handleSelectButtonClick);
         });
     }
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return `<div class="account-option">
                     <p>${account.accountName}</p>
                     <p>${account.accountNo}</p>
-                    <button class="select-button" data-account-id="${account.accEnc}">Select</button>
+                    <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
                 </div>`;
         }).join('');
 
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Attach event listeners to the "Select" buttons
-        document.querySelectorAll('.select-button').forEach(button => {
+        document.querySelectorAll('.ac-select-button').forEach(button => {
             button.addEventListener('click', function () {
                 const selectedAccountId = this.getAttribute('data-account-id');
                 console.log('selectedAccountId', selectedAccountId);

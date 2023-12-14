@@ -144,4 +144,6 @@ return [
     'apologies-something-went-wrong' => 'Apologies, something went wrong. Please try again later.',
     'account-verify-by-nid-dob-success' => 'Account information verification successful.',
     'account-verify-by-nid-dob-failed' => 'Account information verification failed.',
+    'account-switch' => 'Account Switch',
+    'account-switching-success' => 'Account switching successful.',
 ];

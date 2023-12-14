@@ -34,7 +34,9 @@
             defaultNIDScriptTextEn = "{{ config('voices.defaultNIDScript.text.en') }}",
             defaultNIDScriptTextBn = "{{ config('voices.defaultNIDScript.text.bn') }}",
             defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}",
-            defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}";
+            defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}",
+            selectAnAccountEn = "Select an account",
+            selectAnAccountBn = "অ্যাকাউন্ট নির্বাচন করুন";
     </script>
 
     <style>
@@ -126,6 +128,24 @@
             }
         }
 
+        .ac-select-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .ac-select-button:hover {
+            background-color: #45a049;
+        }
+
+        .ac-select-button:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 

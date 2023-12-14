@@ -11,27 +11,6 @@
 </div>
 <!-- Audio Icon -->
 
-<style>
-    .select-button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .select-button:hover {
-        background-color: #45a049;
-    }
-
-    .select-button:focus {
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    }
-
-</style>
 
 <!-- Main Area Start -->
 <main>

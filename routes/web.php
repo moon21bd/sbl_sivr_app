@@ -20,6 +20,7 @@ Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('ho
 Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
 Route::get('/check-login', [\App\Http\Controllers\AuthController::class, 'checkLoginStatus']);
 Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
+Route::get('/getac', [\App\Http\Controllers\ApiController::class, 'getSavedAccountInfo']);
 
 Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');

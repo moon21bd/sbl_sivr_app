@@ -335,6 +335,30 @@ class ApiController extends ResponseController
                     $acLists = $getAccountList['data']['accountList'] ?? [];
                     $acListArr = self::processMaskedAccountLists($acLists);
 
+                    // will be removed later.
+                    $acNoTest = "5107801027727";
+                    $testNewArray = [
+                        "accountNo" => self::maskAccountNumber($acNoTest),
+                        "accountName" => "Raqibul Hasan Moon",
+                        "branchCode" => "ABC123",
+                        "accEnc" => openSSLEncryptDecrypt($acNoTest)
+                    ];
+
+                    $acListArr['acList'][] = $testNewArray;
+                    // will be removed later.
+                    /*
+                     * array:1 [ // app/Http/Controllers/ApiController.php:338
+  "acList" => array:1 [
+    0 => array:4 [
+      "accountNo" => "5107******828"
+      "accountName" => "MD RAQIBUL HASAN"
+      "branchCode" => "ZgR7u65sZWcpywR0Cvq1BThpVi84UWUzbTJ1RWNpWTUzeVFCcUhXOGpZMDc2UG5IZTlNV29nN1l1cFE9"
+      "accEnc" => "DNzEPECCXLac4h+MR7OPAWkxQ1F4RldkWGhkU2RsMkF4aXJyaWc9PQ=="
+    ]
+  ]
+]
+                     */
+
                     // store encrypted accountList in session
                     self::storeAcListInSession($acListArr);
 
@@ -378,6 +402,22 @@ class ApiController extends ResponseController
         Session::put('encrypted_acList', $encryptedAcList);
     }
 
+    public function getSavedAccountInfo()
+    {
+        $acListArr = [];
+        $acList = data_get(decrypt(Session::get('encrypted_acList')), 'acList', []);
+
+        $acListArr['acList'] = $acList;
+        $responseOut = [
+            'code' => 200,
+            'status' => 'success',
+            'message' => __('messages.verification-success-after-login'),
+            'prompt' => null,
+            'acLists' => $acListArr,
+        ];
+        return $this->sendResponse($responseOut, $responseOut['code']);
+    }
+
     public static function getAcListFromSession()
     {
         // Retrieve and decrypt from session
@@ -389,6 +429,7 @@ class ApiController extends ResponseController
     {
         $request->validate([
             'ac' => ['required'],
+            'purpose' => ['nullable'],
         ]);
 
         $selectedAccount = $request->input('ac');
@@ -410,7 +451,7 @@ class ApiController extends ResponseController
             $responseOut = [
                 'code' => Response::HTTP_OK,
                 'status' => 'success',
-                'message' => __('messages.verification-success-after-login'),
+                'message' => ($request->input('purpose') === 'ACCOUNT-SWITCH') ? __('messages.account-switching-success') : __('messages.verification-success-after-login'),
                 'prompt' => null,
                 'pn' => $mobileNo,
                 'an' => $accountAsData['accountName'] ?? null,
@@ -418,7 +459,6 @@ class ApiController extends ResponseController
                 'url' => url('/')
             ];
 
-            // Set the flash message
             session()->flash('status', $responseOut['status']);
             session()->flash('message', $responseOut['message']);
 

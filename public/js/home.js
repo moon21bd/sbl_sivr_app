@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    let locale = getSavedLocale();
 
     const currentPath = window.location.pathname;
 
@@ -199,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: textSubmitComplaint,
                 html: `<label for="callTypeSelect">${textCallType}:</label>
                 <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="" disabled selected>${textSelectCallType}</option>
+                    <option value="4" disabled selected>${textSelectCallType}</option>
                     ${getOptionsHtml(dropdownValues)}
                 </select>
                 <label for="callCategorySelect">${textCallCategory}:</label>
@@ -915,6 +916,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    const btnAccountSwitch = document.getElementById('btnAccountSwitch');
+    btnAccountSwitch.addEventListener('click', handleAccountSwitchClick);
+
+    async function handleAccountSwitchClick() {
+        try {
+            const response = await axios.get('/getac');
+            const accounts = response.data;
+            console.log('accounts', accounts.acLists)
+            showAccountSelectionPopupCommon(accounts.acLists.acList);
+        } catch (error) {
+            console.error('Error fetching accounts:', error);
+        }
+    }
+
+
+    function showAccountSelectionPopupCommon(accounts) {
+        // stopAllAudio();
+        const accountOptions = accounts.map(account => `
+            <div class="account-option">
+                <p>${account.accountName}</p>
+                <p>${account.accountNo}</p>
+                <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
+            </div>`
+        ).join('');
+
+        Swal.fire({
+            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            html: accountOptions,
+            showCancelButton: true,
+            cancelButtonText: 'Cancel',
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+
+        document.querySelectorAll('.ac-select-button').forEach(button => {
+            button.addEventListener('click', handleSelectCommonButtonClick);
+        });
+    }
+
+    function handleSelectCommonButtonClick() {
+        const selectedAccountId = this.getAttribute('data-account-id');
+        console.log('selectedAccountId', selectedAccountId);
+
+        axios.post('/save', {"ac": selectedAccountId, "purpose": "ACCOUNT-SWITCH"})
+            .then(response => handleSaveResponseCommon(response))
+            .catch(error => console.error('Error saving selected account:', error));
+    }
+
+    function handleSaveResponseCommon(response) {
+        const {data: respData, status: statusCode} = response;
+
+        if (statusCode === 200 && respData.status === 'success') {
+            storeData('pn', respData.pn);
+            storeData('acn', respData.acn);
+            goTo(respData.url);
+        } else {
+            const audioUrl = respData.prompt;
+            playErrorAudio(audioUrl);
+            displayErrorMessage(respData.message, errorMessageDiv);
+        }
+    }
+
+
     async function handleEWChangeOrResetEWalletPINClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -1033,7 +1097,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: (locale === 'en') ? "Enter NID and Date of Birth." : "NID এবং জন্ম তারিখ লিখুন ।",
                     html: '<input id="swal-input1" class="swal2-input" placeholder="National ID">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
                     showCancelButton: true,
-                    confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
+                    confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                     cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                     focusConfirm: false,
                     allowOutsideClick: false,
@@ -1072,7 +1136,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const apiResponse = await callDynamicAPI({
                             'purpose': apiPurpose,
                             'page': 'ewallet',
-                            'button': 'btnEWApproveOrReject',
+                            'button': btnName,
                             'reason': apiReason
                         });
 

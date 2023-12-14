@@ -146,4 +146,6 @@ return [
     'apologies-something-went-wrong' => 'দুঃখিত, কোন সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন।',
     'account-verify-by-nid-dob-success' => 'অ্যাকাউন্টের তথ্য যাচাই সফল হয়েছে ।',
     'account-verify-by-nid-dob-failed' => 'অ্যাকাউন্টের তথ্য যাচাই সফল হয়নি ।',
+    'account-switch' => 'অ্যাকাউন্ট পরিবর্তন',
+    'account-switching-success' => 'অ্যাকাউন্ট পাল্টানো সফল হয়েছে৷',
 ];

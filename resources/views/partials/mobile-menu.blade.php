@@ -16,7 +16,7 @@
                 <div class="flex flex-col py-4">
                     {{--<a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">Profile</a>
                     <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">Settings</a>--}}
-                    <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="#">{{ __('messages.support') }}</a>
+                    <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="javascript:void(0)" id="btnAccountSwitch">{{ __('messages.account-switch') }}</a>
                     <a class="text-red-600 text-lg font-bold py-1 my-1" href="javascript:void(0)"
                        id="btnLogout">{{ __('messages.log-out') }}</a>
                 </div>
