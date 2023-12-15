@@ -2053,9 +2053,9 @@ class ApiController extends ResponseController
             if ($response['success']) {
                 $callCategories = $response['data'] ?? [];
                 foreach ($callCategories as $category) {
-                    // if ($category['call_type_id'] === $selectedValues) {
-                    $options[$category['id']] = $category['name'];
-                    // }
+                    if ($category['call_type_id'] === $selectedValues) {
+                        $options[$category['id']] = $category['name'];
+                    }
                 }
             }
 
@@ -2065,7 +2065,7 @@ class ApiController extends ResponseController
 
     }
 
-    public static function dummyResponseForGetDropDownForCallCategoryApi()
+    /*public static function dummyResponseForGetDropDownForCallCategoryApi()
     {
         $dummyResponse = '{
     "success": true,
@@ -2484,7 +2484,7 @@ class ApiController extends ResponseController
 
         return $options;
 
-    }
+    }*/
 
     public static function getDropDownForCallTypeApi()
     {
