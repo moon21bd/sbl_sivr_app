@@ -14,6 +14,7 @@ return [
     'account-loans' => 'Account & Loans',
     'fixed-deposit' => 'Fixed Deposit',
     'loans-advances' => 'Loans & Advances',
+    'ib-loans-advances' => 'Loans & Advances',
     'agent-banking' => 'Agent Banking',
     'credit-card' => 'Credit Card',
     'debit-card' => 'Debit Card',
@@ -146,4 +147,5 @@ return [
     'account-verify-by-nid-dob-failed' => 'Account information verification failed.',
     'account-switch' => 'Account Switch',
     'account-switching-success' => 'Account switching successful.',
+
 ];

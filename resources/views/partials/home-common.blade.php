@@ -41,13 +41,20 @@
 
     <div class="container px-4 mx-auto pt-24 pb-24">
 
+        <!-- Breadcrumb Section -->
+
+        @if (!empty($breadcrumbs))
+            @include('partials.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+        @endif
+
+        <!-- End Breadcrumb Section -->
+
         <div class="px-3 py-5 flex flex-row gap-3 items-center bg-white rounded-md mb-4 z-10">
             <div class="p-2 rounded-md bg-[color:var(--brand-color-blue)] z-10" id="userPhotoDiv">
                 <label for="photoInput" style="cursor: pointer;">
                     <img src="{{ $photo }}" alt="" id="userPhotoIcon" width="30" height="30">
                 </label>
 
-                <!-- The container to hold the file input -->
                 <div id="fileInputContainer" style="display: none;"></div>
             </div>
 

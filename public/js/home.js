@@ -334,162 +334,162 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function showCascadingDropdownsForCreatingAnIssueForEWallet() {
-        let locale = getSavedLocale();
-        try {
-            showLoader();
-            const dropdownValuesResponse = await callDynamicAPI({
-                'purpose': 'GET-CALL-TYPES-DROPDOWN-VALUES', 'page': 'home', 'button': 'createIssue',
-            });
+    /*  async function showCascadingDropdownsForCreatingAnIssueForEWallet() {
+          let locale = getSavedLocale();
+          try {
+              showLoader();
+              const dropdownValuesResponse = await callDynamicAPI({
+                  'purpose': 'GET-CALL-TYPES-DROPDOWN-VALUES', 'page': 'home', 'button': 'createIssue',
+              });
 
-            const dropdownValues = dropdownValuesResponse.data;
-            hideLoader();
+              const dropdownValues = dropdownValuesResponse.data;
+              hideLoader();
 
-            let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
-            let textCallCategory = (locale === 'en') ? "Call Category" : "কল ক্যাটাগরি";
-            let textCallSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব ক্যাটাগরি";
-            let textCallSubSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব সাব ক্যাটাগরি";
-            let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "সাব ক্যাটাগরি নির্বাচন করুন";
-            let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
-            let textSelectCallCategory = (locale === 'en') ? "Select Category" : "ক্যাটাগরি নির্বাচন করুন";
-            let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Category" : "সাব সাব ক্যাটাগরি নির্বাচন করুন";
-            let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
-            let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
+              let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
+              let textCallCategory = (locale === 'en') ? "Call Category" : "কল ক্যাটাগরি";
+              let textCallSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব ক্যাটাগরি";
+              let textCallSubSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব সাব ক্যাটাগরি";
+              let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "সাব ক্যাটাগরি নির্বাচন করুন";
+              let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
+              let textSelectCallCategory = (locale === 'en') ? "Select Category" : "ক্যাটাগরি নির্বাচন করুন";
+              let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Category" : "সাব সাব ক্যাটাগরি নির্বাচন করুন";
+              let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
+              let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
 
-            const swalOptions = {
-                title: textSubmitComplaint,
-                html: `<label for="callTypeSelect">${textCallType}:</label>
-                <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="" disabled selected>${textSelectCallType}</option>${getOptionsHtml(dropdownValues)}
-                </select>
-                <label for="callCategorySelect">${textCallCategory}:</label>
-                <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
-                    <option value="" disabled selected>${textSelectCallCategory}</option>
-                </select>
-                <label for="callSubCategorySelect">${textCallSubCategory}:</label>
-                <select id="callSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
-                    <option value="" disabled selected>${textSelectSubCallCategory}</option>
-                </select>
-                <label for="callSubSubCategorySelect">${textCallSubSubCategory}:</label>
-                <select id="callSubSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectSubSubCallCategory}" required>
-                    <option value="" disabled selected>${textSelectSubSubCallCategory}</option>
-                </select>
+              const swalOptions = {
+                  title: textSubmitComplaint,
+                  html: `<label for="callTypeSelect">${textCallType}:</label>
+                  <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
+                      <option value="" disabled selected>${textSelectCallType}</option>${getOptionsHtml(dropdownValues)}
+                  </select>
+                  <label for="callCategorySelect">${textCallCategory}:</label>
+                  <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
+                      <option value="" disabled selected>${textSelectCallCategory}</option>
+                  </select>
+                  <label for="callSubCategorySelect">${textCallSubCategory}:</label>
+                  <select id="callSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
+                      <option value="" disabled selected>${textSelectSubCallCategory}</option>
+                  </select>
+                  <label for="callSubSubCategorySelect">${textCallSubSubCategory}:</label>
+                  <select id="callSubSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectSubSubCallCategory}" required>
+                      <option value="" disabled selected>${textSelectSubSubCallCategory}</option>
+                  </select>
 
-                <label for="reasonInput">${textReason}:</label>
-                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
-                focusConfirm: false,
-                preConfirm: () => {
-                    const callTypeOpts = document.getElementById('callTypeSelect').value;
-                    const callCategoryOpts = document.getElementById('callCategorySelect').value;
-                    const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
-                    const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
-                    const reason = document.getElementById('reasonInput').value;
+                  <label for="reasonInput">${textReason}:</label>
+                  <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
+                  focusConfirm: false,
+                  preConfirm: () => {
+                      const callTypeOpts = document.getElementById('callTypeSelect').value;
+                      const callCategoryOpts = document.getElementById('callCategorySelect').value;
+                      const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
+                      const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
+                      const reason = document.getElementById('reasonInput').value;
 
-                    if (!callTypeOpts || !callCategoryOpts || !callSubCategoryOpts || !callSubSubCategoryOpts || !reason) {
-                        Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
-                    }
+                      if (!callTypeOpts || !callCategoryOpts || !callSubCategoryOpts || !callSubSubCategoryOpts || !reason) {
+                          Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
+                      }
 
-                    // console.log('SUBMIT', callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason);
+                      // console.log('SUBMIT', callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason);
 
-                    return {
-                        callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
-                    };
-                },
-                showCancelButton: true,
-                confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
-                cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-                didOpen: () => {
-                    const callTypeSelect = document.getElementById('callTypeSelect');
-                    const callCategorySelect = document.getElementById('callCategorySelect');
-                    const callSubCategorySelect = document.getElementById('callSubCategorySelect');
-                    const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
+                      return {
+                          callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                      };
+                  },
+                  showCancelButton: true,
+                  confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
+                  cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+                  didOpen: () => {
+                      const callTypeSelect = document.getElementById('callTypeSelect');
+                      const callCategorySelect = document.getElementById('callCategorySelect');
+                      const callSubCategorySelect = document.getElementById('callSubCategorySelect');
+                      const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
 
-                    // CALL TYPE EVENT
-                    callTypeSelect.addEventListener('change', async () => {
-                        const callType = callTypeSelect.value;
-                        const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
-                        const categoryDataValues = callCategories.data;
-                        callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
-                    });
+                      // CALL TYPE EVENT
+                      callTypeSelect.addEventListener('change', async () => {
+                          const callType = callTypeSelect.value;
+                          const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
+                          const categoryDataValues = callCategories.data;
+                          callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
+                      });
 
-                    // CALL CATEGORY EVENT
-                    callCategorySelect.addEventListener('change', async () => {
-                        const callTypeVal = callTypeSelect.value;
-                        const callCategoryVal = callCategorySelect.value;
-                        const callSubCategoryVal = callSubCategorySelect.value;
-                        console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal);
+                      // CALL CATEGORY EVENT
+                      callCategorySelect.addEventListener('change', async () => {
+                          const callTypeVal = callTypeSelect.value;
+                          const callCategoryVal = callCategorySelect.value;
+                          const callSubCategoryVal = callSubCategorySelect.value;
+                          console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal);
 
-                        const callSubCategories = await fetchDropdownOptions('callSubCategorySelect', {
-                            "callType": callTypeVal, "callCategory": callCategoryVal
-                        });
+                          const callSubCategories = await fetchDropdownOptions('callSubCategorySelect', {
+                              "callType": callTypeVal, "callCategory": callCategoryVal
+                          });
 
-                        const subCategoryDataValues = callSubCategories.data;
-                        // console.log('subCategoryDataValues', subCategoryDataValues)
-                        callSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubCallCategory}</option>` + getOptionsHtml(subCategoryDataValues);
-                    });
+                          const subCategoryDataValues = callSubCategories.data;
+                          // console.log('subCategoryDataValues', subCategoryDataValues)
+                          callSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubCallCategory}</option>` + getOptionsHtml(subCategoryDataValues);
+                      });
 
-                    // CALL SUB CATEGORY EVENT
-                    callSubCategorySelect.addEventListener('change', async () => {
-                        const callTypeVal = callTypeSelect.value;
-                        const callCategoryVal = callCategorySelect.value;
-                        const callSubCategoryVal = callSubCategorySelect.value;
-                        const callSubSubCategoryVal = callSubSubCategorySelect.value;
+                      // CALL SUB CATEGORY EVENT
+                      callSubCategorySelect.addEventListener('change', async () => {
+                          const callTypeVal = callTypeSelect.value;
+                          const callCategoryVal = callCategorySelect.value;
+                          const callSubCategoryVal = callSubCategorySelect.value;
+                          const callSubSubCategoryVal = callSubSubCategorySelect.value;
 
-                        console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
+                          console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
 
-                        const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
-                            "callType": callTypeVal,
-                            "callCategory": callCategoryVal,
-                            "callSubCategory": callSubCategoryVal
-                        });
+                          const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
+                              "callType": callTypeVal,
+                              "callCategory": callCategoryVal,
+                              "callSubCategory": callSubCategoryVal
+                          });
 
-                        const subSubCategoryDataValues = callSubSubCategories.data;
-                        // console.log('subSubCategoryDataValues', subSubCategoryDataValues)
-                        callSubSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubSubCallCategory}</option>` + getOptionsHtml(subSubCategoryDataValues);
-                    });
-                },
-            };
+                          const subSubCategoryDataValues = callSubSubCategories.data;
+                          // console.log('subSubCategoryDataValues', subSubCategoryDataValues)
+                          callSubSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubSubCallCategory}</option>` + getOptionsHtml(subSubCategoryDataValues);
+                      });
+                  },
+              };
 
-            const {value: selectedValues, dismiss} = await Swal.fire(swalOptions);
-            // console.log('selectedValues', selectedValues, dismiss);
+              const {value: selectedValues, dismiss} = await Swal.fire(swalOptions);
+              // console.log('selectedValues', selectedValues, dismiss);
 
-            if (selectedValues && !dismiss) {
-                const {
-                    callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
-                } = selectedValues;
+              if (selectedValues && !dismiss) {
+                  const {
+                      callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                  } = selectedValues;
 
-                /*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason);*/
+                  /!*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason);*!/
 
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'CREATEISSUE', 'page': 'home', 'button': 'btnCreateIssue', ...selectedValues
-                });
-                // console.log('apiResponse', apiResponse);
+                  const apiResponse = await callDynamicAPI({
+                      'purpose': 'CREATEISSUE', 'page': 'home', 'button': 'btnCreateIssue', ...selectedValues
+                  });
+                  // console.log('apiResponse', apiResponse);
 
-                const issueId = apiResponse.data?.issueId;
-                const issue = issueId ? issueId : null;
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    text: "IssueId: " + issue,
-                    allowOutsideClick: false
-                });
-                playErrorAudio(apiResponse.prompt);
-            } else if (dismiss === Swal.DismissReason.cancel) {
-                // Handle cancel action if needed
-                hideLoader();
-            }
-        } catch (error) {
-            console.error('Error in btnCreateIssue click:', error);
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        } finally {
-            hideLoader();
-        }
-    }
+                  const issueId = apiResponse.data?.issueId;
+                  const issue = issueId ? issueId : null;
+                  Swal.fire({
+                      title: apiResponse.message,
+                      icon: apiResponse.status === 'success' ? 'success' : 'error',
+                      text: "IssueId: " + issue,
+                      allowOutsideClick: false
+                  });
+                  playErrorAudio(apiResponse.prompt);
+              } else if (dismiss === Swal.DismissReason.cancel) {
+                  // Handle cancel action if needed
+                  hideLoader();
+              }
+          } catch (error) {
+              console.error('Error in btnCreateIssue click:', error);
+              if (error.status === 'error') {
+                  Swal.fire({
+                      title: error.message, icon: 'error', allowOutsideClick: false
+                  });
+                  playErrorAudio(error.prompt);
+              }
+          } finally {
+              hideLoader();
+          }
+      }*/
 
     async function fetchDropdownOptions(targetDropdownId, selectedValues = {}) {
         let purpose;
@@ -812,7 +812,10 @@ document.addEventListener('DOMContentLoaded', function () {
         addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
         const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
-        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);
+        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
+
+        /*const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
+        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);*/
 
         /*const btnEWChangeOrResetEWalletPIN = document.getElementById('btnEWChangeOrResetEWalletPIN');
        btnEWChangeOrResetEWalletPIN.addEventListener('click', handleEWChangeOrResetEWalletPINClick);*/

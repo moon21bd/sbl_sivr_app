@@ -33,7 +33,7 @@ class MainController extends Controller
 
         $prompt = (app()->getLocale() === 'en') ? "home/get-started-en" : "home/get-started-bn";
 
-        Log::info('Prompt: ' . $prompt);
+        // Log::info('Prompt: ' . $prompt);
 
         $data = [
             'title' => __('messages.home'),
@@ -54,11 +54,17 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/cards'), 'label' => __('messages.cards')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.cards'),
             'prompt' => null,
             'name' => $name,
-            'photo' => $userPhoto
+            'photo' => $userPhoto,
         ];
 
         return view('front.cards.index', $data);
@@ -66,14 +72,19 @@ class MainController extends Controller
 
     public function accountAndLoan()
     {
-
         $logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', "Guest User");
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')]
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.account-loans'),
             'prompt' => null,
             'name' => $name,
@@ -92,7 +103,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
+            ['url' => url('/casasnd'), 'label' => __('messages.CASASND-btn')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.CASASND-btn'),
             'prompt' => null,
             'name' => $name,
@@ -111,7 +129,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
+            ['url' => url('/fixed-deposit'), 'label' => __('messages.fixed-deposit')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.fixed-deposit'),
             'prompt' => null,
             'name' => $name,
@@ -130,7 +155,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
+            ['url' => url('/account-dps'), 'label' => __('messages.DPS-btn')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.DPS-btn'),
             'prompt' => null,
             'name' => $name,
@@ -149,7 +181,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
+            ['url' => url('/loans-advances'), 'label' => __('messages.loans-advances')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.loans-advances'),
             'prompt' => null,
             'name' => $name,
@@ -187,7 +226,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/cards'), 'label' => __('messages.cards')],
+            ['url' => url('/credit-card'), 'label' => __('messages.credit-card')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.credit-card'),
             'prompt' => null,
             'name' => $name,
@@ -206,7 +252,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/cards'), 'label' => __('messages.cards')],
+            ['url' => url('/debit-card'), 'label' => __('messages.debit-card')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.debit-card'),
             'prompt' => null,
             'name' => $name,
@@ -225,7 +278,14 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/cards'), 'label' => __('messages.cards')],
+            ['url' => url('/prepaid-card'), 'label' => __('messages.prepaid-card')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.prepaid-card'),
             'prompt' => null,
             'name' => $name,
@@ -263,7 +323,13 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/ewallet'), 'label' => __('messages.eWallet-btn')]
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.eWallet-btn'),
             'prompt' => null,
             'name' => $name,
@@ -283,7 +349,13 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/islami-banking'), 'label' => __('messages.islami-banking')],
+        ];
+
         $data = [
+            'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.islami-banking'),
             'prompt' => null,
             'name' => $name,
@@ -302,8 +374,15 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/islami-banking'), 'label' => __('messages.islami-banking')],
+            ['url' => url('/ib-account-related'), 'label' => __('messages.ib-account-related-btn')],
+        ];
+
         $data = [
-            'title' => 'Account Related',
+            'breadcrumbs' => $breadcrumbs,
+            'title' => __('messages.ib-account-related-btn'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto
@@ -322,8 +401,15 @@ class MainController extends Controller
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
 
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/islami-banking'), 'label' => __('messages.islami-banking')],
+            ['url' => url('/ib-loans-advances'), 'label' => __('messages.ib-loans-advances')],
+        ];
+
         $data = [
-            'title' => 'Loans & Advances',
+            'breadcrumbs' => $breadcrumbs,
+            'title' => __('messages.ib-loans-advances'),
             'prompt' => null,
             'name' => $name,
             'photo' => $userPhoto

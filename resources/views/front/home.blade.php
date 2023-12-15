@@ -70,8 +70,6 @@
         </div>
 
 
-
-
         <div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnIslamiBanking"
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">

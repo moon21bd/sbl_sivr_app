@@ -5966,7 +5966,6 @@ class ApiController extends ResponseController
                 ];
         }*/
 
-
         return (new ApiController)->sendResponse($responseOut, $responseOut['code']);
     }
 

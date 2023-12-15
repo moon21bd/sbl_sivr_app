@@ -14,6 +14,7 @@ return [
     'account-loans' => 'অ্যাকাউন্ট ও লোনস',
     'fixed-deposit' => 'ফিক্সড ডিপোজিট',
     'loans-advances' => 'লোনস ও সুবিধাদি',
+    'ib-loans-advances' => 'লোনস ও সুবিধাদি',
     'agent-banking' => 'এজেন্ট ব্যাংকিং',
     'credit-card' => 'ক্রেডিট কার্ড',
     'debit-card' => 'ডেবিট কার্ড',

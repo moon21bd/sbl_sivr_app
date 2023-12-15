@@ -48,11 +48,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         const backButton = document.getElementById('btnBack');
         const btnHome = document.getElementById('btnHome');
-        /*backButton.addEventListener('click', function () {
-            window.history.back();
-        });*/
 
-        btnHome.addEventListener('click', function () {
+        btnHome.addEventListener('click', () => goTo());
+        backButton.addEventListener('click', () => goTo());
+
+        /*btnHome.addEventListener('click', function () {
             goTo();
         });
 
@@ -65,7 +65,7 @@
                 // Fallback: Go to the home page URL
                 window.location.href = window.location.origin;
             }
-        });
+        });*/
 
     });
 
