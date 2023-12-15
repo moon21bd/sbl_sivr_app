@@ -2035,7 +2035,7 @@ class ApiController extends ResponseController
 
 
         // $selectedValues = $data['selectedValues']['callType'];
-        $selectedValues = 2;
+        $selectedValues = 2; // hardcoded call-type value for Service Request
         $url = config('api.crm_ticket_base_url') .
             config('api.crm_ticket_call_category_url');
 
@@ -2053,9 +2053,9 @@ class ApiController extends ResponseController
             if ($response['success']) {
                 $callCategories = $response['data'] ?? [];
                 foreach ($callCategories as $category) {
-                    //if ($category['call_type_id'] === $selectedValues) {
+                    // if ($category['call_type_id'] === $selectedValues) {
                     $options[$category['id']] = $category['name'];
-                    //}
+                    // }
                 }
             }
 
@@ -2544,13 +2544,13 @@ class ApiController extends ResponseController
         $callCategoryValue = $data['selectedValues']['callCategory'];
 
         $url = config('api.crm_ticket_base_url') .
-            config('api.crm_ticket_call_sub_category_url') . "?" . http_build_query([
-                "call_type_id" => $callTypeValue,
-                "call_category_id" => $callCategoryValue
-            ]);
+            config('api.crm_ticket_call_sub_category_url');
 
         $apiHandler = new APIHandler();
-        $responseData = $apiHandler->doGetCall($url, [], [
+        $responseData = $apiHandler->doGetCall($url, [
+            "call_type_id" => $callTypeValue,
+            "call_category_id" => $callCategoryValue
+        ], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
         ]);
 
@@ -2585,14 +2585,13 @@ class ApiController extends ResponseController
         $callCategoryValue = $data['selectedValues']['callCategory'];
         $callSubCategoryValue = $data['selectedValues']['callSubCategory'];
 
-        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_sub_sub_category_url') .
-            "?" . http_build_query([
-                "call_type_id" => $callTypeValue,
-                "call_category_id" => $callCategoryValue,
-                "call_sub_category_id" => $callSubCategoryValue,
-            ]);
+        $url = config('api.crm_ticket_base_url') . config('api.crm_ticket_call_sub_sub_category_url');
         $apiHandler = new APIHandler();
-        $responseData = $apiHandler->doGetCall($url, [], [
+        $responseData = $apiHandler->doGetCall($url, [
+            "call_type_id" => $callTypeValue,
+            "call_category_id" => $callCategoryValue,
+            "call_sub_category_id" => $callSubCategoryValue,
+        ], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
         ]);
 
