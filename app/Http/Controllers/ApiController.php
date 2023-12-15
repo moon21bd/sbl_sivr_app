@@ -2037,12 +2037,12 @@ class ApiController extends ResponseController
         // $selectedValues = $data['selectedValues']['callType'];
         $selectedValues = 2;
         $url = config('api.crm_ticket_base_url') .
-            config('api.crm_ticket_call_category_url') . "?" . http_build_query([
-                "call_type_id" => $selectedValues
-            ]);
+            config('api.crm_ticket_call_category_url');
 
         $apiHandler = new APIHandler();
-        $responseData = $apiHandler->doGetCall($url, [], [
+        $responseData = $apiHandler->doGetCall($url, [
+            "call_type_id" => $selectedValues
+        ], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
         ]);
 
@@ -2053,9 +2053,9 @@ class ApiController extends ResponseController
             if ($response['success']) {
                 $callCategories = $response['data'] ?? [];
                 foreach ($callCategories as $category) {
-                    if ($category['call_type_id'] === $selectedValues) {
-                        $options[$category['id']] = $category['name'];
-                    }
+                    //if ($category['call_type_id'] === $selectedValues) {
+                    $options[$category['id']] = $category['name'];
+                    //}
                 }
             }
 
