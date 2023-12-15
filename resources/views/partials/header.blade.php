@@ -36,7 +36,11 @@
             defaultNIDScriptTitleBn = "{{ config('voices.defaultNIDScript.title.bn') }}",
             defaultNIDScriptTitleEn = "{{ config('voices.defaultNIDScript.title.en') }}",
             selectAnAccountEn = "Select an account",
-            selectAnAccountBn = "অ্যাকাউন্ট নির্বাচন করুন";
+            selectAnAccountBn = "অ্যাকাউন্ট নির্বাচন করুন",
+            eShebaAndroid = "{{ config('bank.eSheba.android') }}",
+            eShebaiOS = "{{ config('bank.eSheba.ios') }}",
+            SPGiOS = "{{ config('bank.SPG.ios') }}",
+            SPGAndroid = "{{ config('bank.SPG.android') }}";
     </script>
 
     <style>
@@ -145,6 +149,10 @@
         .ac-select-button:focus {
             outline: none;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .transparent-button {
+            opacity: 0.7; /* Adjust the transparency level (0.0 - 1.0) */
         }
     </style>
 </head>

@@ -178,11 +178,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let locale = getSavedLocale();
         try {
             showLoader();
-            const dropdownValuesResponse = await callDynamicAPI({
-                'purpose': 'GET-CALL-TYPES-DROPDOWN-VALUES', 'page': 'home', 'button': 'createIssue',
+            const callCategoryDropdownValuesResponse = await callDynamicAPI({
+                'purpose': 'GET-CALL-CATEGORY-OPTIONS', 'page': 'home', 'button': 'createIssue'
             });
 
-            const dropdownValues = dropdownValuesResponse.data;
+            const callCategoryDropdownValues = callCategoryDropdownValuesResponse.data;
             hideLoader();
 
             let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
@@ -200,13 +200,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: textSubmitComplaint,
                 html: `<label for="callTypeSelect">${textCallType}:</label>
                 <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="4" disabled selected>${textSelectCallType}</option>
-                    ${getOptionsHtml(dropdownValues)}
+                    <option value="2" selected>Service Request</option>
                 </select>
+
                 <label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
+                    ${getOptionsHtml(callCategoryDropdownValues)}
                 </select>
+
                 <label for="callSubCategorySelect">${textCallSubCategory}:</label>
                 <select id="callSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
                     <option value="" disabled selected>${textSelectSubCallCategory}</option>
@@ -246,12 +248,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
 
                     // CALL TYPE EVENT
-                    callTypeSelect.addEventListener('change', async () => {
+                    /*callTypeSelect.addEventListener('change', async () => {
                         const callType = callTypeSelect.value;
                         const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
                         const categoryDataValues = callCategories.data;
                         callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
-                    });
+                    });*/
 
                     // CALL CATEGORY EVENT
                     callCategorySelect.addEventListener('change', async () => {
@@ -624,7 +626,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addClickEventWithAsyncHandler('btnAgentBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandler('btnESheba', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+        /*addClickEventWithAsyncHandler('btnESheba', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
+
+        const btnESheba = document.getElementById('btnESheba');
+        btnESheba.addEventListener('click', function () {
+            showDownloadOptions('esheba');
+        });
 
         const btnEWallet = document.getElementById('btnEWallet');
         btnEWallet.addEventListener('click', handleEWalletClick);
@@ -634,7 +641,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addClickEventWithAsyncHandler('btnSonaliBankProduct', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
-        addClickEventWithAsyncHandler('btnSPG', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+        /*addClickEventWithAsyncHandler('btnSPG', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
+
+        const btnSPG = document.getElementById('btnSPG');
+        btnSPG.addEventListener('click', function () {
+            showDownloadOptions('spg');
+        });
 
         // Event listener for creation issue button
         /*const btnCreateIssue = document.getElementById('btnCreateIssue');
@@ -938,8 +950,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>${account.accountName}</p>
                 <p>${account.accountNo}</p>
                 <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
-            </div>`
-        ).join('');
+            </div>`).join('');
 
         Swal.fire({
             title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
@@ -1123,21 +1134,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     showLoader();
 
                     const verifyResp = await callDynamicAPI({
-                        'purpose': 'USER-INFO-VERIFY',
-                        'page': pageName,
-                        'button': btnName,
-                        'nid': nid,
-                        'dob': dob
+                        'purpose': 'USER-INFO-VERIFY', 'page': pageName, 'button': btnName, 'nid': nid, 'dob': dob
                     });
 
                     hideLoader();
                     // console.log('verifyResp', verifyResp);
                     if (verifyResp.status === 'success') {
                         const apiResponse = await callDynamicAPI({
-                            'purpose': apiPurpose,
-                            'page': 'ewallet',
-                            'button': btnName,
-                            'reason': apiReason
+                            'purpose': apiPurpose, 'page': 'ewallet', 'button': btnName, 'reason': apiReason
                         });
 
                         hideLoader();
@@ -2598,4 +2602,38 @@ document.addEventListener('DOMContentLoaded', function () {
         return {title, text, voice};
     }
 
+    function showDownloadOptions(appName) {
+        let locale = getSavedLocale();
+        Swal.fire({
+            title: (locale === 'en') ? 'Select your app store' : 'অ্যাপ স্টোর নির্বাচন করুন',
+            showCancelButton: true,
+            confirmButtonText: '<img class="transparent-button" src="/img/app-store.png" alt="App Store" width="50" height="50">',
+            cancelButtonText: '<img class="transparent-button" src="/img/google-play.png" alt="Play Store" width="50" height="50">',
+            reverseButtons: true,
+            focusConfirm: false,
+            focusCancel: false
+        }).then((result) => {
+            if (result.isConfirmed) { // apple appStore
+                redirectToAppStore(appName);
+            } else if (result.dismiss === Swal.DismissReason.cancel) { // google playStore
+                redirectToPlayStore(appName);
+            }
+        });
+    }
+
+    function redirectToAppStore(appName) {
+        let appUrl = (appName === 'esheba') ? eShebaiOS : SPGiOS;
+        console.log('appUrl', appUrl);
+        window.open(appUrl, '_blank');
+        // window.location.href = appUrl;
+        return false;
+    }
+
+    function redirectToPlayStore(appName) {
+        let appUrl = (appName === 'esheba') ? eShebaAndroid : SPGAndroid;
+        console.log('appUrl', appUrl);
+        window.open(appUrl, '_blank');
+        // window.location.href = appUrl;
+        return false;
+    }
 });

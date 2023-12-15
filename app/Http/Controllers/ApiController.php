@@ -2034,7 +2034,8 @@ class ApiController extends ResponseController
         // will be removed later*/
 
 
-        $selectedValues = $data['selectedValues']['callType'];
+        // $selectedValues = $data['selectedValues']['callType'];
+        $selectedValues = 2;
         $url = config('api.crm_ticket_base_url') .
             config('api.crm_ticket_call_category_url') . "?" . http_build_query([
                 "call_type_id" => $selectedValues
