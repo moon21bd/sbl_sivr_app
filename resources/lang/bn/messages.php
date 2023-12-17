@@ -148,5 +148,12 @@ return [
     'account-verify-by-nid-dob-success' => 'অ্যাকাউন্টের তথ্য যাচাই সফল হয়েছে ।',
     'account-verify-by-nid-dob-failed' => 'অ্যাকাউন্টের তথ্য যাচাই সফল হয়নি ।',
     'account-switch' => 'অ্যাকাউন্ট পরিবর্তন',
-    'account-switching-success' => 'অ্যাকাউন্ট পাল্টানো সফল হয়েছে৷',
+    'account-switching-success' => 'অ্যাকাউন্ট পরিবর্তন সফল হয়েছে৷',
+    'guest-user' => 'গেস্ট ইউজার',
+    'otp-expire-in' => 'OTP এর মেয়াদ শেষ হবে',
+    'resend' => 'রিসেন্ড',
+    'submit' => 'সাবমিট',
+    'otp-send-success' => 'ওটিপি পাঠানো সফল হয়েছে।',
+
+
 ];

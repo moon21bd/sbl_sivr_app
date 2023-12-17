@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Handlers\APIHandler;
 use App\Handlers\EncryptionHandler;
+use App\Models\OtpHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 
 class ApiController extends ResponseController
@@ -25,9 +28,8 @@ class ApiController extends ResponseController
         return $this->sendResponse($responseOut);*/
         // will be deleted this code later
 
-        $phoneNumber = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
+        $phoneNumber = Session::get('logInfo.otp_info.otp_phone') ?? null;
         $response = self::fetchGetWalletDetails($phoneNumber);
-
         $responseOut = [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
@@ -43,7 +45,7 @@ class ApiController extends ResponseController
         return $this->sendResponse($responseOut, $responseOut['code']);
     }
 
-    public function sendOtpWrapper(Request $request)
+    /*public function sendOtpWrapper(Request $request)
     {
         $request->validate([
             'mobile_no' => $this->phoneValidationRules()
@@ -52,21 +54,21 @@ class ApiController extends ResponseController
         $mobileNo = $request->input('mobile_no');
 
         // will be removed later
-        /*$mobileNo = '01710455990';
-        $strRefId = $mobileNo . randomDigits();
-        Session::put('otp', [
-            'phone_masked' => $this->hidePhoneNumber($mobileNo),
-            'otp_phone' => $mobileNo,
-            'strRefId' => $strRefId
-        ]);
-
-        $responseOut = [
-            'code' => Response::HTTP_OK,
-            'status' => 'success',
-            'message' => 'Success.',
-            'url' => url('verify-otp')
-        ];
-        return $this->sendResponse($responseOut, $responseOut['code']);*/
+//        $mobileNo = '01710455990';
+//        $strRefId = $mobileNo . randomDigits();
+//        Session::put('otp', [
+//            'phone_masked' => $this->hidePhoneNumber($mobileNo),
+//            'otp_phone' => $mobileNo,
+//            'strRefId' => $strRefId
+//        ]);
+//
+//        $responseOut = [
+//            'code' => Response::HTTP_OK,
+//            'status' => 'success',
+//            'message' => 'Success.',
+//            'url' => url('verify-otp')
+//        ];
+//        return $this->sendResponse($responseOut, $responseOut['code']);
         // will be removed later
 
         $apiHandler = new APIHandler();
@@ -142,8 +144,110 @@ class ApiController extends ResponseController
         }
 
 
+    }*/
+
+    public function sendOtpWrapper(Request $request)
+    {
+        $request->validate([
+            'mobile_no' => $this->phoneValidationRules()
+        ], $this->phoneValidationErrorMessages());
+
+        $mobileNo = $request->input('mobile_no');
+        $response = $this->sendOtp($mobileNo);
+
+        return new JsonResponse($response->getData(true), $response->getStatusCode());
     }
 
+    public function resendOtp(Request $request)
+    {
+
+        /*$request->validate([
+            'mobile_no' => $this->phoneValidationRules()
+        ], $this->phoneValidationErrorMessages());
+        $mobileNo = $request->input('mobile_no');*/
+
+        $mobileNo = data_get(Session::get('otp'), 'otp_phone', "NA");
+        $response = $this->sendOtp($mobileNo, true);
+
+        return new JsonResponse($response->getData(true), $response->getStatusCode());
+    }
+
+    private function sendOtp($mobileNo, $isResend = false)
+    {
+        $apiHandler = new APIHandler();
+        $url = config('api.base_url') . config('api.send_otp_url');
+        $strRefId = $mobileNo . randomDigits();
+
+        // Modify the API payload for resend if needed
+        $apiPayload = [
+            'strRefId' => $strRefId,
+            'strMobileNo' => $mobileNo,
+            'isEncPwd' => true,
+        ];
+
+        if ($isResend) {
+            Log::info('RE-SEND-OT-API-CALLED');
+        }
+
+        $response = $apiHandler->postCall($url, $apiPayload);
+
+        if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
+            $isValidData = $this->decodeJsonIfValid($response['data']);
+            if ($isValidData !== null) {
+                $data = $this->decodeJsonIfValid($isValidData);
+                $statusCode = intval($data['StatusCode']);
+                if ($statusCode === Response::HTTP_BAD_REQUEST) {
+                    $responseOut = [
+                        'code' => $statusCode,
+                        'status' => 'error',
+                        'message' => __('messages.entered-phone-number-invalid'),
+                        'prompt' => null
+                    ];
+                    return $this->sendResponse($responseOut, $responseOut['code']);
+                } elseif ($statusCode === Response::HTTP_OK) {
+                    Session::put('otp', [
+                        'phone_masked' => $this->hidePhoneNumber($mobileNo),
+                        'otp_phone' => $mobileNo,
+                        'strRefId' => $strRefId
+                    ]);
+
+                    $responseOut = [
+                        'code' => $statusCode,
+                        'status' => 'success',
+                        'message' => __('messages.otp-send-success'),
+                        'url' => url('verify-otp')
+                    ];
+                    return $this->sendResponse($responseOut, $responseOut['code']);
+                } else {
+                    $responseOut = [
+                        'code' => Response::HTTP_EXPECTATION_FAILED,
+                        'status' => 'error',
+                        'message' => __('messages.apologies-something-went-wrong'),
+                        'prompt' => getPromptPath('common/request-failed-en')
+                    ];
+                    return $this->sendResponse($responseOut, $responseOut['code']);
+                }
+            } else {
+                $responseOut = [
+                    'code' => Response::HTTP_EXPECTATION_FAILED,
+                    'status' => 'error',
+                    'message' => __('messages.apologies-something-went-wrong'), // Null response
+                    'prompt' => getPromptPath('common/request-failed-en')
+                ];
+                return $this->sendResponse($responseOut, $responseOut['code']);
+            }
+        } else {
+            $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
+            Log::error('API ERROR:: ' . $msg);
+            $responseOut = [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.apologies-something-went-wrong'),
+                'prompt' => getPromptPath('common/request-failed-en')
+            ];
+            return $this->sendResponse($responseOut, $responseOut['code']);
+        }
+    }
 
     public function sendOtpWrapperNew(Request $request)
     {
@@ -152,38 +256,115 @@ class ApiController extends ResponseController
         ], $this->phoneValidationErrorMessages());
 
         $mobileNo = $request->input('mobile_no');
+        $otpHistory = OtpHistory::where('phone_number', $mobileNo)->first();
+        $otpStatus = self::isOtpSendingAllowed($otpHistory);
 
-        // Check OTP history for the phone number
-        $otpHistory = \DB::table('otp_history')
-            ->where('phone_number', $mobileNo)
-            ->first();
+        if (self::isFirstTimeVisit($otpHistory) || $otpStatus['allowed']) {
 
-        // Validate OTP sending conditions
-        if ($otpHistory && $this->isOtpSendingAllowed($otpHistory)) {
             // Call the API to send OTP
             $apiHandler = new APIHandler();
             $url = config('api.base_url') . config('api.send_otp_url');
             $strRefId = $mobileNo . randomDigits();
-            $startTime = now();
 
+            $startTime = now();
             $response = $apiHandler->postCall($url, [
                 'strRefId' => $strRefId,
                 'strMobileNo' => $mobileNo,
                 'isEncPwd' => true,
             ]);
 
-            // Capture response information
-            $responseTime = now()->diffInSeconds($startTime);
-            $otpSentSuccess = $response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK;
+            if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) { // success response found from handler.
 
-            // Update OTP history
-            $this->updateOtpHistory($otpHistory, $otpSentSuccess, $response, $responseTime);
+                $isValidData = $this->decodeJsonIfValid($response['data']);
+                if ($isValidData !== null) { // valid json for the first time
 
-            // Handle API response
-            if ($otpSentSuccess) {
-                // ... (existing success response code)
+                    $data = $this->decodeJsonIfValid($isValidData); // second time json validation
+                    $statusCode = intval($data['StatusCode']);
+                    if ($statusCode === Response::HTTP_BAD_REQUEST) { // API RESPONSE ERROR
+
+                        $responseOut = [
+                            'code' => $statusCode,
+                            'status' => 'error',
+                            'message' => __('messages.entered-phone-number-invalid'),
+                            'prompt' => null
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+
+                    } else if ($statusCode === Response::HTTP_OK) { // API SEND SUCCESS RESPONSE
+
+                        Session::put('otp', [
+                            'phone_masked' => $this->hidePhoneNumber($mobileNo),
+                            'otp_phone' => $mobileNo,
+                            'strRefId' => $strRefId
+                        ]);
+
+                        // Capture response information
+                        $responseTime = now()->diffInSeconds($startTime);
+                        $otpSentSuccess = $response['statusCode'] === Response::HTTP_OK;
+
+                        if (self::isFirstTimeVisit($otpHistory)) {
+                            // If it's the first-time visit, create a new record
+                            OtpHistory::create([
+                                'phone_number' => $mobileNo,
+                                'otp_sent_count' => 1,
+                                'last_sent_at' => now(),
+                                'otp_sent_success' => $otpSentSuccess,
+                                'response_status_code' => $response['statusCode'] ?? null,
+                                'response_received_at' => now(),
+                                'response_data' => json_encode($response),
+                                'response_time_seconds' => $responseTime,
+                            ]);
+                        } else {
+                            // If it's not the first-time visit, create a new record and update the existing record
+                            OtpHistory::create([
+                                'phone_number' => $mobileNo,
+                                'otp_sent_count' => $otpHistory->otp_sent_count + 1,
+                                'last_sent_at' => now(),
+                                'otp_sent_success' => $otpSentSuccess,
+                                'response_status_code' => $response['statusCode'] ?? null,
+                                'response_received_at' => now(),
+                                'response_data' => json_encode($response),
+                                'response_time_seconds' => $responseTime,
+                            ]);
+
+                            // Update the existing record
+                            $this->updateOtpHistory($otpHistory, $otpSentSuccess, $response, $responseTime);
+                        }
+
+                        $responseOut = [
+                            'code' => $statusCode,
+                            'status' => 'success',
+                            'message' => 'Success.',
+                            'url' => url('verify-otp')
+                        ];
+
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+
+                    } else {
+
+                        $responseOut = [
+                            'code' => Response::HTTP_EXPECTATION_FAILED,
+                            'status' => 'error',
+                            'message' => __('messages.apologies-something-went-wrong'),
+                            'prompt' => getPromptPath('common/request-failed-en')
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+                    }
+
+                } else {
+                    $responseOut = [
+                        'code' => Response::HTTP_EXPECTATION_FAILED,
+                        'status' => 'error',
+                        'message' => __('messages.apologies-something-went-wrong'), // Null response
+                        'prompt' => getPromptPath('common/request-failed-en')
+                    ];
+                    return $this->sendResponse($responseOut, $responseOut['code']);
+                }
+
             } else {
-                // Handle API error response
+
+                $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
+                Log::error('API ERROR:: ' . $msg);
                 $responseOut = [
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
@@ -192,46 +373,82 @@ class ApiController extends ResponseController
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
+
         } else {
-            // Handle case where OTP sending is not allowed
-            $responseOut = [
-                'code' => Response::HTTP_TOO_MANY_REQUESTS,
-                'status' => 'error',
-                'message' => 'Too many OTP requests. Please try again later.',
-                'prompt' => null
-            ];
-            return $this->sendResponse($responseOut, $responseOut['code']);
+
+            if ($otpStatus['reason'] === 'daily_limit_exceeded') {
+                $response = [
+                    'code' => Response::HTTP_FORBIDDEN,
+                    'status' => 'error',
+                    'message' => 'Max daily OTP count exceeded.',
+                    'prompt' => null
+                ];
+            } else if ($otpStatus['reason'] === 'overall_limit_exceeded') {
+                $response = [
+                    'code' => Response::HTTP_FORBIDDEN,
+                    'status' => 'error',
+                    'message' => 'Max OTP SMS count exceeded.',
+                    'prompt' => null
+                ];
+            } else {
+                $response = [
+                    'code' => Response::HTTP_FORBIDDEN,
+                    'status' => 'error',
+                    'message' => 'Sending OTP not allowed.',
+                    'prompt' => null
+                ];
+            }
+
+            return $this->sendResponse($response, $response['code']);
         }
 
-        // ... (remaining existing code)
     }
 
-    private function updateOtpHistory($otpHistory, $otpSentSuccess, $response, $responseTime)
+    public static function isOtpSendingAllowed($otpHistory)
     {
-        // Update OTP history after successful or unsuccessful OTP sending
-        \DB::table('otp_history')
-            ->where('phone_number', $otpHistory->phone_number)
-            ->update([
-                'otp_sent_count' => $otpHistory->otp_sent_count + 1,
-                'last_sent_at' => now(),
-                'otp_sent_success' => $otpSentSuccess,
-                'response_status_code' => $response['statusCode'] ?? null,
-                'response_received_at' => now(),
-                'response_data' => json_encode($response),
-                'response_time_seconds' => $responseTime,
-            ]);
+        $maxAllowedOtpSmsCount = config('otp.max_allowed_otp_sms_count');
+        $maxAllowedDailyOtpCount = config('otp.max_allowed_daily_otp_count');
+
+        Log::info('MAX_ALLOWED_OTP_SMS_COUNT: ' . $maxAllowedOtpSmsCount);
+        Log::info('MAX_ALLOWED_DAILY_OTP_COUNT: ' . $maxAllowedDailyOtpCount);
+
+        $todaySentCount = OtpHistory::where('phone_number', $otpHistory->phone_number)
+            ->whereDate('created_at', Carbon::today())
+            // ->count()
+            ->sum('otp_sent_count');
+
+        Log::info('TODAY_SENT_COUNT: ' . $todaySentCount);
+        Log::info('TOTAL_SENT_COUNT: ' . $otpHistory->otp_sent_count);
+
+        if ($todaySentCount >= $maxAllowedDailyOtpCount) {
+            // Daily count exceeded
+            return ['allowed' => false, 'reason' => 'daily_limit_exceeded'];
+        }
+
+        if ($otpHistory->otp_sent_count >= $maxAllowedOtpSmsCount) {
+            // Overall count exceeded
+            return ['allowed' => false, 'reason' => 'overall_limit_exceeded'];
+        }
+
+        return ['allowed' => true, 'reason' => null];
     }
 
-
-    private function isOtpSendingAllowed($otpHistory)
+    public static function updateOtpHistory($otpHistory, $otpSentSuccess, $response, $responseTime)
     {
-        // Implement your logic to check if OTP sending is allowed
-        $currentTime = now();
-        $lastSentAt = \Carbon::parse($otpHistory->last_sent_at);
+        $otpHistory->update([
+            'otp_sent_count' => $otpHistory->otp_sent_count + 1,
+            'last_sent_at' => now(),
+            'otp_sent_success' => $otpSentSuccess,
+            'response_status_code' => $response['statusCode'] ?? null,
+            'response_received_at' => now(),
+            'response_data' => json_encode($response),
+            'response_time_seconds' => $responseTime,
+        ]);
+    }
 
-        $minutesSinceLastSent = $currentTime->diffInMinutes($lastSentAt);
-
-        return $minutesSinceLastSent >= config('otp.allowed_attempt_interval');
+    public static function isFirstTimeVisit($otpHistory)
+    {
+        return $otpHistory === null;
     }
 
     public function verifyOtpWrapper(Request $request)
@@ -280,7 +497,7 @@ class ApiController extends ResponseController
         $response = $apiHandler->postCall($url, [
             'strRequstId' => $strRefId,
             'strAcMobileNo' => $mobileNo,
-            'strReOTP' => $request->input('code'),
+            'strReOTP' => $request->input('code') ?? null,
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) { // successful api response found from apihandler end.
@@ -362,6 +579,16 @@ class ApiController extends ResponseController
                     // store encrypted accountList in session
                     self::storeAcListInSession($acListArr);
 
+                    /*$otpInfo = Session::get('otp');
+                    $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
+
+                    Session::put('logInfo', [
+                        'is_logged' => base64_encode(true),
+                        'otp_info' => $otpInfo,
+                        'account_info' => $getAccountList['data'],
+                    ]);
+                    Session::forget('otp');*/
+
                     $responseOut = [
                         'code' => $statusCode,
                         'status' => 'success',
@@ -433,6 +660,7 @@ class ApiController extends ResponseController
         ]);
 
         $selectedAccount = $request->input('ac');
+        $purpose = $request->input('purpose') ?? null;
         $getSelected = self::processSelectedAccount($selectedAccount);
         $accountAsData = self::getAccountListArray($getSelected);
 
@@ -448,10 +676,11 @@ class ApiController extends ResponseController
             Session::forget('otp');
 
             $mobileNo = Session::get('logInfo.otp_info.otp_phone');
+            $purpose = $request->input('purpose');
             $responseOut = [
                 'code' => Response::HTTP_OK,
                 'status' => 'success',
-                'message' => ($request->input('purpose') === 'ACCOUNT-SWITCH') ? __('messages.account-switching-success') : __('messages.verification-success-after-login'),
+                'message' => (filled($purpose) && $purpose == 'ACCOUNT-SWITCH') ? __('messages.account-switching-success') : __('messages.verification-success-after-login'),
                 'prompt' => null,
                 'pn' => $mobileNo,
                 'an' => $accountAsData['accountName'] ?? null,
@@ -1299,6 +1528,41 @@ class ApiController extends ResponseController
     }
 
     public static function processApiCallingUserInfoVerify($data)
+    {
+        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
+        $successPrompt = "common/request-successful{$localeSuffix}";
+        $failedPrompt = "common/request-failed{$localeSuffix}";
+        $successText = __('messages.account-verify-by-nid-dob-success');
+        $failedText = __('messages.account-verify-by-nid-dob-failed');
+
+        $phoneNumber = $data['mobile_no'];
+        $account = $data['account'];
+        $dob = $data['dob'];
+
+        $response = self::fetchGetWalletDetails($phoneNumber);
+
+        if ($response['status'] === 'success' && $response['code'] === Response::HTTP_OK) { // success
+            if ($response['data']['accountNo'] === $account && $dob === date('Y-m-d', strtotime($response['data']['dateOfBirth']))) {
+
+                return [
+                    'code' => Response::HTTP_OK,
+                    'status' => 'success',
+                    'message' => $successText,
+                    'prompt' => getPromptPath($successPrompt),
+                ];
+            }
+        }
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => $failedText,
+            'prompt' => getPromptPath($failedPrompt)
+        ];
+
+    }
+
+    public static function processApiCallingReSendOTP($data)
     {
         $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
         $successPrompt = "common/request-successful{$localeSuffix}";
@@ -5924,8 +6188,8 @@ class ApiController extends ResponseController
     {
         $request->validate([
             'purpose' => 'required',
-            'page' => 'required',
-            'button' => 'required',
+            'page' => 'nullable',
+            'button' => 'nullable',
         ]);
 
         $purpose = strtoupper($request->input('purpose'));
@@ -6037,6 +6301,8 @@ class ApiController extends ResponseController
                 return self::processApiCallingCreateIssue($data);
             case 'USER-INFO-VERIFY':
                 return self::processApiCallingUserInfoVerify($data);
+            case 'RESEND-OTP':
+                return self::processApiCallingReSendOTP($data);
             default:
                 // Code to be executed if $purpose is different from all cases;
                 return false;

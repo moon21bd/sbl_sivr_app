@@ -22,11 +22,10 @@ class MainController extends Controller
     public function home()
     {
         // Uncomment these lines for debugging
-        // session()->forget(['logInfo', 'api_calling']);
         // dd(Session::all());
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -49,7 +48,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -73,7 +72,7 @@ class MainController extends Controller
     public function accountAndLoan()
     {
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -98,7 +97,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -124,7 +123,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -150,7 +149,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -176,7 +175,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -202,7 +201,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -221,7 +220,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -247,7 +246,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -273,7 +272,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -299,7 +298,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -318,7 +317,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -344,7 +343,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -369,7 +368,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -396,7 +395,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -422,7 +421,7 @@ class MainController extends Controller
     {
 
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
@@ -440,7 +439,7 @@ class MainController extends Controller
     public function sonaliPaymentGateway()
     {
         $logInfo = Session::get('logInfo');
-        $name = data_get($logInfo, 'account_info.accountName', "Guest User");
+        $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
         $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');

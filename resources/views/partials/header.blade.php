@@ -154,6 +154,111 @@
         .transparent-button {
             opacity: 0.7; /* Adjust the transparency level (0.0 - 1.0) */
         }
+
+
+        .account-option {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .account-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .account-details {
+            margin-bottom: 8px;
+        }
+
+        /* Optional: Add styles for the labels */
+        .account-option label {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Optional: Style for the submit button */
+        .ac-submit-button {
+            display: block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .ac-submit-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Add to your existing styles or create a new CSS file */
+        .ac-cancel-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #d9534f; /* Red color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .ac-cancel-button:hover {
+            background-color: #c9302c; /* Darker red color on hover */
+        }
+
+        /* Add to your existing styles or create a new CSS file */
+        .button-container {
+            text-align: center; /* Center-align the buttons */
+            margin-top: 20px; /* Add some top margin for separation */
+        }
+
+        .ac-submit-button,
+        .ac-cancel-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px; /* Add some margin between buttons */
+            background-color: #4caf50; /* Green color for Submit button */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .ac-cancel-button {
+            background-color: #d9534f; /* Red color for Cancel button */
+        }
+
+        .ac-submit-button:hover,
+        .ac-cancel-button:hover {
+            background-color: #45a049; /* Darker green on hover for Submit button */
+        }
+
+        .ac-cancel-button:hover {
+            background-color: #c9302c; /* Darker red on hover for Cancel button */
+        }
+
     </style>
 </head>
 

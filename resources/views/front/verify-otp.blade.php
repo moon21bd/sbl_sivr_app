@@ -63,14 +63,23 @@
                         <span class="text-red-700 text-base pt-1 block hidden"
                               id="error_message"></span>
 
-                        {{--<p class="text-white text-base mt-3">Didn’t received the code?</p>
-                        <div class="div">
-                            <button class="text-white text-lg border-b-[1px] border-white">Resend</button>
-                        </div>--}}
+                        <p class="text-white text-base mt-3 hidden" id="success_message"></p>
+
+                        <p id="otpTimer" style="display: none"
+                           class="text-white text-base mt-3">{{__('messages.otp-expire-in')}}
+                            <span id="timer">3:00</span></p>
 
                         <button
+                            class="resendOtpBtn text-white text-lg border-b-[1px] border-white hidden"> {{ __('messages.resend') }}
+                        </button>
+
+                        {{--<div id="resendDiv" class="hidden">
+                                             <p class="text-white text-base mt-3">Didn’t receive the code?</p>
+                                             <button id="resendOtpBtn" class="text-white text-lg border-b-[1px] border-white">Resend</button>
+                                         </div>--}}
+                        <button
                             class="text-[color:var(--brand-color-blue)] text-lg rounded-md w-full py-2 mt-10 bg-white"
-                            type="submit">Submit
+                            type="submit">{{ __('messages.submit') }}
                         </button>
                     </div>
 
@@ -84,6 +93,10 @@
 
 </main>
 <!-- Main Area End -->
+
+<script>
+
+</script>
 
 <script src="{{ asset('js/verify.js') }}"></script>
 

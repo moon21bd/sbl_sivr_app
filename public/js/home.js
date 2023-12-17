@@ -186,24 +186,19 @@ document.addEventListener('DOMContentLoaded', function () {
             hideLoader();
 
             let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
-            let textCallCategory = (locale === 'en') ? "Call Category" : "কল ক্যাটাগরি";
-            let textCallSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব ক্যাটাগরি";
-            let textCallSubSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব সাব ক্যাটাগরি";
-            let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "সাব ক্যাটাগরি নির্বাচন করুন";
+            let textCallCategory = (locale === 'en') ? "Complaint Type" : "অভিযোগের ধরণ";
+            let textCallSubCategory = (locale === 'en') ? "Complaint Sub Type" : "অভিযোগের উপ ধরণ";
+            let textCallSubSubCategory = (locale === 'en') ? "Complaint Sub Sub Type" : "অভিযোগের উপ-উপ ধরণ";
+            let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "অভিযোগের উপ ধরণ নির্বাচন করুন";
             let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
-            let textSelectCallCategory = (locale === 'en') ? "Select Category" : "ক্যাটাগরি নির্বাচন করুন";
-            let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Category" : "সাব সাব ক্যাটাগরি নির্বাচন করুন";
+            let textSelectCallCategory = (locale === 'en') ? "Select Complaint Type" : "অভিযোগের ধরণ নির্বাচন করুন";
+            let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Complaint Type" : "অভিযোগের উপ-উপ ধরণ নির্বাচন করুন";
             let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
             let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
 
             const swalOptions = {
                 title: textSubmitComplaint,
-                html: `<label for="callTypeSelect">${textCallType}:</label>
-                <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="2" selected>Service Request</option>
-                </select>
-
-                <label for="callCategorySelect">${textCallCategory}:</label>
+                html: `<label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
@@ -222,7 +217,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
                 focusConfirm: false,
                 preConfirm: () => {
-                    const callTypeOpts = document.getElementById('callTypeSelect').value;
+                    // const callTypeOpts = document.getElementById('callTypeSelect').value;
+                    const callTypeOpts = 2; // service request
                     const callCategoryOpts = document.getElementById('callCategorySelect').value;
                     const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
                     const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
@@ -242,7 +238,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                 cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                 didOpen: () => {
-                    const callTypeSelect = document.getElementById('callTypeSelect');
+                    // const callTypeSelect = document.getElementById('callTypeSelect');
+                    const callTypeSelect = 2;
                     const callCategorySelect = document.getElementById('callCategorySelect');
                     const callSubCategorySelect = document.getElementById('callSubCategorySelect');
                     const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
@@ -257,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // CALL CATEGORY EVENT
                     callCategorySelect.addEventListener('change', async () => {
-                        const callTypeVal = callTypeSelect.value;
+                        const callTypeVal = callTypeSelect;
                         const callCategoryVal = callCategorySelect.value;
                         const callSubCategoryVal = callSubCategorySelect.value;
                         console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal);
@@ -273,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // CALL SUB CATEGORY EVENT
                     callSubCategorySelect.addEventListener('change', async () => {
-                        const callTypeVal = callTypeSelect.value;
+                        const callTypeVal = callTypeSelect;
                         const callCategoryVal = callCategorySelect.value;
                         const callSubCategoryVal = callSubCategorySelect.value;
                         const callSubSubCategoryVal = callSubSubCategorySelect.value;
@@ -628,9 +625,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /*addClickEventWithAsyncHandler('btnESheba', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
 
-        const btnESheba = document.getElementById('btnESheba');
+        /*const btnESheba = document.getElementById('btnESheba');
         btnESheba.addEventListener('click', function () {
             showDownloadOptions('esheba');
+        });
+
+        const btnSPG = document.getElementById('btnSPG');
+        btnSPG.addEventListener('click', function () {
+            showDownloadOptions('spg');
+        });*/
+
+        const btnESheba = document.getElementById('btnESheba');
+        btnESheba.addEventListener('click', function () {
+            redirectUserToAppStore('esheba');
+        });
+
+        const btnSPG = document.getElementById('btnSPG');
+        btnSPG.addEventListener('click', function () {
+            redirectUserToAppStore('spg');
         });
 
         const btnEWallet = document.getElementById('btnEWallet');
@@ -643,10 +655,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /*addClickEventWithAsyncHandler('btnSPG', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
 
-        const btnSPG = document.getElementById('btnSPG');
-        btnSPG.addEventListener('click', function () {
-            showDownloadOptions('spg');
-        });
 
         // Event listener for creation issue button
         /*const btnCreateIssue = document.getElementById('btnCreateIssue');
@@ -948,26 +956,93 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showAccountSelectionPopupCommon(accounts) {
         // stopAllAudio();
-        const accountOptions = accounts.map(account => `
+        /*const accountOptions = accounts.map(account => `
             <div class="account-option">
                 <p>${account.accountName}</p>
                 <p>${account.accountNo}</p>
                 <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
-            </div>`).join('');
+            </div>`).join('');*/
 
-        Swal.fire({
+        const accountOptions = accounts.map(account => `
+    <div class="account-option">
+        <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
+        <label for="account-${account.accEnc}">
+            <div class="account-details">
+                <p>Account Name: ${account.accountName}</p>
+                <p>Account No: ${account.accountNo}</p>
+            </div>
+        </label>
+    </div>`).join('');
+
+
+        /*Swal.fire({
             title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
             html: accountOptions,
             showCancelButton: true,
             cancelButtonText: 'Cancel',
             showConfirmButton: false,
             allowOutsideClick: false
+        });*/
+
+        /*Swal.fire({
+            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            html: `${accountOptions}<button class="ac-submit-button">${(locale === 'en') ? "Submit" : "জমা দিন"}</button>`,
+            showCancelButton: true,
+            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+            showConfirmButton: false,
+            allowOutsideClick: false
         });
 
-        document.querySelectorAll('.ac-select-button').forEach(button => {
-            button.addEventListener('click', handleSelectCommonButtonClick);
+        const submitButton = document.querySelector('.ac-submit-button');
+        submitButton.addEventListener('click', handleAccountSwitchCommonSubmitButtonClick);*/
+
+        Swal.fire({
+            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            html: `
+        ${accountOptions}
+        <div class="button-container">
+            <button class="ac-submit-button">${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
+            <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
+        </div>
+    `,
+            showConfirmButton: false,
+            allowOutsideClick: false
         });
+
+        const submitButton = document.querySelector('.ac-submit-button');
+        const cancelButton = document.querySelector('.ac-cancel-button');
+
+        submitButton.addEventListener('click', handleAccountSwitchCommonSubmitButtonClick);
+        cancelButton.addEventListener('click', handleAccountSwitchCommonCancelButtonClick);
+
+        /*document.querySelectorAll('.ac-select-button').forEach(button => {
+            button.addEventListener('click', handleSelectCommonButtonClick);
+        });*/
     }
+
+    function handleAccountSwitchCommonSubmitButtonClick() {
+        const selectedAccountId = document.querySelector('input[name="selectedAccount"]:checked');
+
+        if (selectedAccountId) {
+            console.log('Selected Account Id:', selectedAccountId.value);
+
+            // Perform any additional actions here if needed
+
+            axios.post('/save', {"ac": selectedAccountId.value, "purpose": "ACCOUNT-SWITCH"})
+                .then(response => handleSaveResponseCommon(response))
+                .catch(error => console.error('Error saving selected account:', error));
+
+            Swal.close(); // Close the SweetAlert popup
+        } else {
+            // Display a message or handle the case where no account is selected
+            console.log('No account selected');
+        }
+    }
+
+    function handleAccountSwitchCommonCancelButtonClick() {
+        Swal.close();
+    }
+
 
     function handleSelectCommonButtonClick() {
         const selectedAccountId = this.getAttribute('data-account-id');
@@ -1107,37 +1182,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
-                const {value: nidAndDob} = await Swal.fire({
-                    title: (locale === 'en') ? "Enter NID and Date of Birth." : "NID এবং জন্ম তারিখ লিখুন ।",
-                    html: '<input id="swal-input1" class="swal2-input" placeholder="National ID">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
+                const {value: accountAndDob} = await Swal.fire({
+                    title: (locale === 'en') ? "Enter Account & Date of Birth." : "অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।",
+                    html: '<input id="swal-input1" class="swal2-input" placeholder="Account Number">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
                     showCancelButton: true,
                     confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                     cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                     focusConfirm: false,
                     allowOutsideClick: false,
                     preConfirm: () => {
-                        const nid = Swal.getPopup().querySelector('#swal-input1').value;
+                        const account = Swal.getPopup().querySelector('#swal-input1').value;
                         const dob = Swal.getPopup().querySelector('#swal-input2').value;
-                        if (!nid || !/^\d{10,17}$/.test(nid)) {
-                            Swal.showValidationMessage((locale === 'en') ? "NID is required and must be a number with 10 to 17 digits." : "NID আবশ্যক এবং ১০ থেকে ১৭ সংখ্যা বিশিষ্ট হতে হবে।");
+                        if (!account || !/^\d{10,20}$/.test(account)) {
+                            Swal.showValidationMessage((locale === 'en') ? "Account is required and must be a number with 10 to 20 digits." : "অ্যাকাউন্ট নাম্বার আবশ্যক এবং ১০ থেকে ২০ সংখ্যা বিশিষ্ট হতে হবে।");
                         }
                         if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
                             Swal.showValidationMessage((locale === 'en') ? "Invalid date format." : "তারিখ ভুল হয়েছে ।");
                         }
-                        return {nid, dob};
+                        return {account, dob};
                     }
                 });
 
-                if (!nidAndDob) {
+                if (!accountAndDob) {
                     return;
                 }
 
-                const {nid, dob} = nidAndDob;
-                if (nid && dob) {
+                const {account, dob} = accountAndDob;
+                if (account && dob) {
                     showLoader();
 
                     const verifyResp = await callDynamicAPI({
-                        'purpose': 'USER-INFO-VERIFY', 'page': pageName, 'button': btnName, 'nid': nid, 'dob': dob
+                        'purpose': 'USER-INFO-VERIFY',
+                        'page': pageName,
+                        'button': btnName,
+                        'account': account,
+                        'dob': dob
                     });
 
                     hideLoader();
@@ -2605,7 +2684,28 @@ document.addEventListener('DOMContentLoaded', function () {
         return {title, text, voice};
     }
 
-    function showDownloadOptions(appName) {
+    function redirectUserToAppStore(appType) {
+        let appStoreLink;
+
+        if (appType === 'esheba') {
+            // Choose the appropriate link based on the user's platform
+            appStoreLink = isIOS() ? eShebaiOS : eShebaAndroid;
+        } else if (appType === 'spg') {
+            // Choose the appropriate link based on the user's platform
+            appStoreLink = isIOS() ? SPGiOS : SPGAndroid;
+        }
+
+        if (appStoreLink) {
+            // Redirect the user to the selected app store link
+            window.location.href = appStoreLink;
+            return false;
+        } else {
+            // Handle unsupported platform or other error
+            console.error('Unsupported platform or invalid app type');
+        }
+    }
+
+    /*function showDownloadOptions(appName) {
         let locale = getSavedLocale();
         Swal.fire({
             title: (locale === 'en') ? 'Select your app store' : 'অ্যাপ স্টোর নির্বাচন করুন',
@@ -2638,5 +2738,5 @@ document.addEventListener('DOMContentLoaded', function () {
         window.open(appUrl, '_blank');
         // window.location.href = appUrl;
         return false;
-    }
+    }*/
 });

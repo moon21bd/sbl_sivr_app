@@ -147,5 +147,9 @@ return [
     'account-verify-by-nid-dob-failed' => 'Account information verification failed.',
     'account-switch' => 'Account Switch',
     'account-switching-success' => 'Account switching successful.',
-
+    'guest-user' => 'Guest User',
+    'otp-expire-in' => 'OTP will expire in',
+    'resend' => 'Resend',
+    'submit' => 'Submit',
+    'otp-send-success' => 'OTP sending successful.',
 ];

@@ -1591,6 +1591,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 @media (prefers-color-scheme: dark) {
     .dark\:border-gray-600 {
         --tw-border-opacity: 1;

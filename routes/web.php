@@ -25,10 +25,17 @@ Route::get('/getac', [\App\Http\Controllers\ApiController::class, 'getSavedAccou
 Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
     Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
+
 });
 
 Route::middleware(['web'])->group(function () {
     Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
+    Route::post('/resend', [\App\Http\Controllers\ApiController::class, 'resendOtp'])->name('resendOtp');
+});
+
+Route::middleware(['web', 'verify.login'])->group(function () {
+    Route::post('/otp-wrap', [\App\Http\Controllers\ApiController::class, 'sendOtpWrapper'])->name('sendOtpWrapper');
+    Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');
 });
 
 Route::middleware(['web', 'verify.login'])->group(function () {
@@ -54,11 +61,7 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::get('/sonali-products', [\App\Http\Controllers\MainController::class, 'sonaliBankProducts'])->name('sonali-products');
     Route::get('/spg', [\App\Http\Controllers\MainController::class, 'sonaliPaymentGateway'])->name('spg');
 
-    Route::post('/otp-wrap', [\App\Http\Controllers\ApiController::class, 'sendOtpWrapper'])->name('sendOtpWrapper');
-    Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');
-
-
-    Route::post('/upload-photo', [\App\Http\Controllers\MainController::class, 'uploadUserPhoto'])->name('verifyOtpWrapper');
+    Route::post('/upload-photo', [\App\Http\Controllers\MainController::class, 'uploadUserPhoto'])->name('uploadUserPhoto');
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
 
