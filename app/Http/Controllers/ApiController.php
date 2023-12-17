@@ -1542,7 +1542,8 @@ class ApiController extends ResponseController
         $response = self::fetchGetWalletDetails($phoneNumber);
 
         if ($response['status'] === 'success' && $response['code'] === Response::HTTP_OK) { // success
-            if ($response['data']['accountNo'] === $account && $dob === date('Y-m-d', strtotime($response['data']['dateOfBirth']))) {
+
+            if (($response['data']['accountNo'] == $account) && ($dob == date('Y-m-d', strtotime($response['data']['dateOfBirth'])))) {
 
                 return [
                     'code' => Response::HTTP_OK,
