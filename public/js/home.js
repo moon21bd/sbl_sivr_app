@@ -940,7 +940,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const btnAccountSwitch = document.getElementById('btnAccountSwitch');
-    btnAccountSwitch.addEventListener('click', handleAccountSwitchClick);
+    if (btnAccountSwitch) {
+        btnAccountSwitch.addEventListener('click', handleAccountSwitchClick);
+    } else {
+        console.info('Element with ID "btnAccountSwitch" not found.');
+    }
 
     async function handleAccountSwitchClick() {
         try {
@@ -2459,22 +2463,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const savedLocale = getSavedLocale();
     // Set the initial active state based on the saved locale
     setActiveState(savedLocale);
+    const btnLogout = document.getElementById('btnLogout');
+    if (btnLogout) {
+        document.getElementById('btnLogout').addEventListener('click', function (event) {
+            event.preventDefault();
 
-    document.getElementById('btnLogout').addEventListener('click', function (event) {
-        event.preventDefault();
+            // Make an AJAX request to the logout endpoint
+            axios.post('/logout')
+                .then(response => {
+                    // Handle the successful logout response (if needed)
+                    console.log('logout response', response.data);
+                    goTo();
+                })
+                .catch(error => {
+                    // Handle any errors that occur during the logout request
+                    console.error(error);
+                });
+        });
+    }
 
-        // Make an AJAX request to the logout endpoint
-        axios.post('/logout')
-            .then(response => {
-                // Handle the successful logout response (if needed)
-                console.log('logout response', response.data);
-                goTo();
-            })
-            .catch(error => {
-                // Handle any errors that occur during the logout request
-                console.error(error);
-            });
-    });
 
     async function showMessageForHelp(voice = "", text = "") {
         showLoader();

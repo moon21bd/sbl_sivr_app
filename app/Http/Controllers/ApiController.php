@@ -37,7 +37,7 @@ class ApiController extends ResponseController
         ];
 
         if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
-            $responseOut['code'] = Response::HTTP_OK;
+            $responseOut['code'] = $response['code'];
             $responseOut['status'] = 'success';
             $responseOut['balance'] = number_format($response['data']['balanceAmount'] ?? 0, 2);
         }
@@ -178,7 +178,6 @@ class ApiController extends ResponseController
         $url = config('api.base_url') . config('api.send_otp_url');
         $strRefId = $mobileNo . randomDigits();
 
-        // Modify the API payload for resend if needed
         $apiPayload = [
             'strRefId' => $strRefId,
             'strMobileNo' => $mobileNo,
@@ -186,7 +185,7 @@ class ApiController extends ResponseController
         ];
 
         if ($isResend) {
-            Log::info('RE-SEND-OT-API-CALLED');
+            Log::info('RE-SEND-OT-API-CALLED : ' . json_encode($apiPayload));
         }
 
         $response = $apiHandler->postCall($url, $apiPayload);
@@ -261,7 +260,6 @@ class ApiController extends ResponseController
 
         if (self::isFirstTimeVisit($otpHistory) || $otpStatus['allowed']) {
 
-            // Call the API to send OTP
             $apiHandler = new APIHandler();
             $url = config('api.base_url') . config('api.send_otp_url');
             $strRefId = $mobileNo . randomDigits();
@@ -6233,7 +6231,6 @@ class ApiController extends ResponseController
 
         return (new ApiController)->sendResponse($responseOut, $responseOut['code']);
     }
-
 
     public static function processDynamicAPICalling($purpose, $data = [])
     {

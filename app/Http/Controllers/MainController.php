@@ -4,13 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Handlers\EncryptionHandler;
 use App\Models\SblUserImage;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-
 
 class MainController extends Controller
 {
@@ -338,7 +333,6 @@ class MainController extends Controller
         return view('front.eWallet.index', $data);
     }
 
-
     public function islamiBanking()
     {
 
@@ -389,7 +383,6 @@ class MainController extends Controller
 
         return view('front.islami-banking.account-related.index', $data);
     }
-
 
     public function ibLoansAdvances()
     {
@@ -525,7 +518,6 @@ class MainController extends Controller
             'path' => $imagePathPrefix . $fileNameToStore
         ];
     }
-
 
     public function encryptWeb()
     {

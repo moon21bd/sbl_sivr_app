@@ -1,21 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\App;
-use Illuminate\Encryption\Encrypter;
-use Illuminate\Support\Facades\Crypt;
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('home');
 Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
 Route::get('/check-login', [\App\Http\Controllers\AuthController::class, 'checkLoginStatus']);
@@ -25,7 +11,6 @@ Route::get('/getac', [\App\Http\Controllers\ApiController::class, 'getSavedAccou
 Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
     Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
-
 });
 
 Route::middleware(['web'])->group(function () {
@@ -39,9 +24,7 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 });
 
 Route::middleware(['web', 'verify.login'])->group(function () {
-    // Your routes and route groups protected by the specified middleware go here
     Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
-
     Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
     Route::get('/account-and-loan', [\App\Http\Controllers\MainController::class, 'accountAndLoan'])->name('accountAndLoan');
     Route::get('/casasnd', [\App\Http\Controllers\MainController::class, 'casasnd'])->name('casasnd');

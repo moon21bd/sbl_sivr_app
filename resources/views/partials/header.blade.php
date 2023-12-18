@@ -259,6 +259,13 @@
             background-color: #c9302c; /* Darker red on hover for Cancel button */
         }
 
+        #swal2-html-container {
+            display: flex
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
     </style>
 </head>
 
