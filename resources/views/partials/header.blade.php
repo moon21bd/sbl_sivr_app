@@ -266,6 +266,11 @@
             flex-direction: column;
         }
 
+        #swal2-html-container input[type=radio] {
+            opacity: 0;
+            display: none;
+        }
+
     </style>
 </head>
 
