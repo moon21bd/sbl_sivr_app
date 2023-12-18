@@ -260,7 +260,7 @@
         }
 
         #swal2-html-container {
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             flex-direction: column;
