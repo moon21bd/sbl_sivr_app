@@ -1188,7 +1188,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isLoggedIn) {
                 const {value: accountAndDob} = await Swal.fire({
                     title: (locale === 'en') ? "Enter Account & Date of Birth." : "অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।",
-                    html: '<input id="swal-input1" class="swal2-input" placeholder="Account Number">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
+                    html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en' ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার')}"><input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">`,
                     showCancelButton: true,
                     confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                     cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
@@ -1235,13 +1235,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         Swal.fire({
                             title: apiResponse.message,
                             icon: apiResponse.status === 'success' ? 'success' : 'error',
-                            allowOutsideClick: false
+                            allowOutsideClick: false,
+                            confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                         });
                         playErrorAudio(apiResponse.prompt);
                     } else {
                         // Handle unsuccessful verification
                         Swal.fire({
-                            title: verifyResp.message, icon: 'error', allowOutsideClick: false
+                            title: verifyResp.message, icon: 'error', allowOutsideClick: false,
+                            confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                         });
                         playErrorAudio(verifyResp.prompt);
                     }

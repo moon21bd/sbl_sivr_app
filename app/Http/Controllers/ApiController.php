@@ -546,11 +546,13 @@ class ApiController extends ResponseController
                     session()->flash('status', $responseOut['status']);
                     session()->flash('message', $responseOut['message']);*/
 
-                    $getAccountList = $this->fetchGetWalletDetails($mobileNo);
-                    $acLists = $getAccountList['data']['accountList'] ?? [];
+                    // $getAccountList = $this->fetchGetWalletDetails($mobileNo);
+                    $getAccountList = $this->fetchSavingsDeposits($mobileNo);
+
+                    $acLists = $getAccountList['accountList'] ?? [];
                     $acListArr = self::processMaskedAccountLists($acLists);
 
-                    // will be removed later.
+                    /*// will be removed later.
                     $acNoTest = "5107801027727";
                     $testNewArray = [
                         "accountNo" => self::maskAccountNumber($acNoTest),
@@ -561,17 +563,16 @@ class ApiController extends ResponseController
 
                     $acListArr['acList'][] = $testNewArray;
                     // will be removed later.
-                    /*
-                     * array:1 [ // app/Http/Controllers/ApiController.php:338
-  "acList" => array:1 [
-    0 => array:4 [
-      "accountNo" => "5107******828"
-      "accountName" => "MD RAQIBUL HASAN"
-      "branchCode" => "ZgR7u65sZWcpywR0Cvq1BThpVi84UWUzbTJ1RWNpWTUzeVFCcUhXOGpZMDc2UG5IZTlNV29nN1l1cFE9"
-      "accEnc" => "DNzEPECCXLac4h+MR7OPAWkxQ1F4RldkWGhkU2RsMkF4aXJyaWc9PQ=="
-    ]
-  ]
-]
+//                    array:1 [ // app/Http/Controllers/ApiController.php:338
+//  "acList" => array:1 [
+//    0 => array:4 [
+//      "accountNo" => "5107******828"
+//      "accountName" => "MD RAQIBUL HASAN"
+//      "branchCode" => "ZgR7u65sZWcpywR0Cvq1BThpVi84UWUzbTJ1RWNpWTUzeVFCcUhXOGpZMDc2UG5IZTlNV29nN1l1cFE9"
+//      "accEnc" => "DNzEPECCXLac4h+MR7OPAWkxQ1F4RldkWGhkU2RsMkF4aXJyaWc9PQ=="
+//    ]
+//  ]
+//]
                      */
 
                     // store encrypted accountList in session
@@ -721,11 +722,12 @@ class ApiController extends ResponseController
     public static function processMaskedAccountLists($acLists)
     {
         return ['acList' => collect($acLists)->map(function ($account) {
+            $accountNo = $account['AccountNo'];
             return [
-                'accountNo' => self::maskAccountNumber($account['accountNo']),
-                'accountName' => trim($account['accountName']),
-                'branchCode' => openSSLEncryptDecrypt($account['branchCode']),
-                'accEnc' => openSSLEncryptDecrypt($account['accountNo']),
+                'accountNo' => self::maskAccountNumber($accountNo),
+                'accountName' => trim($account['AccountName']),
+                'productCode' => openSSLEncryptDecrypt($account['ProductCode']),
+                'accEnc' => openSSLEncryptDecrypt($accountNo),
             ];
         })->values()->toArray()];
     }
@@ -750,16 +752,20 @@ class ApiController extends ResponseController
             $data = json_decode($response['data'], true);
             if (isset($data['StatusCode']) && intval($data['StatusCode']) === Response::HTTP_OK) {
                 $accountList = $data['GetAccountList'];
-                $savingsDeposits = array_filter($accountList, function ($account) {
-                    return $account['ProductName'] === 'Savings Deposit';
-                });
 
-                return array_map(function ($account) {
+                /*$savingsDeposits = array_filter($accountList, function ($account) {
+                    return $account['ProductName'] === 'Savings Deposit';
+                });*/
+
+                $returnArr['accountList'] = array_map(function ($account) {
                     return [
                         'AccountName' => $account['AccountName'],
                         'AccountNo' => $account['AccountNo'],
+                        'ProductCode' => $account['ProductCode'],
+                        'ProductName' => $account['ProductName'],
                     ];
-                }, $savingsDeposits);
+                }, $accountList);
+                return $returnArr;
             }
         }
 
@@ -1533,15 +1539,17 @@ class ApiController extends ResponseController
         $successText = __('messages.account-verify-by-nid-dob-success');
         $failedText = __('messages.account-verify-by-nid-dob-failed');
 
-        $phoneNumber = $data['mobile_no'];
-        $account = $data['account'];
+        $phoneNumber = trim($data['mobile_no']);
+        $account = trim($data['account']);
         $dob = $data['dob'];
 
         $response = self::fetchGetWalletDetails($phoneNumber);
-
         if ($response['status'] === 'success' && $response['code'] === Response::HTTP_OK) { // success
 
-            if (($response['data']['accountNo'] == $account) && ($dob == date('Y-m-d', strtotime($response['data']['dateOfBirth'])))) {
+            $userActualDOB = $response['data']['dateOfBirth'] ?? null;
+            $userActualACNo = $response['data']['accountNo'];
+
+            if ($userActualACNo == $account && self::compareDateOfBirths($dob, $userActualDOB)) {
 
                 return [
                     'code' => Response::HTTP_OK,
@@ -1549,16 +1557,41 @@ class ApiController extends ResponseController
                     'message' => $successText,
                     'prompt' => getPromptPath($successPrompt),
                 ];
+            } else {
+                return [
+                    'code' => Response::HTTP_EXPECTATION_FAILED,
+                    'status' => 'error',
+                    'message' => $failedText,
+                    'prompt' => getPromptPath($failedPrompt),
+                ];
             }
+        } else {
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => $failedText,
+                'prompt' => getPromptPath($failedPrompt)
+            ];
         }
 
-        return [
-            'code' => Response::HTTP_EXPECTATION_FAILED,
-            'status' => 'error',
-            'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
-        ];
+    }
 
+    public static function compareDateOfBirths($userInputedDOB, $userActualDob)
+    {
+        try {
+            $userInputedDOBDateTime = new \DateTime($userInputedDOB);
+            if (is_string($userActualDob)) {
+                $userActualDobDateTime = new \DateTime($userActualDob);
+            } elseif ($userActualDob instanceof \DateTime) {
+                $userActualDobDateTime = $userActualDob;
+            } else {
+                throw new \Exception("Invalid data type for user actual DOB.");
+            }
+
+            return $userInputedDOBDateTime->format('Y-m-d') == $userActualDobDateTime->format('Y-m-d');
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public static function processApiCallingReSendOTP($data)
