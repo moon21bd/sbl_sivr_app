@@ -34,7 +34,7 @@
 </style>
 
 
-<div class="popup-container fixed top-0 right-0 left-0 bottom-0 h-full w-full z-50"
+<div class="popup-container mob-popup-get-started fixed top-0 right-0 left-0 bottom-0 h-full w-full z-50"
      style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
 
     <!-- BG Dots -->
@@ -55,14 +55,14 @@
         <div class="flex justify-center items-center h-screen">
             <div class="w-full lg:w-[40%] flex flex-col gap-6 justify-center items-center text-center">
 
-                <div class="flex flex-col gap-2 justify-center items-center text-center mb-10 z-10">
+                <div class="flex mob-popup-logo-section flex-col gap-2 justify-center items-center text-center mb-10 z-10">
                     <img src="{{ asset('img/logo-white.png') }}" alt="">
                     <h1 class="text-white [font-size:var(--font-size-title)] font-bold relative after:absolute after:w-full after:h-[2px] after:left-0 after:-bottom-1 after:bg-gray-300">
                         সোনালী ব্যাংক পিএলসি</h1>
                     <h2 class="text-white [font-size:var(--font-size-title)] font-bold">Sonali Bank PLC</h2>
                 </div>
 
-                <div class="bg-white rounded-md px-3 py-6 w-full mb-16 z-10"
+                <div class="bg-white mob-get-started-text rounded-md px-3 py-6 w-full mb-16 z-10"
                      data-text-en="{{ config('voices.defaultGetStarted.text.en')}}"
                      data-text-bn="{{ config('voices.defaultGetStarted.text.bn') }}"
                      data-voice-en="{{ config('voices.defaultGetStarted.voice.en')}}"
