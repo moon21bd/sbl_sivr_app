@@ -239,8 +239,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                 didOpen: () => {
                     // Initialize Select2 after the Swal modal is shown
-                    $('.select2').select2();
-                    
+                    // $('.select2').select2();
+
                     // const callTypeSelect = document.getElementById('callTypeSelect');
                     const callTypeSelect = 2;
                     const callCategorySelect = document.getElementById('callCategorySelect');

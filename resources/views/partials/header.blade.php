@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <!-- Include Select2 CSS -->
-    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
+{{--    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>--}}
 
 
     {{-- Script start from here --}}
@@ -16,7 +16,7 @@
     <script src="{{ asset('js/axios.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <!-- Include Select2 JS -->
-    <script src="{{ asset('js/select2.full.min.js') }}"></script>
+{{--    <script src="{{ asset('js/select2.full.min.js') }}"></script>--}}
     {{-- Script ends from here --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
