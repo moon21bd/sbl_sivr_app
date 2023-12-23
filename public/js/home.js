@@ -237,11 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 showCancelButton: true,
                 confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                 cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-                onOpen: () => {
+                didOpen: () => {
                     // Initialize Select2 after the Swal modal is shown
                     $('.select2').select2();
-                },
-                didOpen: () => {
                     // const callTypeSelect = document.getElementById('callTypeSelect');
                     const callTypeSelect = 2;
                     const callCategorySelect = document.getElementById('callCategorySelect');
