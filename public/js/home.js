@@ -239,7 +239,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                 didOpen: () => {
                     // Initialize Select2 after the Swal modal is shown
-                    $('.select2').select2();
+                    $('.select2').select2({
+                        dropdownCssClass: 'select2-dropdown', // Add a custom class to the Select2 dropdown
+                    });
                     // const callTypeSelect = document.getElementById('callTypeSelect');
                     const callTypeSelect = 2;
                     const callCategorySelect = document.getElementById('callCategorySelect');
@@ -945,7 +947,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btnAccountSwitch) {
         btnAccountSwitch.addEventListener('click', handleAccountSwitchClick);
     } else {
-        console.info('Element with ID "btnAccountSwitch" not found.');
+        // console.info('Element with ID "btnAccountSwitch" not found.');
     }
 
     async function handleAccountSwitchClick() {
