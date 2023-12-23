@@ -199,17 +199,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const swalOptions = {
                 title: textSubmitComplaint,
                 html: `<label for="callCategorySelect">${textCallCategory}:</label>
-                <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
+                <select id="callCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
                 </select>
 
                 <label for="callSubCategorySelect">${textCallSubCategory}:</label>
-                <select id="callSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
+                <select id="callSubCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
                     <option value="" disabled selected>${textSelectSubCallCategory}</option>
                 </select>
                 <label for="callSubSubCategorySelect">${textCallSubSubCategory}:</label>
-                <select id="callSubSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectSubSubCallCategory}" required>
+                <select id="callSubSubCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectSubSubCallCategory}" required>
                     <option value="" disabled selected>${textSelectSubSubCallCategory}</option>
                 </select>
 
@@ -237,6 +237,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 showCancelButton: true,
                 confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                 cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+                onOpen: () => {
+                    // Initialize Select2 after the Swal modal is shown
+                    $('.select2').select2();
+                },
                 didOpen: () => {
                     // const callTypeSelect = document.getElementById('callTypeSelect');
                     const callTypeSelect = 2;
