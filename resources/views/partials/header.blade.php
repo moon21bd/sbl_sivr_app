@@ -199,6 +199,12 @@
             color: rgba(115, 103, 239, 1);
         }
 
+        .complaint-title {
+            font-size: 24px;
+            text-align: left;
+            color: rgba(115, 103, 239, 1);
+        }
+
         .account-details p:first-child {
             margin-bottom: 20px;
         }
@@ -292,12 +298,12 @@
         }
 
         .ac-cancel-button {
-            background-color: #d9534f; /* Red color for Cancel button */
+            background-color: #d9534f;
         }
 
         .ac-submit-button:hover,
         .ac-cancel-button:hover {
-            background-color: #45a049; /* Darker green on hover for Submit button */
+            background-color: #45a049;
         }
 
         .ac-cancel-button:hover {

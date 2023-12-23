@@ -197,7 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
             let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
 
             const swalOptions = {
-                title: textSubmitComplaint,
+                // title: textSubmitComplaint,
+                title: `<h3 class="complaint-title"> ${textSubmitComplaint}</h3>`,
                 html: `<label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
