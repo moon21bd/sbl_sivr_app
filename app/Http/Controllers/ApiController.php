@@ -28,7 +28,10 @@ class ApiController extends ResponseController
         return $this->sendResponse($responseOut);*/
         // will be deleted this code later
 
-        $phoneNumber = Session::get('logInfo.otp_info.otp_phone') ?? null;
+        $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
+
+        // dd($phoneNumber, Session::all());
+        // $phoneNumber = Session::get('logInfo.otp_info.otp_phone') ?? null;
         $response = self::fetchGetWalletDetails($phoneNumber);
         $responseOut = [
             'code' => Response::HTTP_EXPECTATION_FAILED,
@@ -672,9 +675,11 @@ class ApiController extends ResponseController
                 'account_info' => $accountAsData,
             ]);
 
-            Session::forget('otp');
+            // Session::forget('otp');
 
-            $mobileNo = Session::get('logInfo.otp_info.otp_phone');
+            // $mobileNo = Session::get('logInfo.otp_info.otp_phone');
+            $mobileNo = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
+
             $purpose = $request->input('purpose');
             $responseOut = [
                 'code' => Response::HTTP_OK,
@@ -6225,7 +6230,9 @@ class ApiController extends ResponseController
         ]);
 
         $purpose = strtoupper($request->input('purpose'));
-        $phoneNumber = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
+        // $phoneNumber = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
+        $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone');
+
 
         // Prepare data for API call
         // we need to add/pass additional data to array_merge 's first param

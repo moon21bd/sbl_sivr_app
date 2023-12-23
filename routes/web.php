@@ -23,8 +23,11 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::post('/verify-wrap', [\App\Http\Controllers\ApiController::class, 'verifyOtpWrapper'])->name('verifyOtpWrapper');
 });
 
+Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
+
 Route::middleware(['web', 'verify.login'])->group(function () {
-    Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
+
+    Route::get('/get-balance', [\App\Http\Controllers\ApiController::class, 'getBalance']);
     Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
     Route::get('/account-and-loan', [\App\Http\Controllers\MainController::class, 'accountAndLoan'])->name('accountAndLoan');
     Route::get('/casasnd', [\App\Http\Controllers\MainController::class, 'casasnd'])->name('casasnd');
@@ -52,7 +55,7 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 
 // web api routes
 Route::get('/example', [\App\Http\Controllers\MainController::class, 'encryptWeb']);
-Route::get('/get-balance', [\App\Http\Controllers\ApiController::class, 'getBalance']);
+
 
 
 

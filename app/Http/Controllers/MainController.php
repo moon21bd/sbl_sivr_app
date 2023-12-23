@@ -19,21 +19,21 @@ class MainController extends Controller
         // Uncomment these lines for debugging
         // dd(Session::all());
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
 
         $prompt = (app()->getLocale() === 'en') ? "home/get-started-en" : "home/get-started-bn";
-
-        // Log::info('Prompt: ' . $prompt);
+        $userInfo = getUserInfoFromSession();
 
         $data = [
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
             'title' => __('messages.home'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto,
         ];
 
         return view('front.home', $data);
@@ -42,23 +42,25 @@ class MainController extends Controller
     public function cards()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
             ['url' => url('/cards'), 'label' => __('messages.cards')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.cards'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto,
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.cards.index', $data);
@@ -66,11 +68,13 @@ class MainController extends Controller
 
     public function accountAndLoan()
     {
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -81,8 +85,8 @@ class MainController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.account-loans'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.account-and-loan.index', $data);
@@ -91,11 +95,13 @@ class MainController extends Controller
     public function casasnd()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -107,8 +113,8 @@ class MainController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.CASASND-btn'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.account-and-loan.casasnd', $data);
@@ -117,12 +123,13 @@ class MainController extends Controller
     public function fixedDeposit()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
+        $userInfo = getUserInfoFromSession();
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
             ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
@@ -133,8 +140,8 @@ class MainController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.fixed-deposit'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.account-and-loan.fixed-deposit', $data);
@@ -143,11 +150,13 @@ class MainController extends Controller
     public function accountDPS()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -159,8 +168,9 @@ class MainController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.DPS-btn'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
+
         ];
 
         return view('front.account-and-loan.dps', $data);
@@ -169,12 +179,13 @@ class MainController extends Controller
     public function loansAdvances()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
+        $userInfo = getUserInfoFromSession();
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
             ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
@@ -185,8 +196,8 @@ class MainController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.loans-advances'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.account-and-loan.loans-and-advances', $data);
@@ -195,17 +206,19 @@ class MainController extends Controller
     public function agentBanking()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $data = [
             'title' => __('messages.agent-banking'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.agent-banking', $data);
@@ -214,11 +227,11 @@ class MainController extends Controller
     public function creditCard()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -226,12 +239,14 @@ class MainController extends Controller
             ['url' => url('/credit-card'), 'label' => __('messages.credit-card')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.credit-card'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.cards.credit-card', $data);
@@ -240,11 +255,11 @@ class MainController extends Controller
     public function debitCard()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -252,12 +267,14 @@ class MainController extends Controller
             ['url' => url('/debit-card'), 'label' => __('messages.debit-card')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.debit-card'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.cards.debit-card', $data);
@@ -266,11 +283,11 @@ class MainController extends Controller
     public function prePaidCard()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -278,12 +295,14 @@ class MainController extends Controller
             ['url' => url('/prepaid-card'), 'label' => __('messages.prepaid-card')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.prepaid-card'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.cards.prepaid-card', $data);
@@ -292,17 +311,19 @@ class MainController extends Controller
     public function eSheba()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $data = [
             'title' => __('messages.eSheba-btn'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.esheba.index', $data);
@@ -311,23 +332,26 @@ class MainController extends Controller
     public function eWallet()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
             ['url' => url('/ewallet'), 'label' => __('messages.eWallet-btn')]
         ];
 
+        $userInfo = getUserInfoFromSession();
+
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.eWallet-btn'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.eWallet.index', $data);
@@ -336,23 +360,25 @@ class MainController extends Controller
     public function islamiBanking()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
             ['url' => url('/islami-banking'), 'label' => __('messages.islami-banking')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.islami-banking'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.islami-banking.index', $data);
@@ -361,11 +387,11 @@ class MainController extends Controller
     public function ibAccountRelated()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -373,12 +399,14 @@ class MainController extends Controller
             ['url' => url('/ib-account-related'), 'label' => __('messages.ib-account-related-btn')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.ib-account-related-btn'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.islami-banking.account-related.index', $data);
@@ -387,11 +415,13 @@ class MainController extends Controller
     public function ibLoansAdvances()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
@@ -399,12 +429,14 @@ class MainController extends Controller
             ['url' => url('/ib-loans-advances'), 'label' => __('messages.ib-loans-advances')],
         ];
 
+        $userInfo = getUserInfoFromSession();
+
         $data = [
             'breadcrumbs' => $breadcrumbs,
             'title' => __('messages.ib-loans-advances'),
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.islami-banking.loans-advances.index', $data);
@@ -413,17 +445,19 @@ class MainController extends Controller
     public function sonaliBankProducts()
     {
 
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $data = [
             'title' => 'Sonali Bank Products',
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.sonali-products.index', $data);
@@ -431,17 +465,19 @@ class MainController extends Controller
 
     public function sonaliPaymentGateway()
     {
-        $logInfo = Session::get('logInfo');
+        /*$logInfo = Session::get('logInfo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
         $userImage = SblUserImage::where('user_phone', $userPhone)->orderBy('created_at', 'desc')->value('path');
-        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');
+        $userPhoto = $userImage ? asset($userImage) : asset('img/icon/user.svg');*/
+
+        $userInfo = getUserInfoFromSession();
 
         $data = [
             'title' => 'Sonali Payment Gateway',
             'prompt' => null,
-            'name' => $name,
-            'photo' => $userPhoto
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
         ];
 
         return view('front.spg.index', $data);
@@ -469,7 +505,6 @@ class MainController extends Controller
         return view('front.verify-otp')->with($data);
     }
 
-    // Assuming you have a route pointing to this controller method
 
     public function uploadUserPhoto(Request $request)
     {
@@ -478,7 +513,8 @@ class MainController extends Controller
             $base64Image = $request->input('photo');
 
             // Save the image to the public/uploads/photos directory and get the image path
-            $userPhone = Session::get('logInfo')['otp_info']['otp_phone'] ?? null;
+
+            $userPhone = data_get(Session::get('logInfo'), 'otp_info.otp_phone');
             $accountName = Session::get('logInfo')['account_info']['accountName'] ?? null;
             $accountNo = Session::get('logInfo')['account_info']['accountNo'] ?? null;
 

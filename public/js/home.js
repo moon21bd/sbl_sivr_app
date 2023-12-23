@@ -1019,9 +1019,27 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.addEventListener('click', handleAccountSwitchCommonSubmitButtonClick);
         cancelButton.addEventListener('click', handleAccountSwitchCommonCancelButtonClick);
 
+        const accountOptionsDivs = document.querySelectorAll('.account-option');
+
+        accountOptionsDivs.forEach(optionDiv => {
+            optionDiv.addEventListener('click', handleAccountOptionCommonClick);
+        });
+
         /*document.querySelectorAll('.ac-select-button').forEach(button => {
             button.addEventListener('click', handleSelectCommonButtonClick);
         });*/
+    }
+
+    function handleAccountOptionCommonClick(event) {
+        const clickedOption = event.currentTarget;
+        const accountId = clickedOption.getAttribute('data-account-id');
+
+        // Reset background color for all options
+        document.querySelectorAll('.account-option').forEach(option => {
+            option.style.backgroundColor = ''; // Reset to default
+        });
+
+        clickedOption.style.backgroundColor = '#E9B308';
     }
 
     function handleAccountSwitchCommonSubmitButtonClick() {
@@ -2694,25 +2712,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function redirectUserToAppStore(appType) {
-        let appStoreLink;
-
-        if (appType === 'esheba') {
-            // Choose the appropriate link based on the user's platform
-            appStoreLink = isIOS() ? eShebaiOS : eShebaAndroid;
-        } else if (appType === 'spg') {
-            // Choose the appropriate link based on the user's platform
-            appStoreLink = isIOS() ? SPGiOS : SPGAndroid;
-        }
+        const appStoreLink = (appType === 'esheba' && isIOS()) ? eShebaiOS :
+            (appType === 'esheba') ? eShebaAndroid :
+                (appType === 'spg' && isIOS()) ? SPGiOS :
+                    (appType === 'spg') ? SPGAndroid : null;
 
         if (appStoreLink) {
-            // Redirect the user to the selected app store link
             window.location.href = appStoreLink;
-            return false;
         } else {
-            // Handle unsupported platform or other error
             console.error('Unsupported platform or invalid app type');
+            window.location.href = (appType === 'esheba') ? eShebaAndroid : SPGAndroid;
         }
+
+        return false;
     }
+
 
     /*function showDownloadOptions(appName) {
         let locale = getSavedLocale();

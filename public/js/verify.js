@@ -239,6 +239,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         submitButton.addEventListener('click', handleAccountSwitchSubmitButtonClick);
         cancelButton.addEventListener('click', handleAccountSwitchCancelButtonClick);
+
+        const accountOptionsDivs = document.querySelectorAll('.account-option');
+
+        accountOptionsDivs.forEach(optionDiv => {
+            optionDiv.addEventListener('click', handleAccountOptionClick);
+        });
     }
 
 
@@ -260,6 +266,19 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             console.log('No account selected');
         }
+    }
+
+
+    function handleAccountOptionClick(event) {
+        const clickedOption = event.currentTarget;
+        const accountId = clickedOption.getAttribute('data-account-id');
+
+        // Reset background color for all options
+        document.querySelectorAll('.account-option').forEach(option => {
+            option.style.backgroundColor = ''; // Reset to default
+        });
+
+        clickedOption.style.backgroundColor = '#E9B308';
     }
 
     function handleSelectButtonClick() {
