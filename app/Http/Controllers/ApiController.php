@@ -19,6 +19,7 @@ class ApiController extends ResponseController
 {
     public function getBalance(Request $request)
     {
+        // dd($phoneNumber, Session::all());
         // will be deleted this code later
         /*$responseOut = [
             'code' => Response::HTTP_OK,
@@ -30,8 +31,6 @@ class ApiController extends ResponseController
 
         $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
 
-        // dd($phoneNumber, Session::all());
-        // $phoneNumber = Session::get('logInfo.otp_info.otp_phone') ?? null;
         $response = self::fetchGetWalletDetails($phoneNumber);
         $responseOut = [
             'code' => Response::HTTP_EXPECTATION_FAILED,
@@ -206,7 +205,8 @@ class ApiController extends ResponseController
                         'prompt' => null
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
-                } elseif ($statusCode === Response::HTTP_OK) {
+                } elseif ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
+
                     Session::put('otp', [
                         'phone_masked' => $this->hidePhoneNumber($mobileNo),
                         'otp_phone' => $mobileNo,
@@ -220,7 +220,8 @@ class ApiController extends ResponseController
                         'url' => url('verify-otp')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
-                } else {
+                    
+                } else { // OTP SENDING FAILED
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
@@ -229,7 +230,9 @@ class ApiController extends ResponseController
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
-            } else {
+
+            } else { // invalid data found from api
+
                 $responseOut = [
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
@@ -238,7 +241,7 @@ class ApiController extends ResponseController
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
-        } else {
+        } else { // UNEXPECTED API RESPONSE
             $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
             Log::error('API ERROR:: ' . $msg);
             $responseOut = [
