@@ -957,15 +957,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     function showAccountSelectionPopupCommon(accounts) {
         // stopAllAudio();
-        /*const accountOptions = accounts.map(account => `
-            <div class="account-option">
-                <p>${account.accountName}</p>
-                <p>${account.accountNo}</p>
-                <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
-            </div>`).join('');*/
 
         const accountOptions = accounts.map(account => `
     <div class="account-option">
@@ -978,34 +971,13 @@ document.addEventListener('DOMContentLoaded', function () {
         </label>
     </div>`).join('');
 
-
-        /*Swal.fire({
-            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
-            html: accountOptions,
-            showCancelButton: true,
-            cancelButtonText: 'Cancel',
-            showConfirmButton: false,
-            allowOutsideClick: false
-        });*/
-
-        /*Swal.fire({
-            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
-            html: `${accountOptions}<button class="ac-submit-button">${(locale === 'en') ? "Submit" : "জমা দিন"}</button>`,
-            showCancelButton: true,
-            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-            showConfirmButton: false,
-            allowOutsideClick: false
-        });
-
-        const submitButton = document.querySelector('.ac-submit-button');
-        submitButton.addEventListener('click', handleAccountSwitchCommonSubmitButtonClick);*/
-
         Swal.fire({
-            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`,
+            //title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
             html: `
         ${accountOptions}
         <div class="button-container">
-            <button class="ac-submit-button">${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
+            <button class="ac-submit-button" >${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
             <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
         </div>
     `,

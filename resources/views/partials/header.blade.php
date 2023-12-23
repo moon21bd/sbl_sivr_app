@@ -156,12 +156,24 @@
         }
 
 
-        .account-option {
+        /*.account-option {
             margin-bottom: 15px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 8px;
             transition: background-color 0.3s ease;
+        }*/
+
+        .account-option {
+            margin-bottom: 20px;
+            padding: 25px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .account-option:last-child {
+            margin-bottom: 0px;
         }
 
         .account-option:hover {
@@ -175,6 +187,17 @@
         .account-details {
             margin-bottom: 8px;
         }
+
+        .account-list-title {
+            font-size: 24px;
+            text-align: left;
+            color: rgba(115, 103, 239, 1);
+        }
+
+        .account-details p:first-child {
+            margin-bottom: 20px;
+        }
+
 
         /* Optional: Add styles for the labels */
         .account-option label {
@@ -223,10 +246,27 @@
             background-color: #c9302c; /* Darker red color on hover */
         }
 
-        /* Add to your existing styles or create a new CSS file */
         .button-container {
-            text-align: center; /* Center-align the buttons */
-            margin-top: 20px; /* Add some top margin for separation */
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        .button-container button {
+            margin: 0;
+            border-color: rgba(115, 103, 239, 1);
+            background-color: transparent;
+            color: rgba(115, 103, 239, 1);
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        .button-container button.ac-submit-button {
+            margin-right: 20px;
+            background-color: rgba(115, 103, 239, 1);
+            color: #fff;
         }
 
         .ac-submit-button,

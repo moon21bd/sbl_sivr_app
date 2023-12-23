@@ -195,41 +195,15 @@ document.addEventListener('DOMContentLoaded', function () {
         </label>
     </div>`).join('');
 
-
-        /*Swal.fire({
-            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
-            html: accountOptions,
-            showCancelButton: true,
-            confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
-            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-            showConfirmButton: false,
-            allowOutsideClick: false
-        });*/
-
-        /*Swal.fire({
-            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
-            html: `${accountOptions}<button class="ac-submit-button">${(locale === 'en') ? "Submit" : "জমা দিন"}</button>`,
-            showCancelButton: true,
-            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-            showConfirmButton: false,
-            allowOutsideClick: false
-        });*/
-
-        /*document.querySelectorAll('.ac-select-button').forEach(button => {
-            button.addEventListener('click', handleSelectButtonClick);
-        });*/
-        /*const submitButton = document.querySelector('.ac-submit-button');
-        submitButton.addEventListener('click', handleAccountSwitchSubmitButtonClick);*/
-
         Swal.fire({
-            title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`,
+            // title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
             html: `
         ${accountOptions}
         <div class="button-container">
             <button class="ac-submit-button">${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
             <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
-        </div>
-    `,
+        </div>`,
             showConfirmButton: false,
             allowOutsideClick: false
         });
@@ -246,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
             optionDiv.addEventListener('click', handleAccountOptionClick);
         });
     }
-
 
     function handleAccountSwitchCancelButtonClick() {
         Swal.close();
