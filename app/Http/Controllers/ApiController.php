@@ -220,7 +220,7 @@ class ApiController extends ResponseController
                         'url' => url('verify-otp')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
-                    
+
                 } else { // OTP SENDING FAILED
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
