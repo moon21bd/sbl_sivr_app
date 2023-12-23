@@ -2,6 +2,22 @@
 
 <style>
 
+    @media only screen and (max-width: 768.88px), (max-device-width: 768.88px) {
+        .mob-popup-get-started .mob-popup-logo-section {
+            gap: 0rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mob-popup-get-started .mob-get-started-text {
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        .mob-popup-get-started .mob-get-started-text p {
+            font-size: 1rem;
+        }
+    }
+
     .popup-container {
         display: none;
     }
@@ -55,7 +71,8 @@
         <div class="flex justify-center items-center h-screen">
             <div class="w-full lg:w-[40%] flex flex-col gap-6 justify-center items-center text-center">
 
-                <div class="flex mob-popup-logo-section flex-col gap-2 justify-center items-center text-center mb-10 z-10">
+                <div
+                    class="flex mob-popup-logo-section flex-col gap-2 justify-center items-center text-center mb-10 z-10">
                     <img src="{{ asset('img/logo-white.png') }}" alt="">
                     <h1 class="text-white [font-size:var(--font-size-title)] font-bold relative after:absolute after:w-full after:h-[2px] after:left-0 after:-bottom-1 after:bg-gray-300">
                         সোনালী ব্যাংক পিএলসি</h1>
