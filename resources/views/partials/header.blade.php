@@ -16,7 +16,7 @@
     <script src="{{ asset('js/axios.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <!-- Include Select2 JS -->
-    <script src="{{ asset('js/select2.min.js') }}"></script>
+    <script src="{{ asset('js/select2.full.min.js') }}"></script>
     {{-- Script ends from here --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
