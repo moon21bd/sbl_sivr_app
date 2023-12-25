@@ -106,13 +106,18 @@
                     <div class="flex relative top-5">
 
                         <button id="bnButton" type="submit" data-locale="bn"
-                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-4">
+                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-3">
                             বাংলা
                         </button>
 
                         <button id="enButton" type="submit" data-locale="en"
-                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-4">
+                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-3">
                             English
+                        </button>
+
+                        <button id="skipButton" type="submit" data-skip="yes"
+                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-3">
+                            Skip
                         </button>
                     </div>
                 </div>
@@ -130,6 +135,7 @@
         const popupContainer = document.querySelector('.popup-container');
         const bnButton = document.getElementById('bnButton');
         const enButton = document.getElementById('enButton');
+        const skipButton = document.getElementById('skipButton');
         let showGetStartedBtn = true;
 
         try {
@@ -138,6 +144,7 @@
             console.error('Error retrieving data from sessionStorage:', error);
         }
 
+        // console.log('showGetStartedBtn-Val', showGetStartedBtn)
         popupContainer.style.display = showGetStartedBtn ? 'block' : 'none';
 
         function playGSAudio(audio) {
@@ -166,24 +173,29 @@
                     playGSAudio(audio);
                 });
 
-                audio.addEventListener('ended', () => {
+                audio.addEventListener('ended', async () => {
                     hidePopupContainer();
                     saveUserConsent(locale);
-                    axios.post('/change-locale', {locale})
-                        .then(response => {
-                            console.log(response.data);
-                            goTo(response.data.redirect);
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        })
-                        .finally(() => {
-                            console.log('AJAX request completed.');
-                        });
+                    await doSwitchLangRequest(locale);
                 });
             } else {
-                console.error(`Element with attribute data-text-${locale} not found.`);
+                // console.error(`Element with attribute data-text-${locale} not found.`);
             }
+        }
+
+        async function doSwitchLangRequest(locale) {
+
+            await axios.post('/change-locale', {locale})
+                .then(response => {
+                    console.log(response.data);
+                    goTo(response.data.redirect);
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+                .finally(() => {
+                    console.info('Language Switch AJAX request completed.');
+                });
         }
 
         function addLanguageButtonEventListener(button, locale) {
@@ -200,17 +212,46 @@
         addLanguageButtonEventListener(enButton, 'en');
         addLanguageButtonEventListener(bnButton, 'bn');
 
+        if (skipButton) {
+            skipButton.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const skip = this.getAttribute('data-skip');
+                console.log('value', skip);
+                if (skip === 'yes') {
+                    await processSkipOperation('bn');
+                }
+            });
+        }
+
+        async function processSkipOperation(localeToBeDecide) {
+            hidePopupContainer();
+            setShowHide('show');
+            setSavedLocale(localeToBeDecide);
+            if (bnButton) {
+                bnButton.style.display = 'none';
+            }
+            if (enButton) {
+                enButton.style.display = 'none';
+            }
+            await doSwitchLangRequest(localeToBeDecide);
+        }
+
         function hidePopupContainer() {
             popupContainer.style.display = 'none';
         }
 
         function saveUserConsent(button) {
             try {
-                sessionStorage.setItem('hideGetStartedBtn', 'show');
+                setShowHide('show');
                 tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': button});
             } catch (error) {
                 console.error('Error saving data in sessionStorage:', error);
             }
         }
+
+        function setShowHide(val) {
+            sessionStorage.setItem('hideGetStartedBtn', val);
+        }
+
     });
 </script>

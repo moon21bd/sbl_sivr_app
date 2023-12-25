@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const balanceContainer = document.getElementById('balance-container');
     let dataTextValue = "";
-    const balanceText = document.getElementById('balance-text');
     const btnTapForBalance = document.getElementById('balance-button');
     const balanceImage = document.querySelector('#balance-container img');
-    const resetAnimationTimeout = 3000; // Change this value to configure the timeout
+    const resetAnimationTimeout = 2000; // 2 Secs. Change this value to configure the timeout
+    const balanceText = document.getElementById('balance-text');
 
     function handleBalanceButtonClick() {
         balanceContainer.classList.add('slide-out');
@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
             'user_account_no': getData('acn')
         });
 
-        // Fetch balance from API using Axios
         axios.get('/get-balance')
             .then(handleSuccess)
             .catch(handleError)
@@ -27,14 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
     btnTapForBalance.addEventListener('click', () => {
 
         dataTextValue = balanceContainer.getAttribute('data-text');
-        // console.log('dataTextValue', dataTextValue)
         checkLoginStatus()
             .then(isLoggedIn => {
                 if (isLoggedIn) {
-                    // User is logged in, proceed with the file upload
                     handleBalanceButtonClick();
                 } else {
-                    // User is not logged in, show the verification alert
                     showVerificationAlert();
                 }
             })
@@ -46,11 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
         balanceText.textContent = `${balance}`;
         balanceImage.style.opacity = 0;
         balanceContainer.classList.remove('slide-out');
-        balanceContainer.classList.add('slide-in');
+        btnTapForBalance.disabled = true; // to prevent second time balance button click
+
+        /*balanceContainer.classList.add('slide-in');
 
         setTimeout(() => {
             resetAnimation(dataTextValue)
-        }, resetAnimationTimeout);
+        }, resetAnimationTimeout);*/
     }
 
 

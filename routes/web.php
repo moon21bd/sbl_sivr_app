@@ -50,6 +50,7 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::post('/upload-photo', [\App\Http\Controllers\MainController::class, 'uploadUserPhoto'])->name('uploadUserPhoto');
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
+    Route::post('/logout-on-close', 'AuthController@logoutOnClose')->name('logoutOnClose');
 
 });
 

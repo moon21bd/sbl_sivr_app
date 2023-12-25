@@ -31,12 +31,23 @@ class ApiController extends ResponseController
 
         $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
 
-        $response = self::fetchGetWalletDetails($phoneNumber);
         $responseOut = [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'balance' => 0
         ];
+
+        /*$purpose = 'BALANCE-CHECK';
+        $allowedTime = config('bank.SECOND_ALLOW_FOR_TICKET');
+        if (!createTicket($purpose, $phoneNumber, $allowedTime)) {
+            // user will be unable to create a ticket
+            $responseOut['message'] = "User can create a ticket after 12 hours.";
+            return $this->sendResponse($responseOut, $responseOut['code']);
+        } else {
+            // Ticket history creation succeeded
+        }*/
+
+        $response = self::fetchGetWalletDetails($phoneNumber);
 
         if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
             $responseOut['code'] = $response['code'];

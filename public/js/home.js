@@ -644,9 +644,14 @@ document.addEventListener('DOMContentLoaded', function () {
             redirectUserToAppStore('esheba');
         });
 
-        const btnSPG = document.getElementById('btnSPG');
+        /*const btnSPG = document.getElementById('btnSPG');
         btnSPG.addEventListener('click', function () {
             redirectUserToAppStore('spg');
+        });*/
+
+        const btnSPG = document.getElementById('btnSPG');
+        btnSPG.addEventListener('click', function () {
+            goTo('https://sbl.com.bd:7070/');
         });
 
         const btnEWallet = document.getElementById('btnEWallet');
@@ -943,12 +948,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    const btnAccountSwitch = document.getElementById('btnAccountSwitch');
-    if (btnAccountSwitch) {
-        btnAccountSwitch.addEventListener('click', handleAccountSwitchClick);
-    } else {
-        // console.info('Element with ID "btnAccountSwitch" not found.');
+    async function handleAccountSwitchButtonClick() {
+        if (await checkLoginStatus()) {
+            await handleAccountSwitchClick();
+        } else {
+            showVerificationAlert();
+        }
     }
+
+    const btnAccountSwitch = document.getElementById('btnAccountSwitch');
+    btnAccountSwitch.addEventListener('click', handleAccountSwitchButtonClick);
 
     async function handleAccountSwitchClick() {
         try {

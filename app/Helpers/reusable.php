@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Created by PhpStorm.
  * User: Raqibul Hasan Moon
@@ -119,4 +121,36 @@ if (!function_exists('getUserInfoFromSession')) {
 }
 
 
+if (!function_exists('createTicket')) {
+    function createTicket($purpose, $mobileNo, $secondAllowForTicket)
+    {
+        $userTicketHistory = \App\Models\UserTicketHistory::latest()
+            ->where(function ($query) use ($mobileNo, $purpose) {
+                $query->where('mobile_no', $mobileNo);
+            })
+            ->lockForUpdate()
+            ->first();
 
+        $isUserEligible = $userTicketHistory && $userTicketHistory->created_at->diffInSeconds(now()) <= $secondAllowForTicket;
+
+        if ($isUserEligible) {
+            // User is not eligible for creating a ticket
+            \Illuminate\Support\Facades\Log::info("user is not eligible for creating a ticket for the next $secondAllowForTicket seconds");
+            return false;
+        }
+
+        saveUserTicketHistory($purpose, 'done', $mobileNo);
+        return true;
+    }
+}
+
+if (!function_exists('saveUserTicketHistory')) {
+    function saveUserTicketHistory($purpose, $status = 0, $mobileNo)
+    {
+        \App\Models\UserTicketHistory::create([
+            'purpose' => $purpose,
+            'status' => $status,
+            'mobile_no' => $mobileNo,
+        ]);
+    }
+}

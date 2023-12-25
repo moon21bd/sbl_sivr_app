@@ -19,13 +19,14 @@ class AuthController extends Controller
 
     public function logout()
     {
-        // Implement any necessary cleanup or logout procedures here
-        // For example, you can clear the user session data or perform any other actions
-
-        // Set 'is_logged_in' to false in the session
         Session::put('is_logged_in', false);
+        return response()->json(['message' => 'Good bye !']);
+    }
 
-        // Return a JSON response indicating successful logout
-        return response()->json(['message' => 'Logout successful']);
+    public function logoutOnClose()
+    {
+        // Session::put('is_logged_in', false);
+        Session::flush();
+        return response()->json(['message' => 'Good bye']);
     }
 }

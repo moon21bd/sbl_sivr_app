@@ -22,10 +22,12 @@
                     <a class="text-red-600 text-lg font-bold py-1 my-1" href="javascript:void(0)"
                        id="btnLogout">{{ __('messages.log-out') }}</a>--}}
 
+                    <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="javascript:void(0)" id="btnAccountSwitch">{{ __('messages.account-switch') }}</a>
+
                     @if(session()->has('logInfo') && session('logInfo.is_logged'))
-                        <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1" href="javascript:void(0)" id="btnAccountSwitch">{{ __('messages.account-switch') }}</a>
                         <a class="text-red-600 text-lg font-bold py-1 my-1" href="javascript:void(0)" id="btnLogout">{{ __('messages.log-out') }}</a>
                     @endif
+
 
 
                 </div>
