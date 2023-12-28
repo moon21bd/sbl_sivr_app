@@ -23,19 +23,21 @@ document.addEventListener('DOMContentLoaded', function () {
             .finally(hideLoader);
     }
 
-    btnTapForBalance.addEventListener('click', () => {
+    if (btnTapForBalance) {
+        btnTapForBalance.addEventListener('click', () => {
 
-        dataTextValue = balanceContainer.getAttribute('data-text');
-        checkLoginStatus()
-            .then(isLoggedIn => {
-                if (isLoggedIn) {
-                    handleBalanceButtonClick();
-                } else {
-                    showVerificationAlert();
-                }
-            })
-            .catch(error => console.error(error));
-    });
+            dataTextValue = balanceContainer.getAttribute('data-text');
+            checkLoginStatus()
+                .then(isLoggedIn => {
+                    if (isLoggedIn) {
+                        handleBalanceButtonClick();
+                    } else {
+                        showVerificationAlert();
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    }
 
     function handleSuccess(response) {
         const balance = response?.data?.status === 'success' ? response.data.balance : 'Error occurred.';

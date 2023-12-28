@@ -975,8 +975,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const accountOptions = accounts.map(account => `
     <div class="account-option">
-        <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
         <label for="account-${account.accEnc}">
+         <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
             <div class="account-details">
                 <p>Account Name: ${account.accountName}</p>
                 <p>Account No: ${account.accountNo}</p>
@@ -1004,11 +1004,11 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.addEventListener('click', handleAccountSwitchCommonSubmitButtonClick);
         cancelButton.addEventListener('click', handleAccountSwitchCommonCancelButtonClick);
 
-        const accountOptionsDivs = document.querySelectorAll('.account-option');
+        /*const accountOptionsDivs = document.querySelectorAll('.account-option');
 
         accountOptionsDivs.forEach(optionDiv => {
             optionDiv.addEventListener('click', handleAccountOptionCommonClick);
-        });
+        });*/
 
         /*document.querySelectorAll('.ac-select-button').forEach(button => {
             button.addEventListener('click', handleSelectCommonButtonClick);
@@ -1024,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', function () {
             option.style.backgroundColor = ''; // Reset to default
         });
 
-        clickedOption.style.backgroundColor = '#E9B308';
+        clickedOption.style.backgroundColor = '';
     }
 
     function handleAccountSwitchCommonSubmitButtonClick() {
@@ -2506,13 +2506,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         playErrorAudio(voiceToPlay);
         const result = await Swal.fire({
-            icon: 'info',
-            title: defaultContactOurCallCenter,
-            text: textToDisplay,
+            // icon: 'info',
+            //icon: '',
+            html: `<img class="" src="./img/icon/default-call-center.svg" /> <h2 class="swal2-title"> ${defaultContactOurCallCenter} </h2>
+<p>${textToDisplay}</p>`,
+            // title: defaultContactOurCallCenter,
+            // text: textToDisplay,
             showCancelButton: true,
             confirmButtonText: defaultConfirmButtonText,
             cancelButtonText: defaultCancelButtonText,
             reverseButtons: true,
+            customClass: {
+                container: 'default-call-center-swal-bg'
+            }
         });
 
         if (result.isConfirmed) {

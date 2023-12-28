@@ -7,7 +7,7 @@ return [
         ],
         'text' => [
             'en' => 'Welcome to Sonali Bank PLC Digital IVR! Life is now simple and convenient. You can easily fulfill your banking operations by using Sonali Bank Digital IVR.',
-            'bn' => 'সোনালী ব্যাংক পিএলসি ডিজিটাল আইভিআর-এ স্বাগতম! জীবন এখন আরও সহজ। সোনালী ব্যাংক পিএলসি ডিজিটাল আইভিআর ব্যবহার করে আপনি সহজেই আপনার ব্যাঙ্কিং কার্যক্রমগুলি সম্পন্ন করতে পারেন।'
+            'bn' => 'সোনালী ব্যাংক পিএলসি ডিজিটাল আইভিআর-এ স্বাগতম! জীবন এখন আরও সহজ। সোনালী ব্যাংক পিএলসি ডিজিটাল আইভিআর ব্যবহার করে আপনি সহজেই আপনার ব্যাংকিং কার্যক্রমগুলি সম্পন্ন করতে পারেন।'
         ],
     ],
     "defaultVerification" => [

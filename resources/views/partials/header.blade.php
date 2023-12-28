@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <!-- Include Select2 CSS -->
-{{--    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>--}}
+    {{--    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>--}}
 
 
     {{-- Script start from here --}}
@@ -16,7 +16,7 @@
     <script src="{{ asset('js/axios.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <!-- Include Select2 JS -->
-{{--    <script src="{{ asset('js/select2.full.min.js') }}"></script>--}}
+    {{--    <script src="{{ asset('js/select2.full.min.js') }}"></script>--}}
     {{-- Script ends from here --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -169,12 +169,18 @@
             transition: background-color 0.3s ease;
         }*/
 
-        .account-option {
+        .account-details {
             margin-bottom: 20px;
             padding: 25px;
             border: 1px solid #ccc;
             border-radius: 8px;
             transition: background-color 0.3s ease;
+            color: #333;
+        }
+
+        .account-option input:checked + .account-details {
+            background: linear-gradient(103deg, #D9A629 12.56%, #1D629F 106.94%);
+            color: #ffffff;
         }
 
         .account-option:last-child {
@@ -215,7 +221,6 @@
             display: block;
             font-size: 16px;
             font-weight: bold;
-            color: #333;
         }
 
         /* Optional: Style for the submit button */
@@ -321,6 +326,20 @@
             opacity: 0;
             display: none;
         }
+
+        .default-call-center-swal-bg .swal2-popup {
+            background: linear-gradient(102.82deg, #D9A629 12.56%, #1D629F 106.94%) !important;
+        }
+
+        .default-call-center-swal-bg .swal2-html-container {
+            color: #fdfdfd;
+        }
+
+        .default-call-center-swal-bg .swal2-title {
+            color: #ffffff;
+            font-size: 36px;
+        }
+
 
     </style>
 </head>
