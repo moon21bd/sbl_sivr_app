@@ -683,8 +683,7 @@ class ApiController extends ResponseController
         $getSelected = self::processSelectedAccount($selectedAccount);
         $accountAsData = self::getAccountListArray($getSelected);
 
-        $eWalletAccountReport = $this->processEWalletAccountVerification($selectedAccount);
-        Log::info('eWalletAccountReport: ' . $eWalletAccountReport);
+
         // dd($report, $request->all(), $getSelected, $accountAsData);
 
         if ($getSelected) {
@@ -700,6 +699,10 @@ class ApiController extends ResponseController
 
             // $mobileNo = Session::get('logInfo.otp_info.otp_phone');
             $mobileNo = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
+
+            $eWalletAccountReport = $this->processEWalletAccountVerification($selectedAccount);
+
+            Log::info('request: ' . json_encode($request->all()) . ' | eWalletAccountReport: ' . $eWalletAccountReport . " | " . $selectedAccount);
 
             // $purpose = $request->input('purpose');
             $responseOut = [
@@ -737,7 +740,7 @@ class ApiController extends ResponseController
             $decryptedAccount = openSSLEncryptDecrypt($encryptedAccountId, 'decrypt');
             $phoneNumber = data_get(Session::get('logInfo'), self::OTP_PHONE_KEY) ?? 'NA';
             $getWalletResponse = $this->fetchGetWalletDetails($phoneNumber);
-
+            Log::info('decryptedAccount ' . $decryptedAccount . ' phoneNumber ' . $phoneNumber . ' getWalletResponse ' . json_encode($getWalletResponse));
             $isAccountVerified = false;
 
             if ($getWalletResponse['status'] !== 'error') {
@@ -752,7 +755,7 @@ class ApiController extends ResponseController
             }
 
             Session::put(self::ACCOUNT_VERIFICATION_STATUS_KEY, $isAccountVerified);
-
+            Log::info('isAccountVerified ' . $isAccountVerified);
             return $isAccountVerified;
         } catch (\Exception $e) {
             // Handle exceptions (log or rethrow if needed)
