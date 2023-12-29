@@ -318,10 +318,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     // title: apiResponse.message,
                     html: `<img class="" src="./img/icon/checkmark.svg" />
                         <h2 class="swal2-title"> ${apiResponse.message} </h2>
+                        <p>${"IssueId: " + issue}</p>
                         `,
                     // icon: apiResponse.status === 'success' ? 'success' : 'error',
                     allowOutsideClick: false,
-                    text: "IssueId: " + issue,
+                    // text: "IssueId: " + issue,
                     confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
                     customClass: {
                         container: 'issueid-swal-bg'
