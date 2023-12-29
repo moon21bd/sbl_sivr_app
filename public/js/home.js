@@ -315,10 +315,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const issueId = apiResponse.data?.issueId;
                 const issue = issueId ? issueId : null;
                 Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    // title: apiResponse.message,
+                    html: `<img class="" src="./img/icon/checkmark.svg" />
+                        <h2 class="swal2-title"> ${apiResponse.message} </h2>
+                        `,
+                    // icon: apiResponse.status === 'success' ? 'success' : 'error',
                     allowOutsideClick: false,
-                    text: "IssueId: " + issue
+                    text: "IssueId: " + issue,
+                    confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
+                    customClass: {
+                        container: 'issueid-swal-bg'
+                    },
+
                 });
                 playErrorAudio(apiResponse.prompt);
             } else if (dismiss === Swal.DismissReason.cancel) {

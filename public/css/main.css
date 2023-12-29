@@ -1921,6 +1921,19 @@ input[type="radio"] {
     background: linear-gradient(102.82deg, #D9A629 12.56%, #1D629F 106.94%) !important;
 }
 
+.issueid-swal-bg .swal2-html-container {
+    color: #fdfdfd;
+}
+
+.issueid-swal-bg .swal2-title {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.issueid-swal-bg .swal2-popup {
+    background: linear-gradient(102.82deg, #D9A629 12.56%, #1D629F 106.94%) !important;
+}
+
 .complaint-swal-bg .swal2-html-container {
     color: #fdfdfd;
 }
