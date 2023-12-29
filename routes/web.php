@@ -5,12 +5,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('home');
 
 Route::get('/check-login', [\App\Http\Controllers\AuthController::class, 'checkLoginStatus']);
-Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
+
 Route::get('/getac', [\App\Http\Controllers\ApiController::class, 'getSavedAccountInfo']);
 
 Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
     Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
+    Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
 });
 
 Route::middleware(['web'])->group(function () {
