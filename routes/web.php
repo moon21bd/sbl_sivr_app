@@ -25,6 +25,10 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 
 Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track']);
 
+Route::middleware(['web', 'verify.login', 'check.wallet.access'])->group(function () {
+    Route::get('/ewallet', [\App\Http\Controllers\MainController::class, 'eWallet'])->name('ewallet');
+});
+
 Route::middleware(['web', 'verify.login'])->group(function () {
 
     Route::get('/get-balance', [\App\Http\Controllers\ApiController::class, 'getBalance']);
@@ -40,7 +44,7 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
     Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class, 'prePaidCard'])->name('prepaid-card');
     Route::get('/esheba', [\App\Http\Controllers\MainController::class, 'eSheba'])->name('esheba');
-    Route::get('/ewallet', [\App\Http\Controllers\MainController::class, 'eWallet'])->name('ewallet');
+
     Route::get('/islami-banking', [\App\Http\Controllers\MainController::class, 'islamiBanking'])->name('islami-banking');
     Route::get('/ib-account-related', [\App\Http\Controllers\MainController::class, 'ibAccountRelated'])->name('ib-account-related');
     Route::get('/ib-loans-advances', [\App\Http\Controllers\MainController::class, 'ibLoansAdvances'])->name('ib-loans-advances');

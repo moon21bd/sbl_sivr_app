@@ -236,6 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     };
                 },
                 showCancelButton: true,
+                customClass: {
+                    container: 'complaint-swal-bg'
+                },
                 confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                 cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                 didOpen: () => {
@@ -655,7 +658,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         const btnEWallet = document.getElementById('btnEWallet');
-        btnEWallet.addEventListener('click', handleEWalletClick);
+        if (btnEWallet) {
+            btnEWallet.addEventListener('click', handleEWalletClick);
+        }
 
         const btnIslamiBanking = document.getElementById('btnIslamiBanking');
         btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
@@ -985,17 +990,14 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>`).join('');
 
         Swal.fire({
-            title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`,
-            //title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`, // title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
             html: `
         ${accountOptions}
         <div class="button-container">
             <button class="ac-submit-button" >${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
             <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
         </div>
-    `,
-            showConfirmButton: false,
-            allowOutsideClick: false
+    `, showConfirmButton: false, allowOutsideClick: false
         });
 
         const submitButton = document.querySelector('.ac-submit-button');
@@ -1028,6 +1030,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleAccountSwitchCommonSubmitButtonClick() {
+        showLoader();
         const selectedAccountId = document.querySelector('input[name="selectedAccount"]:checked');
 
         if (selectedAccountId) {
@@ -1037,7 +1040,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             axios.post('/save', {"ac": selectedAccountId.value, "purpose": "ACCOUNT-SWITCH"})
                 .then(response => handleSaveResponseCommon(response))
-                .catch(error => console.error('Error saving selected account:', error));
+                .catch(error => console.error('Error saving selected account:', error))
+                .finally(() => hideLoader());
 
             Swal.close(); // Close the SweetAlert popup
         } else {
@@ -1147,56 +1151,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }*/
 
-    async function handleEWApproveOrRejectClick_OLD() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-
-                showLoader();
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'EW-APPROVE-OR-REJECT',
-                    'reason': 'Approve wallet request received.',
-                    'page': 'ewallet',
-                    'button': 'btnEWApproveOrReject',
-                });
-                hideLoader();
-
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false
-                });
-                playErrorAudio(apiResponse.prompt);
-
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnEWApproveOrReject click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
     async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
+        let locale = getSavedLocale();
         try {
-            let locale = getSavedLocale();
-
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+                const dobText = (locale === 'en') ? "YYYY-MM-DD" : "YYYY-MM-DD";
                 const {value: accountAndDob} = await Swal.fire({
                     title: (locale === 'en') ? "Enter Account & Date of Birth." : "অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।",
-                    html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en' ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার')}"><input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">`,
+                    html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en' ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার')}">
+                    <input id="swal-input2" readonly class="swal2-input" placeholder="${dobText}" min="1945-01-01" max="2099-12-31">`,
                     showCancelButton: true,
-                    confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
+                    confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                     cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                     focusConfirm: false,
                     allowOutsideClick: false,
+                    customClass: {
+                        container: 'user-info-verify-swal-bg swal2-overflow'
+                    },
+                    didOpen: function () {
+                        $('#swal-input2').datepicker({
+                            dateFormat: 'yy-mm-dd',
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: '1945:2099',
+                            theme: 'smoothness'
+                        });
+                    },
                     preConfirm: () => {
                         const account = Swal.getPopup().querySelector('#swal-input1').value;
                         const dob = Swal.getPopup().querySelector('#swal-input2').value;
@@ -1234,18 +1215,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
 
                         hideLoader();
-
+                        let locale = getSavedLocale();
                         Swal.fire({
                             title: apiResponse.message,
                             icon: apiResponse.status === 'success' ? 'success' : 'error',
                             allowOutsideClick: false,
-                            confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
+                            confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
                         });
                         playErrorAudio(apiResponse.prompt);
                     } else {
                         // Handle unsuccessful verification
                         Swal.fire({
-                            title: verifyResp.message, icon: 'error', allowOutsideClick: false,
+                            title: verifyResp.message,
+                            icon: 'error',
+                            allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                         });
                         playErrorAudio(verifyResp.prompt);
@@ -1256,7 +1239,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (error) {
             hideLoader();
-            // console.error('Error:', error);
 
             if (error.status === 'error') {
                 Swal.fire({
@@ -1272,7 +1254,7 @@ document.addEventListener('DOMContentLoaded', function () {
         handleAPIRequest('SOME-PURPOSE', 'Some reason for the request');
     });*/
 
-    async function handleEWApproveOrRejectClick() {
+    /*async function handleEWApproveOrRejectClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
@@ -1355,8 +1337,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // playErrorAudio(error.prompt);
             }
         }
-    }
-
+    }*/
 
     /*async function handleEWDeviceBindClick() {
         try {
@@ -2506,10 +2487,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         playErrorAudio(voiceToPlay);
         const result = await Swal.fire({
-            // icon: 'info',
-            //icon: '',
             html: `<img class="" src="./img/icon/default-call-center.svg" /> <h2 class="swal2-title"> ${defaultContactOurCallCenter} </h2>
-<p>${textToDisplay}</p>`,
+             <p>${textToDisplay}</p>`, // icon: 'info',
             // title: defaultContactOurCallCenter,
             // text: textToDisplay,
             showCancelButton: true,
@@ -2703,10 +2682,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function redirectUserToAppStore(appType) {
-        const appStoreLink = (appType === 'esheba' && isIOS()) ? eShebaiOS :
-            (appType === 'esheba') ? eShebaAndroid :
-                (appType === 'spg' && isIOS()) ? SPGiOS :
-                    (appType === 'spg') ? SPGAndroid : null;
+        const appStoreLink = (appType === 'esheba' && isIOS()) ? eShebaiOS : (appType === 'esheba') ? eShebaAndroid : (appType === 'spg' && isIOS()) ? SPGiOS : (appType === 'spg') ? SPGAndroid : null;
 
         if (appStoreLink) {
             window.location.href = appStoreLink;

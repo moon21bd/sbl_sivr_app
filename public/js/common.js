@@ -59,25 +59,29 @@ function showVerificationAlert() {
     const getLocaleFromLS = getSavedLocale();
     playErrorAudio(`/uploads/prompts/common/verify-your-account-${getLocaleFromLS}.m4a`); // Play the error audio
 
-    let titleHere = verificationTitleBn;
-    let textHere = verificationTextBn;
+    let newTitle = verificationTitleBn;
+    let newText = verificationTextBn;
     if (getLocaleFromLS === 'en') {
-        titleHere = verificationTitleEn;
-        textHere = verificationTextEn;
+        newTitle = verificationTitleEn;
+        newText = verificationTextEn;
     }
 
     Swal.fire({
-        icon: 'warning',
-        title: titleHere,
-        text: textHere,
+        // icon: 'warning',
+        // title: newTitle,
+        // text: newText,
+        html: `<img class="" src="./img/icon/checkmark.svg" /> <h2 class="swal2-title"> ${newTitle} </h2>
+             <p>${newText}</p>`,
         showCancelButton: true,
         confirmButtonText: defaultVerificationText,
         cancelButtonText: defaultVerificationCancelText,
-        allowOutsideClick: false
+        allowOutsideClick: false,
+        customClass: {
+            container: 'default-verification-swal-bg'
+        }
     }).then((result) => {
         if (result.isConfirmed) {
-            // Redirect the user to the login page
-            goTo('send-otp'); // Replace with your login page URL
+            goTo('send-otp');
         }
     });
 }

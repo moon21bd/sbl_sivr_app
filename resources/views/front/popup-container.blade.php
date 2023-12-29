@@ -1,55 +1,4 @@
 <!-- Popup Container Started -->
-
-<style>
-
-    @media only screen and (max-width: 768.88px), (max-device-width: 768.88px) {
-        .mob-popup-get-started .mob-popup-logo-section {
-            gap: 0rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .mob-popup-get-started .mob-get-started-text {
-            margin-bottom: 0.5rem;
-            padding: 0.75rem;
-        }
-
-        .mob-popup-get-started .mob-get-started-text p {
-            font-size: 1rem;
-        }
-    }
-
-    .popup-container {
-        display: none;
-    }
-
-    /*.get-started-btn {
-        display: block;
-    }*/
-
-    /* For Language switcher in Get Started Popup*/
-
-    .language-button {
-        transition: background-color 0.3s;
-        border: 2px solid #fff;
-        border-radius: 9999px;
-        overflow: hidden;
-    }
-
-    .selected-language {
-        background-color: var(--brand-color-blue);
-        color: #fff;
-    }
-
-    @media (max-width: 768px) {
-        .popup-container {
-            font-size: 14px;
-        }
-
-    }
-
-</style>
-
-
 <div class="popup-container mob-popup-get-started fixed top-0 right-0 left-0 bottom-0 h-full w-full z-50"
      style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
 
@@ -96,6 +45,7 @@
                 </div>--}}
 
                 <div class="relative" style="bottom: 15px;">
+
                     {{--<div class="flex relative top-5">
                         <a data-locale="bn" id="bnButton" onclick="selectLanguage('bn')"
                            class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-4">বাংলা</a>

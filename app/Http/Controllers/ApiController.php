@@ -680,6 +680,10 @@ class ApiController extends ResponseController
         $getSelected = self::processSelectedAccount($selectedAccount);
         $accountAsData = self::getAccountListArray($getSelected);
 
+        $eWalletAccountReport = $this->processEWalletAccountVerification($selectedAccount);
+        Log::info('eWalletAccountReport: ' . $eWalletAccountReport);
+        // dd($report, $request->all(), $getSelected, $accountAsData);
+
         if ($getSelected) {
 
             $otpInfo = Session::get('otp');
@@ -694,7 +698,7 @@ class ApiController extends ResponseController
             // $mobileNo = Session::get('logInfo.otp_info.otp_phone');
             $mobileNo = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
 
-            $purpose = $request->input('purpose');
+            // $purpose = $request->input('purpose');
             $responseOut = [
                 'code' => Response::HTTP_OK,
                 'status' => 'success',
@@ -706,6 +710,7 @@ class ApiController extends ResponseController
                 'url' => url('/')
             ];
 
+            // dd('session', Session::get('account_verification_status'));
             session()->flash('status', $responseOut['status']);
             session()->flash('message', $responseOut['message']);
 
@@ -722,6 +727,35 @@ class ApiController extends ResponseController
         return $this->sendResponse($responseOut, $responseOut['code']);
 
     }
+
+    private function processEWalletAccountVerification($encryptedAccountId)
+    {
+        $decryptedAccount = openSSLEncryptDecrypt($encryptedAccountId, 'decrypt');
+        $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
+        $getWalletResponse = $this->fetchGetWalletDetails($phoneNumber);
+
+        $isAccountVerified = false;
+
+        if ($getWalletResponse['status'] !== 'error') {
+            $acLists = $getWalletResponse['data']['accountList'] ?? [];
+
+            foreach ($acLists as $account) {
+                if ($account['accountNo'] === $decryptedAccount) {
+                    $isAccountVerified = true;
+                    break;
+                }
+            }
+        }
+
+        // Update the logInfo session with the account verification result
+        /*$logInfo = Session::get('logInfo', []);
+        $logInfo['account_verification_status'] = $isAccountVerified;
+        Session::put('logInfo', $logInfo);
+        */
+        Session::put('account_verification_status', $isAccountVerified);
+        return $isAccountVerified;
+    }
+
 
     public static function getAccountListArray($data)
     {
@@ -822,6 +856,7 @@ class ApiController extends ResponseController
 
             if ($data['status'] === '200' && $data['statsDetails'] === 'success' && isset($data['acList'][0])) {
                 $accountList = $data['acList'];
+
                 return [
                     'status' => 'success',
                     'message' => 'Data Received.',
@@ -1461,9 +1496,19 @@ class ApiController extends ResponseController
         // will be removed later
 
         $reason = $data['reason'];
+        $mobileNo = $data['mobile_no'];
+
+        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+
         $url = config('api.base_url') . config('api.get_pin_reset_url');
         $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
@@ -1493,6 +1538,20 @@ class ApiController extends ResponseController
         ];
     }
 
+    public static function processTicketCreation($data)
+    {
+        if (!createTicket($data['purpose'], $data['mobile_no'], config('bank.SECOND_ALLOW_FOR_TICKET'))) {
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+        return true;
+
+    }
+
     public static function processApiCallingEWApproveOrReject($data)
     {
         $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
@@ -1518,9 +1577,19 @@ class ApiController extends ResponseController
         // will be removed later
 
         $reason = $data['reason'];
+        $mobileNo = $data['mobile_no'];
+
+        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+
         $url = config('api.base_url') . config('api.approve_wallet_request_url');
         $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
@@ -1530,7 +1599,6 @@ class ApiController extends ResponseController
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
             $data = json_decode($response['data'], true);
-            // dd($data, intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success');
             if (intval($data['status']) === Response::HTTP_OK && $data['statsDetails'] === 'success') {
 
                 return [
@@ -1673,9 +1741,19 @@ class ApiController extends ResponseController
         // will be removed later
 
         $reason = $data['reason'];
+        $mobileNo = $data['mobile_no'];
+
+        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+
         $url = config('api.base_url') . config('api.device_bind_url');
         $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
@@ -1730,9 +1808,19 @@ class ApiController extends ResponseController
         // will be removed later
 
         $reason = $data['reason'];
+        $mobileNo = $data['mobile_no'];
+
+        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+
         $url = config('api.base_url') . config('api.close_wallet_url');
         $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
@@ -1787,9 +1875,19 @@ class ApiController extends ResponseController
         ];*/
         // will be removed later
         $reason = $data['reason'];
+        $mobileNo = $data['mobile_no'];
+
+        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+
         $url = config('api.base_url') . config('api.lock_wallet_url');
         $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
@@ -1845,9 +1943,19 @@ class ApiController extends ResponseController
         // will be removed later
 
         $reason = $data['reason'];
+        $mobileNo = $data['mobile_no'];
+
+        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+            return [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.service-not-available'),
+                'prompt' => null
+            ];
+        }
+
         $url = config('api.base_url') . config('api.active_wallet_url');
         $apiHandler = new APIHandler();
-        $mobileNo = $data['mobile_no'];
         $response = $apiHandler->postCall($url, [
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",

@@ -17,7 +17,7 @@ return [
         ],
         'text' => [
             'en' => 'To avail this service, please verify your account first.',
-            'bn' => 'এই সেবাটি ব্যবহার করার জন্য আপনার অ্যাকাউন্টটি যাচাইয়ের প্রয়োজন।'
+            'bn' => 'এই সেবাটি গ্রহণ করার জন্য আপনার অ্যাকাউন্টটি যাচাইয়ের প্রয়োজন।'
         ],
         'title' => [
             'en' => 'Please verify your account.',

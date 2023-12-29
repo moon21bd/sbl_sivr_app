@@ -1,4 +1,9 @@
 <script>
+
+    $(function () {
+        $('.select2').select2();
+    });
+
     /*document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'hidden') {
             // Page is being hidden, perform actions here

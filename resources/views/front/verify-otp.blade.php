@@ -1,4 +1,3 @@
-{{--@php($prompt = Session::get('api_calling')['prompt'] ?? $prompt)--}}
 @include('partials.header')
 
 <script src="{{ asset('js/ap.js') }}"></script>
@@ -10,7 +9,6 @@
     </button>
 </div>
 <!-- Audio Icon -->
-
 
 <!-- Main Area Start -->
 <main>

@@ -152,4 +152,6 @@ return [
     'resend' => 'Resend',
     'submit' => 'Submit',
     'otp-send-success' => 'OTP sending successful.',
+    'service-access-denied' => "Apologies! This service doesn't include you.",
+    'service-not-available' => 'Try again in the next 12 hours to avail the service.',
 ];

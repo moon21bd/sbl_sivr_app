@@ -166,28 +166,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showAccountSelectionPopup(accounts) {
         stopAllAudio();
-        /*const accountOptions = accounts.map(account => `
-            <div class="account-option">
-                <p>${account.accountName}</p>
-                <p>${account.accountNo}</p>
-                <button class="ac-select-button" data-account-id="${account.accEnc}">Select</button>
-            </div>`).join('');*/
-
-        /*const accountOptions = accounts.map(account => `
-    <div class="account-option">
-        <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
-        <label for="account-${account.accEnc}">
-            <div class="account-details">
-                <p>Account Name: ${account.accountName}</p>
-                <p>Account No: ${account.accountNo}</p>
-            </div>
-        </label>
-    </div>`).join('');*/
 
         const accountOptions = accounts.map(account => `
     <div class="account-option">
-        <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
         <label for="account-${account.accEnc}">
+        <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
             <div class="account-details">
                 <p>Account Name: ${account.accountName}</p>
                 <p>Account No: ${account.accountNo}</p>
@@ -214,11 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.addEventListener('click', handleAccountSwitchSubmitButtonClick);
         cancelButton.addEventListener('click', handleAccountSwitchCancelButtonClick);
 
-        const accountOptionsDivs = document.querySelectorAll('.account-option');
-
+        /*const accountOptionsDivs = document.querySelectorAll('.account-option');
         accountOptionsDivs.forEach(optionDiv => {
             optionDiv.addEventListener('click', handleAccountOptionClick);
-        });
+        });*/
     }
 
     function handleAccountSwitchCancelButtonClick() {

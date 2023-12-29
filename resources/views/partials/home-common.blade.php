@@ -108,13 +108,23 @@
         const message = '{{ session('message') }}';
 
         if (status && message) {
-            // Display the SweetAlert2 message based on the flash status
+
+            let iconAsImg = 'lock-card.svg';
+            if (status === 'success') {
+                iconAsImg = 'checkmark.svg';
+            }
+
             Swal.fire({
-                icon: status,
-                title: message,
+                html: `<img class="" src="./img/icon/${iconAsImg}" />
+                        <h2 class="swal2-title"> ${message} </h2>
+                        `,
                 showConfirmButton: false,
-                timer: 4000, // 4 seconds
-                allowOutsideClick: false
+                timer: 3000, // 3 seconds
+                allowOutsideClick: false,
+                customClass: {
+                    container: 'show-flash-message-swal-bg'
+                }
+
             });
         }
     }
