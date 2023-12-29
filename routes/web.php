@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('home');
-Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
+
 Route::get('/check-login', [\App\Http\Controllers\AuthController::class, 'checkLoginStatus']);
 Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
 Route::get('/getac', [\App\Http\Controllers\ApiController::class, 'getSavedAccountInfo']);
@@ -16,6 +16,7 @@ Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
 Route::middleware(['web'])->group(function () {
     Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
     Route::post('/resend', [\App\Http\Controllers\ApiController::class, 'resendOtp'])->name('resendOtp');
+    Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
 });
 
 Route::middleware(['web', 'verify.login'])->group(function () {
