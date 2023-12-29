@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
 
     <!-- Include Select2 CSS -->
-    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
+{{--    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>--}}
     <!-- Include Smoothness jquery-ui CSS -->
     <link rel="stylesheet" href="{{ asset('css/smoothness-jquery-ui.css') }}">
 
@@ -19,7 +19,7 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 
     <!-- Include Select2 JS -->
-    <script src="{{ asset('js/select2.full.min.js') }}"></script>
+{{--    <script src="{{ asset('js/select2.full.min.js') }}"></script>--}}
 
     <!-- Include jqueryui related JS -->
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
