@@ -11,13 +11,14 @@ Route::get('/getac', [\App\Http\Controllers\ApiController::class, 'getSavedAccou
 Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
     Route::get('/send-otp', [\App\Http\Controllers\MainController::class, 'sendOtp'])->name('sendOtp');
     Route::get('/verify-otp', [\App\Http\Controllers\MainController::class, 'verifyOtp'])->name('verifyOtp');
-    Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
+
 });
 
 Route::middleware(['web'])->group(function () {
     Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
     Route::post('/resend', [\App\Http\Controllers\ApiController::class, 'resendOtp'])->name('resendOtp');
     Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
+    Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
 });
 
 Route::middleware(['web', 'verify.login'])->group(function () {
