@@ -338,7 +338,15 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error in btnCreateIssue click:', error);
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
+                    // title: error.message,
+                    // icon: 'error',
+                    html: `<img class="" src="./img/icon/lock-card.svg" />
+                        <h2 class="swal2-title"> ${error.message} </h2>
+                        `,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'issueid-swal-bg'
+                    },
                 });
                 playErrorAudio(error.prompt);
             }
@@ -1225,20 +1233,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         hideLoader();
                         let locale = getSavedLocale();
+                        let iconAsImg = 'lock-card.svg';
+                        if (apiResponse.status === 'success') {
+                            iconAsImg = 'checkmark.svg';
+                        }
                         Swal.fire({
-                            title: apiResponse.message,
-                            icon: apiResponse.status === 'success' ? 'success' : 'error',
+                            html: `<img class="" src="./img/icon/${iconAsImg}" />
+                            <h2 class="swal2-title"> ${apiResponse.message} </h2>
+                        `,
+                            // title: apiResponse.message,
+                            // icon: apiResponse.status === 'success' ? 'success' : 'error',
                             allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
+                            customClass: {
+                                container: 'user-info-verify-swal-bg'
+                            },
                         });
                         playErrorAudio(apiResponse.prompt);
                     } else {
                         // Handle unsuccessful verification
                         Swal.fire({
-                            title: verifyResp.message,
-                            icon: 'error',
+                            html: `<img class="" src="./img/icon/lock-card.svg" />
+                            <h2 class="swal2-title"> ${verifyResp.message} </h2>
+                        `,
+                            // title: verifyResp.message,
+                            // icon: 'error',
                             allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
+                            customClass: {
+                                container: 'user-info-verify-swal-bg'
+                            },
                         });
                         playErrorAudio(verifyResp.prompt);
                     }
@@ -1251,7 +1275,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
+                    html: `<img class="" src="./img/icon/lock-card.svg" />
+                            <h2 class="swal2-title"> ${error.message} </h2>
+                        `,
+                    //title: error.message,
+                    //icon: 'error',
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'user-info-verify-swal-bg'
+                    },
                 });
                 // playErrorAudio(error.prompt);
             }
