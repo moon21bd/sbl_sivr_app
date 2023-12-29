@@ -27,6 +27,7 @@
     {{-- Script ends from here --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>{{ isset($title) ? $title . ' | ' . __('messages.sonali-bank-vivr') : __('messages.sonali-bank-vivr') }}</title>
     <script>
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;

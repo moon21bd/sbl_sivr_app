@@ -1930,6 +1930,10 @@ input[type="radio"] {
     font-size: 24px;
 }
 
+.complaint-swal-bg select option {
+    color: #0f0f0f;
+}
+
 .default-verification-swal-bg .swal2-title {
     color: #ffffff;
     font-size: 29px;
