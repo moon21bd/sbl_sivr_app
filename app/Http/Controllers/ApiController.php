@@ -17,6 +17,9 @@ use Illuminate\Http\JsonResponse;
 
 class ApiController extends ResponseController
 {
+    const OTP_PHONE_KEY = 'otp_info.otp_phone';
+    const ACCOUNT_VERIFICATION_STATUS_KEY = 'account_verification_status';
+
     public function getBalance(Request $request)
     {
         // dd($phoneNumber, Session::all());
@@ -730,6 +733,36 @@ class ApiController extends ResponseController
 
     private function processEWalletAccountVerification($encryptedAccountId)
     {
+        try {
+            $decryptedAccount = openSSLEncryptDecrypt($encryptedAccountId, 'decrypt');
+            $phoneNumber = data_get(Session::get('logInfo'), self::OTP_PHONE_KEY) ?? 'NA';
+            $getWalletResponse = $this->fetchGetWalletDetails($phoneNumber);
+
+            $isAccountVerified = false;
+
+            if ($getWalletResponse['status'] !== 'error') {
+                $acLists = $getWalletResponse['data']['accountList'] ?? [];
+
+                foreach ($acLists as $account) {
+                    if ($account['accountNo'] === $decryptedAccount) {
+                        $isAccountVerified = true;
+                        break;
+                    }
+                }
+            }
+
+            Session::put(self::ACCOUNT_VERIFICATION_STATUS_KEY, $isAccountVerified);
+
+            return $isAccountVerified;
+        } catch (\Exception $e) {
+            // Handle exceptions (log or rethrow if needed)
+            Log::error('Error in processEWalletAccountVerification: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /*private function processEWalletAccountVerification($encryptedAccountId)
+    {
         $decryptedAccount = openSSLEncryptDecrypt($encryptedAccountId, 'decrypt');
         $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
         $getWalletResponse = $this->fetchGetWalletDetails($phoneNumber);
@@ -748,13 +781,14 @@ class ApiController extends ResponseController
         }
 
         // Update the logInfo session with the account verification result
-        /*$logInfo = Session::get('logInfo', []);
-        $logInfo['account_verification_status'] = $isAccountVerified;
-        Session::put('logInfo', $logInfo);
-        */
+//        $logInfo = Session::get('logInfo', []);
+//        $logInfo['account_verification_status'] = $isAccountVerified;
+//        Session::put('logInfo', $logInfo);
+
+
         Session::put('account_verification_status', $isAccountVerified);
         return $isAccountVerified;
-    }
+    }*/
 
 
     public static function getAccountListArray($data)
