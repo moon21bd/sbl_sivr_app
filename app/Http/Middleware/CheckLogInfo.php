@@ -17,13 +17,10 @@ class CheckLogInfo
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if the 'logInfo' session value is set
         if (Session::has('logInfo')) {
-            // Redirect to the main route
             return redirect('/');
         }
 
-        // Continue with the request
         return $next($request);
     }
 }

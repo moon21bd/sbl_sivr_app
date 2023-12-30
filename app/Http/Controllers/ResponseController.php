@@ -16,7 +16,6 @@ class ResponseController extends Controller
     protected function sendResponse($content = [], $status = 200)
     {
         return response()->json($content, $status);
-        // return response()->json($content)->setStatusCode($status);
     }
 
     public function sendError($error, $code = 404)
@@ -102,7 +101,6 @@ class ResponseController extends Controller
         ];
     }
 
-
     protected function decodeJsonIfValid($jsonString)
     {
         // Check if the string is a valid JSON
@@ -115,7 +113,6 @@ class ResponseController extends Controller
                 return $decodedData;
             } else {
                 // Error occurred while decoding JSON
-                // Handle the error if needed
                 return null;
             }
         } else {
@@ -125,7 +122,6 @@ class ResponseController extends Controller
         }
     }
 
-    // Function to check if a string is a valid JSON
     protected function isJson($string)
     {
         json_decode($string);
