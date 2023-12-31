@@ -40,6 +40,18 @@ class ApiController extends ResponseController
             'balance' => 0
         ];
 
+        /*if (!createUserTicketHistory('ACCOUNT_BALANCE', $phoneNumber)) { // Ticket Creation Failed
+
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('ACCOUNT_BALANCE');
+            return [
+                'code' => Response::HTTP_FORBIDDEN,
+                'status' => 'error',
+                'message' => $message,
+                'prompt' => null
+            ];
+        }*/
+
         $response = self::fetchGetWalletDetails($phoneNumber);
 
         if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
@@ -1031,11 +1043,13 @@ class ApiController extends ResponseController
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
-        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+        if (!createUserTicketHistory($data['purpose'], $mobileNo)) { // Ticket Creation Failed
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }
@@ -1073,11 +1087,13 @@ class ApiController extends ResponseController
 
     public static function processTicketCreation($data)
     {
-        if (!createTicket($data['purpose'], $data['mobile_no'], config('bank.SECOND_ALLOW_FOR_TICKET'))) {
+        if (!createUserTicketHistory($data['purpose'], $data['mobile_no'])) {
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }
@@ -1096,11 +1112,13 @@ class ApiController extends ResponseController
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
-        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+        if (!createUserTicketHistory($data['purpose'], $mobileNo)) { // Ticket Creation Failed
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }
@@ -1244,11 +1262,13 @@ class ApiController extends ResponseController
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
-        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+        if (!createUserTicketHistory($data['purpose'], $mobileNo)) { // Ticket Creation Failed
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }
@@ -1295,11 +1315,13 @@ class ApiController extends ResponseController
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
-        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+        if (!createUserTicketHistory($data['purpose'], $mobileNo)) { // Ticket Creation Failed
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }
@@ -1348,11 +1370,13 @@ class ApiController extends ResponseController
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
-        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+        if (!createUserTicketHistory($data['purpose'], $mobileNo)) { // Ticket Creation Failed
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }
@@ -1400,11 +1424,13 @@ class ApiController extends ResponseController
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
-        if (!createTicket($data['purpose'], $mobileNo, config('bank.SECOND_ALLOW_FOR_TICKET'))) { // Ticket Creation Failed
+        if (!createUserTicketHistory($data['purpose'], $mobileNo)) { // Ticket Creation Failed
+            // $message = __('messages.service-not-available');
+            ['message' => $message] = getExecutionTime('EWALLET');
             return [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
-                'message' => __('messages.service-not-available'),
+                'message' => $message,
                 'prompt' => null
             ];
         }

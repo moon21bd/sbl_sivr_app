@@ -120,9 +120,13 @@ if (!function_exists('getUserInfoFromSession')) {
 }
 
 
-if (!function_exists('createTicket')) {
-    function createTicket($purpose, $mobileNo, $secondAllowForTicket)
+if (!function_exists('createUserTicketHistory')) {
+    function createUserTicketHistory($purpose, $mobileNo, $ticketType = 'EWALLET')
     {
+        ['seconds' => $seconds] = getExecutionTime($ticketType);
+
+        // $secondAllowForTicket = getExecutionTimeInSeconds($ticketType);
+        $secondAllowForTicket = $seconds;
         $userTicketHistory = \App\Models\UserTicketHistory::latest()
             ->where(function ($query) use ($mobileNo, $purpose) {
                 $query->where('mobile_no', $mobileNo);
@@ -153,3 +157,29 @@ if (!function_exists('saveUserTicketHistory')) {
         ]);
     }
 }
+
+if (!function_exists('getExecutionTime')) {
+    function getExecutionTime($type)
+    {
+        $defaultHours = 12; // Default hours in case the type is not 'EWALLET', 'CARDS', or 'ACCOUNT_BALANCE'
+
+        $hours = $defaultHours; // Default hours
+
+        if (strtoupper($type) === 'EWALLET' || strtoupper($type) === 'CARDS') {
+            $hours = intval(config('EWALLET_CARDS_NEXT_TICKET_EXECUTION_TIME'));
+        } else if (strtoupper($type) === 'ACCOUNT_BALANCE') {
+            $hours = intval(config('ACCOUNT_BALANCE_NEXT_TICKET_EXECUTION_TIME'));
+        }
+
+        $seconds = $hours * 60 * 60; // Calculate seconds
+
+        // Get localized message based on the app locale
+        $message = \Illuminate\Support\Facades\Lang::get('messages.service-not-available', ['hours' => $hours]);
+
+        return [
+            'seconds' => $seconds,
+            'message' => $message,
+        ];
+    }
+}
+
