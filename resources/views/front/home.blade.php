@@ -10,14 +10,25 @@
 
                     <div
                         class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                        <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/set-pin.svg') }}" alt="">
+                        <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/e-wallet.svg') }}" alt="">
                     </div>
                     <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                         {{ __('messages.eWallet-btn') }}</h3>
                 </a>
             </div>
         @else
-            <!-- Button is hidden when account is not verified -->
+            <div class="col-span-4 z-10">
+                <a href="javascript:void(0)" id="btnEWalletDisable"
+                   class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
+
+                    <div
+                        class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
+                        <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/e-wallet-disable.svg') }}" alt="">
+                    </div>
+                    <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
+                        {{ __('messages.eWallet-btn') }}</h3>
+                </a>
+            </div>
         @endif
         <div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnESheba"
@@ -26,7 +37,7 @@
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/reset-pin.svg') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/e-sheba.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.eSheba-btn') }}</h3>
@@ -40,31 +51,46 @@
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/lock-card.svg') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/spg.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.spg-btn') }}</h3>
             </a>
         </div>
 
-        <div class="col-span-4 z-10">
-            <a href="javascript:void(0)" id="btnCards"
-               class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
-                <div
-                    class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/card-details.svg') }}" alt="">
+            @if(Session::get('account_verification_status', false))
+                <div class="col-span-4 z-10">
+                    <a href="javascript:void(0)" id="btnCards"
+                       class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
+                        <div
+                            class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
+                            <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/cards.svg') }}" alt="">
+                        </div>
+                        <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
+                            {{ __('messages.cards-btn') }}</h3>
+                    </a>
                 </div>
-                <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
-                    {{ __('messages.cards-btn') }}</h3>
-            </a>
-        </div>
+            @else
+                <div class="col-span-4 z-10">
+                    <a href="javascript:void(0)" id="btnCardsDisable"
+                       class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
+                        <div
+                            class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
+                            <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/cards-disable.svg') }}" alt="">
+                        </div>
+                        <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
+                            {{ __('messages.cards-btn') }}</h3>
+                    </a>
+                </div>
+            @endif
+
 
         <div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnAccountAndLoan"
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/active-card.svg') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/acc-loan.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.account-or-loan-btn') }}</h3>
@@ -76,7 +102,7 @@
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/payment-info.svg') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/islami-bank.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.islami-banking-btn') }}</h3>
@@ -90,7 +116,7 @@
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/statement.svg') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/agent-bank.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.agent-banking-btn') }}</h3>
@@ -104,7 +130,7 @@
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/card-details.svg') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/bank-products.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.sonali-bank-product-btn') }}</h3>
@@ -116,7 +142,7 @@
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
                     class="w-10 h-10 lg:w-14 lg:h-14 flex justify-center items-center rounded-md bg-[color:var(--brand-color-blue)]">
-                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/my-complaint.png') }}" alt="">
+                    <img class="w-6 h-6 lg:w-8 lg:h-8" src="{{ asset('img/icon/my-complaint.svg') }}" alt="">
                 </div>
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.my-complain-btn') }}</h3>

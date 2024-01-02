@@ -43,7 +43,7 @@
 </footer>
 <!-- Footer Area End -->
 
-<script type="application/javascript">
+{{--<script type="application/javascript">
 
     document.addEventListener('DOMContentLoaded', function () {
         const backButton = document.getElementById('btnBack');
@@ -52,22 +52,7 @@
         btnHome.addEventListener('click', () => goTo());
         backButton.addEventListener('click', () => goTo());
 
-        /*btnHome.addEventListener('click', function () {
-            goTo();
-        });
-
-        backButton.addEventListener('click', function () {
-            // Check if there is history
-            if (window.history.length > 1) {
-                // Go back in history
-                window.history.back();
-            } else {
-                // Fallback: Go to the home page URL
-                window.location.href = window.location.origin;
-            }
-        });*/
-
     });
 
-</script>
+</script>--}}
 

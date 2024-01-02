@@ -100,7 +100,7 @@
 </main>
 <!-- Main Area End -->
 
-<script>
+<script type="application/javascript">
     // Function to display the flash message using SweetAlert2
     function showFlashMessage() {
         // Check if the flash message exists in the session

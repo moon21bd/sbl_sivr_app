@@ -34,7 +34,7 @@
 </main>
 <!-- Main Araea End -->
 
-<script>
+<script type="application/javascript">
 
     document.addEventListener('DOMContentLoaded', function () {
         // Check if the unique identifier exists in localStorage

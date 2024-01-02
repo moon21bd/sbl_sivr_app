@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
 
     <!-- Include Select2 CSS -->
-{{--    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>--}}
+    {{--    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>--}}
     <!-- Include Smoothness jquery-ui CSS -->
     <link rel="stylesheet" href="{{ asset('css/smoothness-jquery-ui.css') }}">
 
@@ -19,7 +19,7 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 
     <!-- Include Select2 JS -->
-{{--    <script src="{{ asset('js/select2.full.min.js') }}"></script>--}}
+    {{--    <script src="{{ asset('js/select2.full.min.js') }}"></script>--}}
 
     <!-- Include jqueryui related JS -->
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
@@ -29,7 +29,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ isset($title) ? $title . ' | ' . __('messages.sonali-bank-vivr') : __('messages.sonali-bank-vivr') }}</title>
-    <script>
+    <script type="application/javascript">
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
 
         const helpCenterNumber = {{ config('bank.customer-support') }},
@@ -52,7 +52,16 @@
             eShebaAndroid = "{{ config('bank.eSheba.android') }}",
             eShebaiOS = "{{ config('bank.eSheba.ios') }}",
             SPGiOS = "{{ config('bank.SPG.ios') }}",
-            SPGAndroid = "{{ config('bank.SPG.android') }}";
+            SPGAndroid = "{{ config('bank.SPG.android') }}",
+            eWalletDisableTitleEn = "{{ config('voices.eWalletDisable.title.en') }}",
+            eWalletDisableTitleBn = "{{ config('voices.eWalletDisable.title.bn') }}",
+            eWalletDisableTextEn = "{{ config('voices.eWalletDisable.text.en') }}",
+            eWalletDisableTextBn = "{{ config('voices.eWalletDisable.text.bn') }}",
+            cardsDisableTitleEn = "{{ config('voices.cardsDisable.title.en') }}",
+            cardsDisableTitleBn = "{{ config('voices.cardsDisable.title.bn') }}",
+            cardsDisableTextEn = "{{ config('voices.cardsDisable.text.en') }}",
+            cardsDisableTextBn = "{{ config('voices.cardsDisable.text.bn') }}"
+        ;
     </script>
 
     <style>

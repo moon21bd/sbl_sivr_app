@@ -1917,6 +1917,22 @@ input[type="radio"] {
     color: #fdfdfd;
 }
 
+.active-your-service-swal-bg .swal2-popup {
+    background: linear-gradient(102.82deg, #D9A629 12.56%, #1D629F 106.94%) !important;
+}
+
+.active-your-service-swal-bg .swal2-html-container {
+    color: #fdfdfd;
+}
+
+.show-custom-message-swal-bg .swal2-popup {
+    background: linear-gradient(102.82deg, #D9A629 12.56%, #1D629F 106.94%) !important;
+}
+
+.show-custom-message-swal-bg .swal2-html-container {
+    color: #fdfdfd;
+}
+
 .complaint-swal-bg .swal2-popup {
     background: linear-gradient(102.82deg, #D9A629 12.56%, #1D629F 106.94%) !important;
 }

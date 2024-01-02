@@ -92,10 +92,6 @@
 </main>
 <!-- Main Area End -->
 
-<script>
-
-</script>
-
 <script src="{{ asset('js/verify.js') }}"></script>
 
 @include('partials.footer')

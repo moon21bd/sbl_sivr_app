@@ -40,17 +40,17 @@ class ApiController extends ResponseController
             'balance' => 0
         ];
 
-        /*if (!createUserTicketHistory('ACCOUNT_BALANCE', $phoneNumber)) { // Ticket Creation Failed
+        if (!createUserTicketHistory('ACCOUNT_BALANCE', $phoneNumber)) { // Ticket Creation Failed
 
-            // $message = __('messages.service-not-available');
             ['message' => $message] = getExecutionTime('ACCOUNT_BALANCE');
             return [
                 'code' => Response::HTTP_FORBIDDEN,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
+                'balance' => null,
             ];
-        }*/
+        }
 
         $response = self::fetchGetWalletDetails($phoneNumber);
 

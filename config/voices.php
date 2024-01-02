@@ -194,8 +194,8 @@ return [
             'bn' => '',
         ],
         'text' => [
-            'en' => 'Tap for Balance',
-            'bn' => 'ব্যালেন্স দেখি',
+            'en' => 'Balance',
+            'bn' => 'ব্যালেন্স',
         ],
         'title' => [
             'en' => '',
@@ -228,6 +228,34 @@ return [
         'title' => [
             'en' => 'Apologies, something went wrong.',
             'bn' => 'দুঃখিত, কোন সমস্যা হয়েছে।'
+        ]
+    ],
+    "eWalletDisable" => [
+        'voice' => [
+            'en' => '',
+            'bn' => '',
+        ],
+        'text' => [
+            'en' => 'Please activate your eWallet.',
+            'bn' => 'আপনার ই-ওয়ালেট সক্রিয় করুন ।'
+        ],
+        'title' => [
+            'en' => 'Inactive eWallet',
+            'bn' => 'ই-ওয়ালেট নিষ্ক্রিয়',
+        ]
+    ],
+    "cardsDisable" => [
+        'voice' => [
+            'en' => '',
+            'bn' => '',
+        ],
+        'text' => [
+            'en' => 'Please activate your Cards.',
+            'bn' => 'আপনার কার্ড সক্রিয় করুন ।'
+        ],
+        'title' => [
+            'en' => 'Inactive Card',
+            'bn' => 'কার্ড নিষ্ক্রিয়',
         ]
     ],
 

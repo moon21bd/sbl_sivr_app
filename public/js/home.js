@@ -319,12 +319,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     html: `<img class="" src="./img/icon/checkmark.svg" />
                         <h2 class="swal2-title"> ${apiResponse.message} </h2>
                         <p>${"IssueId: " + issue}</p>
-                        `,
-                    // icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false,
-                    // text: "IssueId: " + issue,
-                    confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
-                    customClass: {
+                        `, // icon: apiResponse.status === 'success' ? 'success' : 'error',
+                    allowOutsideClick: false, // text: "IssueId: " + issue,
+                    confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে", customClass: {
                         container: 'issueid-swal-bg'
                     },
 
@@ -342,9 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // icon: 'error',
                     html: `<img class="" src="./img/icon/lock-card.svg" />
                         <h2 class="swal2-title"> ${error.message} </h2>
-                        `,
-                    allowOutsideClick: false,
-                    customClass: {
+                        `, allowOutsideClick: false, customClass: {
                         container: 'issueid-swal-bg'
                     },
                 });
@@ -640,7 +635,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentPath === '/') { // home/root path
 
         const btnCards = document.getElementById('btnCards');
-        btnCards.addEventListener('click', handleCardsButtonClick);
+        if (btnCards) {
+            btnCards.addEventListener('click', handleCardsButtonClick);
+        }
+
+        const btnCardsDisable = document.getElementById('btnCardsDisable');
+        if (btnCardsDisable) {
+            btnCardsDisable.addEventListener('click', function () {
+                let title = (locale === "en") ? cardsDisableTitleEn : cardsDisableTitleBn;
+                let text = (locale === "en") ? cardsDisableTextEn : cardsDisableTextBn;
+                showActiveYourServiceMessage(title, text);
+            });
+        }
 
         const accountOrLoan = document.getElementById('btnAccountAndLoan');
         accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
@@ -678,6 +684,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (btnEWallet) {
             btnEWallet.addEventListener('click', handleEWalletClick);
         }
+
+        const btnEWalletDisable = document.getElementById('btnEWalletDisable');
+        if (btnEWalletDisable) {
+            btnEWalletDisable.addEventListener('click', function () {
+                let title = (locale === "en") ? eWalletDisableTitleEn : eWalletDisableTitleBn;
+                let text = (locale === "en") ? eWalletDisableTextEn : eWalletDisableTextBn;
+                showActiveYourServiceMessage(title, text);
+            });
+        }
+
 
         const btnIslamiBanking = document.getElementById('btnIslamiBanking');
         btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
@@ -1240,8 +1256,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         Swal.fire({
                             html: `<img class="" src="./img/icon/${iconAsImg}" />
                             <h2 class="swal2-title"> ${apiResponse.message} </h2>
-                        `,
-                            // title: apiResponse.message,
+                        `, // title: apiResponse.message,
                             // icon: apiResponse.status === 'success' ? 'success' : 'error',
                             allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
@@ -1255,8 +1270,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         Swal.fire({
                             html: `<img class="" src="./img/icon/lock-card.svg" />
                             <h2 class="swal2-title"> ${verifyResp.message} </h2>
-                        `,
-                            // title: verifyResp.message,
+                        `, // title: verifyResp.message,
                             // icon: 'error',
                             allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
@@ -1277,11 +1291,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     html: `<img class="" src="./img/icon/lock-card.svg" />
                             <h2 class="swal2-title"> ${error.message} </h2>
-                        `,
-                    //title: error.message,
+                        `, //title: error.message,
                     //icon: 'error',
-                    allowOutsideClick: false,
-                    customClass: {
+                    allowOutsideClick: false, customClass: {
                         container: 'user-info-verify-swal-bg'
                     },
                 });
@@ -2703,6 +2715,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 playErrorAudio(error.prompt);
             }
         }
+    }
+
+    function showActiveYourServiceMessage(title, message) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: 'error',
+            confirmButtonText: (locale === 'en') ? "Ok" : "ঠিক আছে",
+            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+            focusConfirm: false,
+            allowOutsideClick: false,
+            customClass: {
+                container: 'active-your-service-swal-bg'
+            },
+        });
     }
 
     function isAndroid() {

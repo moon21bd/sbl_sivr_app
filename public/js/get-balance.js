@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+    let locale = getSavedLocale();
+
     const balanceContainer = document.getElementById('balance-container');
     let dataTextValue = "";
     const btnTapForBalance = document.getElementById('balance-button');
@@ -40,23 +42,45 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleSuccess(response) {
+        const status = response?.data?.status;
+
+        if (status === 'success') {
+            const balance = response.data.balance;
+            balanceText.textContent = `${balance}`;
+            balanceImage.style.opacity = 0;
+            balanceContainer.classList.remove('slide-out');
+            btnTapForBalance.disabled = true; // to prevent second time balance button click
+        } else {
+            const errorMessage = response?.data?.message || 'Error occurred.';
+            showCustomMessage('Error', errorMessage);
+            balanceContainer.classList.remove('slide-out');
+            balanceContainer.classList.add('slide-in');
+
+            setTimeout(() => {
+                resetAnimation(dataTextValue)
+            }, resetAnimationTimeout);
+        }
+    }
+
+    /*function handleSuccess(response) {
+        console.log('respon', response)
         const balance = response?.data?.status === 'success' ? response.data.balance : 'Error occurred.';
         balanceText.textContent = `${balance}`;
         balanceImage.style.opacity = 0;
         balanceContainer.classList.remove('slide-out');
         btnTapForBalance.disabled = true; // to prevent second time balance button click
 
-        /*balanceContainer.classList.add('slide-in');
-
-        setTimeout(() => {
-            resetAnimation(dataTextValue)
-        }, resetAnimationTimeout);*/
-    }
+        // balanceContainer.classList.add('slide-in');
+        //
+        // setTimeout(() => {
+        //     resetAnimation(dataTextValue)
+        // }, resetAnimationTimeout);
+    }*/
 
 
     function handleError(error) {
         console.error('Failed to fetch balance from API', error);
-        balanceText.textContent = 'Error occurred.';
+        balanceText.textContent = 'Error.';
         balanceImage.style.opacity = 0;
         balanceContainer.classList.remove('slide-out');
         balanceContainer.classList.add('slide-in');
@@ -76,4 +100,18 @@ document.addEventListener('DOMContentLoaded', function () {
             balanceContainer.classList.remove('slide-in-reverse');
         }, 500);
     }
+
+    function showCustomMessage(title, message) {
+        Swal.fire({
+            text: message,
+            icon: 'error',
+            confirmButtonText: (locale === 'en') ? "Ok" : "ঠিক আছে",
+            focusConfirm: false,
+            allowOutsideClick: false,
+            customClass: {
+                container: 'show-custom-message-swal-bg'
+            },
+        });
+    }
+
 });
