@@ -147,10 +147,10 @@
                     </details>--}}
 
                     <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
-                       href="javascript:void(0)" id="btnSPGMenu">{{ __('messages.spg-btn') }}</a>
+                       href="javascript:void(0)" id="btnEShebaMenu">{{ __('messages.eSheba-btn') }}</a>
 
                     <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
-                       href="javascript:void(0)" id="btnEShebaMenu">{{ __('messages.eSheba-btn') }}</a>
+                       href="javascript:void(0)" id="btnSPGMenu">{{ __('messages.spg-btn') }}</a>
 
                     <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
                        href="javascript:void(0)" id="btnAgentBankingMenu"
