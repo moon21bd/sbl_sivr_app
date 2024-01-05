@@ -105,16 +105,15 @@ if (!function_exists('getUserInfoFromSession')) {
     {
         $logInfo = \Illuminate\Support\Facades\Session::get('logInfo');
         $userPhone = data_get($logInfo, 'otp_info.otp_phone');
-
+        $userAccountNo = data_get($logInfo, 'account_info.accountNo');
         $name = data_get($logInfo, 'account_info.accountName', __('messages.guest-user'));
-
         $getUserImage = \App\Models\SblUserImage::where('user_phone', $userPhone)
             ->orderBy('created_at', 'desc')
             ->value('path');
-
         $userImage = $getUserImage ? asset($getUserImage) : asset('img/icon/user.svg');
+        $userImageMMenu = $getUserImage ? asset($getUserImage) : asset('img/icon/default-user.svg');
 
-        return compact('name', 'userPhone', 'userImage');
+        return compact('name', 'userPhone', 'userImage', 'userImageMMenu', 'userAccountNo');
     }
 
 }

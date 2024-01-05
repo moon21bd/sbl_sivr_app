@@ -196,7 +196,7 @@
         </div>
 
         <div>
-            <a class="fixed bottom-24 right-4 lg:right-14 bg-[color:var(--brand-color-blue)] z-50 flex justify-center items-center w-14 h-14 rounded-md border-2 border-white"
+            <a class="fixed bottom-24 right-4 lg:right-14 bg-[color:var(--brand-color-blue)] z-40 flex justify-center items-center w-14 h-14 rounded-md border-2 border-white"
                href="tel:{{config('bank.customer-support')}}" id="btnCustSupp">
                 <img src="{{ asset('img/icon/headphone.svg') }}" alt="">
             </a>

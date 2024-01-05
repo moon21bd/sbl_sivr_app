@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
             display.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
             if (--timer < 0) {
-                clearInterval(intervalId); // Stop the timer
+                clearInterval(intervalId);
                 // display.textContent = "OTP has expired.";
                 reSendOTPButton.style.display = "block";
                 otpTimer.style.display = "none";
@@ -137,10 +137,10 @@ document.addEventListener('DOMContentLoaded', function () {
         input.addEventListener('keydown', function (event) {
             if (event.key === 'Backspace') {
                 if (this.value.length === 0 && index > 0) {
-                    event.preventDefault(); // Prevent default behavior of Backspace
+                    event.preventDefault();
                     inputs[index - 1].focus();
                 } else if (this.value.length === 1 && this.value[0] === '0') {
-                    event.preventDefault(); // Prevent removing the zero (0) value
+                    event.preventDefault();
                 }
             }
         });
@@ -180,7 +180,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         Swal.fire({
             title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`,
-            // title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
             html: `
         ${accountOptions}
         <div class="button-container">
@@ -197,10 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.addEventListener('click', handleAccountSwitchSubmitButtonClick);
         cancelButton.addEventListener('click', handleAccountSwitchCancelButtonClick);
 
-        /*const accountOptionsDivs = document.querySelectorAll('.account-option');
-        accountOptionsDivs.forEach(optionDiv => {
-            optionDiv.addEventListener('click', handleAccountOptionClick);
-        });*/
     }
 
     function handleAccountSwitchCancelButtonClick() {
@@ -217,23 +212,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => handleSaveResponse(response))
                 .catch(error => console.error('Error saving selected account:', error));
 
-            Swal.close(); // Close the SweetAlert popup
+            Swal.close();
         } else {
             console.log('No account selected');
         }
-    }
-
-
-    function handleAccountOptionClick(event) {
-        const clickedOption = event.currentTarget;
-        const accountId = clickedOption.getAttribute('data-account-id');
-
-        // Reset background color for all options
-        document.querySelectorAll('.account-option').forEach(option => {
-            option.style.backgroundColor = ''; // Reset to default
-        });
-
-        clickedOption.style.backgroundColor = '#E9B308';
     }
 
     function handleSelectButtonClick() {
@@ -290,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             displayErrorMessage(errMsg.message, errorMessageDiv);
         } else {
-            // Handle cases where there is no response (e.g., network error)
             console.error('Error without response:', error);
         }
     }

@@ -5,25 +5,25 @@ window.addEventListener('DOMContentLoaded', () => {
     if (audioElement) {
         // Check if the audio element is already playing
         if (!audioElement.paused && !audioElement.ended) {
-            console.log('audio paused.')
+            // console.log('audio paused.')
             toggleButton.classList.add('pause');
         } else {
-            console.log('audio playing.')
+            // console.log('audio playing.')
             toggleButton.classList.add('play');
         }
 
         audioElement.autoplay = true;
 
         audioElement.addEventListener('play', () => {
-            console.log('audio playing 2.')
+            // console.log('audio playing 2.')
             toggleButton.classList.remove('play');
             toggleButton.classList.add('pause');
         });
 
         audioElement.addEventListener('pause', () => {
-            console.log('audio paused 2.')
+            // console.log('audio paused 2.')
             // toggleButton.classList.remove('pause');
-            //toggleButton.classList.add('play');
+            // toggleButton.classList.add('play');
         });
     } else {
         console.error('Audio element not found.');

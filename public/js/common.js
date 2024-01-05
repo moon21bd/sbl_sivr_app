@@ -1,10 +1,3 @@
-/**
- * File: common.js
- * Author: Raqibul Hasan Moon
- * Created: 2023-06-15
- * Description: This file contains commonly used JavaScripts code for the project.
- */
-
 const otpWrap = '/otp-wrap';
 const verifyWrap = '/verify-wrap';
 const callDynamically = '/calldapi';
@@ -13,14 +6,13 @@ const audioManager = {
     audio: [],
 
     playAudio: function (audioUrl) {
-        // Stop any existing audio before playing a new one
+
         this.stopAudio();
 
         const audioElement = new Audio(audioUrl);
         this.audio.push(audioElement);
 
         audioElement.onended = () => {
-            // Remove the audio element from the array when playback is complete
             const index = this.audio.indexOf(audioElement);
             if (index !== -1) {
                 this.audio.splice(index, 1);
@@ -31,7 +23,7 @@ const audioManager = {
     },
 
     stopAudio: function () {
-        // Stop all existing audio elements
+
         for (const audioElement of this.audio) {
             audioElement.pause();
             audioElement.onended = null;
@@ -40,16 +32,13 @@ const audioManager = {
     }
 };
 
-// Function to check login status using Axios and redirect to send-otp if not logged in
 function checkLoginStatus() {
     return new Promise((resolve, reject) => {
-        axios.get('/check-login') // Replace with the URL of your Laravel endpoint for login check
+        axios.get('/check-login')
             .then(response => {
-                // Resolve the promise with a boolean indicating login status
                 resolve(response.data.is_logged);
             })
             .catch(error => {
-                // An error occurred during login check, reject the promise with the error message
                 reject(error);
             });
     });
@@ -67,9 +56,6 @@ function showVerificationAlert() {
     }
 
     Swal.fire({
-        // icon: 'warning',
-        // title: newTitle,
-        // text: newText,
         html: `<img class="" src="./img/icon/checkmark.svg" /> <h2 class="swal2-title"> ${newTitle} </h2>
              <p>${newText}</p>`,
         showCancelButton: true,
@@ -122,10 +108,6 @@ function playerControl() {
         toggleButton.classList.remove('pause');
         toggleButton.classList.add('play');
     }
-}
-
-function uid() {
-    return 'id_' + Date.now() + String(Math.random()).substr(2);
 }
 
 function uniqueID() {
@@ -183,24 +165,15 @@ function isEmpty(value) {
     return (value == null || value.length === 0 || value === '');
 }
 
-
-// user journey track
 function tUj(action, data) {
-    // Get the CSRF token from the page's meta tag
     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
 
-    // Create an XMLHttpRequest object
     let xhr = new XMLHttpRequest();
-
-    // Set the request URL and method
     xhr.open('POST', '/tuj', true);
-
-    // Set the request headers, including the CSRF token
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-    // Handle the response
     xhr.onload = function () {
         if (xhr.status === 200) {
             console.log('succeeded!');
@@ -209,10 +182,8 @@ function tUj(action, data) {
         }
     };
 
-    // Convert the data to JSON string
     const requestData = JSON.stringify({action: action, data: JSON.stringify(data)});
 
-    // Send the request
     xhr.send(requestData);
 }
 
@@ -320,11 +291,10 @@ function getData(key) {
         try {
             return JSON.parse(data);
         } catch (error) {
-            // Parsing failed, return the original string value
             return data;
         }
     }
-    // No data found for the given key
+
     return null;
 }
 
@@ -359,7 +329,6 @@ function pauseAudio(audioElement) {
 }
 
 function playErrorAudio(audioUrl) {
-    // console.log('playErrorAudio called', audioUrl)
 
     setTimeout(() => {
         if (audioUrl) {
@@ -369,36 +338,30 @@ function playErrorAudio(audioUrl) {
         } else {
             console.error('Audio URL not found in the response.');
         }
-    }, 100); // Adjust the delay time as needed
+    }, 100);
 }
 
 function getSavedLocale() {
-    // Check if the locale is saved in cookie
+
     const savedLocale = getCookie('locale');
     if (savedLocale) {
         return savedLocale;
     }
-    // Check if the locale is saved in localStorage
+
     return localStorage.getItem('locale');
 }
 
 function setActiveState(locale) {
-    // Remove active class from all buttons
     $('.radioBtn a').removeClass('active');
-    // Add active class to the button with the matching locale
     $('.radioBtn a[data-locale="' + locale + '"]').addClass('active');
-    // Save the active locale in cookie or localStorage
     setSavedLocale(locale);
 }
 
 function setSavedLocale(locale) {
-    // Save the locale in cookie
-    setCookie('locale', locale, 30); // Set the cookie expiration to 30 days
-    // Save the locale in localStorage
+    setCookie('locale', locale, 30);
     localStorage.setItem('locale', locale);
 }
 
-// Helper function to get cookie value by name
 function getCookie(name) {
     const cookieArr = document.cookie.split(';');
     for (let i = 0; i < cookieArr.length; i++) {
@@ -410,7 +373,6 @@ function getCookie(name) {
     return null;
 }
 
-// Helper function to set cookie
 function setCookie(name, value, days) {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);

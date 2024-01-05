@@ -52,7 +52,7 @@
         <div class="px-3 py-5 flex flex-row gap-3 items-center bg-white rounded-md mb-4 z-10">
             <div class="p-2 rounded-md bg-[color:var(--brand-color-blue)] z-10" id="userPhotoDiv">
                 <label for="photoInput" style="cursor: pointer;">
-                    <img src="{{ $photo }}" alt="" id="userPhotoIcon" width="30" height="30">
+                    <img src="{{ $photo }}" alt="user-photo" id="userPhotoIcon" width="30" height="30">
                 </label>
 
                 <div id="fileInputContainer" style="display: none;"></div>
@@ -89,7 +89,7 @@
         @yield('home-menu-content')
 
         <div>
-            <a class="fixed bottom-24 right-4 lg:right-14 bg-[color:var(--brand-color-blue)] z-50 flex justify-center items-center w-14 h-14 rounded-md border-2 border-white"
+            <a class="fixed bottom-24 right-4 lg:right-14 bg-[color:var(--brand-color-blue)] z-40 flex justify-center items-center w-14 h-14 rounded-md border-2 border-white"
                href="tel:{{config('bank.customer-support')}}" id="btnCustSupp">
                 <img src="{{ asset('img/icon/headphone.svg') }}" alt="">
             </a>

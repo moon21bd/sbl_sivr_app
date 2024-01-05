@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector('button[type="submit"]').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
         buttonDisable(submitButton, true);
         showLoader();
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'mobile_no': mobileNumberVal
         })
             .then(function (response) {
-                hideLoader(); // Hide the loader
+                hideLoader();
 
                 let respData = response.data, statusCode = response.status;
 
@@ -29,13 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('URL:', respData.url);
                     goTo(respData.url);
                 } else {
-                    // Handle non-200 response status codes
                     console.log('ErrorCode:', statusCode);
                     console.log('Message:', respData.message);
                     const audioUrl = respData.prompt;
                     console.log('audioUrl', audioUrl)
                     playErrorAudio(audioUrl);
-                    hideLoader(); // Hide the loader
+                    hideLoader();
                     displayErrorMessage(respData.message, errorMessageDiv);
                 }
 
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('audioUrl', audioUrl)
                 playErrorAudio(audioUrl);
 
-                hideLoader(); // Hide the loader
+                hideLoader();
                 displayErrorMessage(errMsg.message, errorMessageDiv);
             });
     });

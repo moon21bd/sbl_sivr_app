@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let locale = getSavedLocale();
 
     const currentPath = window.location.pathname;
+    console.log(currentPath)
 
     async function callDynamicAPI(data) {
         try {
@@ -12,9 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    const getOptionsHtml = (options) => {
+        return Object.entries(options).map(([value, text]) => `<option value="${value}">${text}</option>`).join('');
+    };
+
     async function enterReason(title, message, audioFile) {
         const popupAudio = new Audio(`/uploads/prompts/${audioFile}.m4a`);
-        popupAudio.play();
+        await popupAudio.play();
 
         return Swal.fire({
             title: title,
@@ -40,138 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             return result;
         });
-    }
-
-    async function handleResetPin() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for resetting PIN?', "Please enter the reason for resetting PIN.", 'enter-reason-resetting-pin');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'resetPin', 'page': 'home', 'button': 'btnResetPin', 'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message,
-                        icon: apiResponse.status === 'success' ? 'success' : 'error',
-                        allowOutsideClick: false
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in handleResetPin:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleCardActivateClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for card activation?', "Please enter the reason for card activation.", 'enter-reason-card-activation');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'cardActivate', 'page': 'home', 'button': 'btnCardActivate', 'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message,
-                        icon: apiResponse.status === 'success' ? 'success' : 'error',
-                        allowOutsideClick: false
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnCardActivate click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleDeviceBindClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for device binding?', "Please enter the reason for binding the device.", 'enter-reason-device-bind');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'deviceBind', 'page': 'home', 'button': 'btnDeviceBind', 'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message,
-                        icon: apiResponse.status === 'success' ? 'success' : 'error',
-                        allowOutsideClick: false
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnDeviceBind click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleLockWalletClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for locking the wallet?', "Please enter the reason for locking the wallet.", 'enter-reason-locking-wallet');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'lockWallet', 'page': 'home', 'button': 'btnLockWallet', 'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message,
-                        icon: apiResponse.status === 'success' ? 'success' : 'error',
-                        allowOutsideClick: false
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLockWallet click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
     }
 
     async function showCascadingDropdownsForCreatingAnIssue() {
@@ -350,163 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    /*  async function showCascadingDropdownsForCreatingAnIssueForEWallet() {
-          let locale = getSavedLocale();
-          try {
-              showLoader();
-              const dropdownValuesResponse = await callDynamicAPI({
-                  'purpose': 'GET-CALL-TYPES-DROPDOWN-VALUES', 'page': 'home', 'button': 'createIssue',
-              });
-
-              const dropdownValues = dropdownValuesResponse.data;
-              hideLoader();
-
-              let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
-              let textCallCategory = (locale === 'en') ? "Call Category" : "কল ক্যাটাগরি";
-              let textCallSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব ক্যাটাগরি";
-              let textCallSubSubCategory = (locale === 'en') ? "Call Sub Category" : "কল সাব সাব ক্যাটাগরি";
-              let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "সাব ক্যাটাগরি নির্বাচন করুন";
-              let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
-              let textSelectCallCategory = (locale === 'en') ? "Select Category" : "ক্যাটাগরি নির্বাচন করুন";
-              let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Category" : "সাব সাব ক্যাটাগরি নির্বাচন করুন";
-              let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
-              let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
-
-              const swalOptions = {
-                  title: textSubmitComplaint,
-                  html: `<label for="callTypeSelect">${textCallType}:</label>
-                  <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                      <option value="" disabled selected>${textSelectCallType}</option>${getOptionsHtml(dropdownValues)}
-                  </select>
-                  <label for="callCategorySelect">${textCallCategory}:</label>
-                  <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
-                      <option value="" disabled selected>${textSelectCallCategory}</option>
-                  </select>
-                  <label for="callSubCategorySelect">${textCallSubCategory}:</label>
-                  <select id="callSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
-                      <option value="" disabled selected>${textSelectSubCallCategory}</option>
-                  </select>
-                  <label for="callSubSubCategorySelect">${textCallSubSubCategory}:</label>
-                  <select id="callSubSubCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectSubSubCallCategory}" required>
-                      <option value="" disabled selected>${textSelectSubSubCallCategory}</option>
-                  </select>
-
-                  <label for="reasonInput">${textReason}:</label>
-                  <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
-                  focusConfirm: false,
-                  preConfirm: () => {
-                      const callTypeOpts = document.getElementById('callTypeSelect').value;
-                      const callCategoryOpts = document.getElementById('callCategorySelect').value;
-                      const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
-                      const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
-                      const reason = document.getElementById('reasonInput').value;
-
-                      if (!callTypeOpts || !callCategoryOpts || !callSubCategoryOpts || !callSubSubCategoryOpts || !reason) {
-                          Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
-                      }
-
-                      // console.log('SUBMIT', callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason);
-
-                      return {
-                          callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
-                      };
-                  },
-                  showCancelButton: true,
-                  confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
-                  cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-                  didOpen: () => {
-                      const callTypeSelect = document.getElementById('callTypeSelect');
-                      const callCategorySelect = document.getElementById('callCategorySelect');
-                      const callSubCategorySelect = document.getElementById('callSubCategorySelect');
-                      const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
-
-                      // CALL TYPE EVENT
-                      callTypeSelect.addEventListener('change', async () => {
-                          const callType = callTypeSelect.value;
-                          const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
-                          const categoryDataValues = callCategories.data;
-                          callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
-                      });
-
-                      // CALL CATEGORY EVENT
-                      callCategorySelect.addEventListener('change', async () => {
-                          const callTypeVal = callTypeSelect.value;
-                          const callCategoryVal = callCategorySelect.value;
-                          const callSubCategoryVal = callSubCategorySelect.value;
-                          console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal);
-
-                          const callSubCategories = await fetchDropdownOptions('callSubCategorySelect', {
-                              "callType": callTypeVal, "callCategory": callCategoryVal
-                          });
-
-                          const subCategoryDataValues = callSubCategories.data;
-                          // console.log('subCategoryDataValues', subCategoryDataValues)
-                          callSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubCallCategory}</option>` + getOptionsHtml(subCategoryDataValues);
-                      });
-
-                      // CALL SUB CATEGORY EVENT
-                      callSubCategorySelect.addEventListener('change', async () => {
-                          const callTypeVal = callTypeSelect.value;
-                          const callCategoryVal = callCategorySelect.value;
-                          const callSubCategoryVal = callSubCategorySelect.value;
-                          const callSubSubCategoryVal = callSubSubCategorySelect.value;
-
-                          console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
-
-                          const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
-                              "callType": callTypeVal,
-                              "callCategory": callCategoryVal,
-                              "callSubCategory": callSubCategoryVal
-                          });
-
-                          const subSubCategoryDataValues = callSubSubCategories.data;
-                          // console.log('subSubCategoryDataValues', subSubCategoryDataValues)
-                          callSubSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubSubCallCategory}</option>` + getOptionsHtml(subSubCategoryDataValues);
-                      });
-                  },
-              };
-
-              const {value: selectedValues, dismiss} = await Swal.fire(swalOptions);
-              // console.log('selectedValues', selectedValues, dismiss);
-
-              if (selectedValues && !dismiss) {
-                  const {
-                      callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
-                  } = selectedValues;
-
-                  /!*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason);*!/
-
-                  const apiResponse = await callDynamicAPI({
-                      'purpose': 'CREATEISSUE', 'page': 'home', 'button': 'btnCreateIssue', ...selectedValues
-                  });
-                  // console.log('apiResponse', apiResponse);
-
-                  const issueId = apiResponse.data?.issueId;
-                  const issue = issueId ? issueId : null;
-                  Swal.fire({
-                      title: apiResponse.message,
-                      icon: apiResponse.status === 'success' ? 'success' : 'error',
-                      text: "IssueId: " + issue,
-                      allowOutsideClick: false
-                  });
-                  playErrorAudio(apiResponse.prompt);
-              } else if (dismiss === Swal.DismissReason.cancel) {
-                  // Handle cancel action if needed
-                  hideLoader();
-              }
-          } catch (error) {
-              console.error('Error in btnCreateIssue click:', error);
-              if (error.status === 'error') {
-                  Swal.fire({
-                      title: error.message, icon: 'error', allowOutsideClick: false
-                  });
-                  playErrorAudio(error.prompt);
-              }
-          } finally {
-              hideLoader();
-          }
-      }*/
-
     async function fetchDropdownOptions(targetDropdownId, selectedValues = {}) {
         let purpose;
         switch (targetDropdownId) {
@@ -527,464 +243,342 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /*
-    // backup code of my complaint
-    async function handleCreateIssueClick() {
-        let locale = getSavedLocale();
-        try {
-            showLoader();
-            // Fetch dropdown values from the API
-            const dropdownValuesResponse = await callDynamicAPI({
-                'purpose': 'GET-DROP-DOWN-VALUES', 'page': 'home', 'button': 'createIssue',
-            });
+    // if (currentPath === '/') { // home/root path
 
-            const dropdownValues = dropdownValuesResponse.data;
-            hideLoader();
+    const btnCards = document.getElementById('btnCards');
+    if (btnCards) {
+        btnCards.addEventListener('click', handleCardsButtonClick);
+    }
 
-            let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
-            let textCallCategory = (locale === 'en') ? "Call Category" : "কল ক্যাটাগরি";
-            let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
-            let textSelectCallCategory = (locale === 'en') ? "Select Category" : "ক্যাটাগরি নির্বাচন করুন";
-            let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
-            let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
-            const {value: selectedValues, dismiss, inputValue: reasonInput} = await Swal.fire({
-                title: textSubmitComplaint,
-                html: `<label for="callTypeSelect">${textCallType}:</label>
-                <select id="callTypeSelect" class="swal2-input" style="width: 100% !important;" placeholder="${textCallType}" required>
-                    <option value="" disabled selected>${textSelectCallType}</option>
-                    ${getOptionsHtml(dropdownValues.callType)}
-                </select>
-                <label for="callCategorySelect">${textCallCategory}:</label>
-                <select id="callCategorySelect" class="swal2-input" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
-                    <option value="" disabled selected>${textSelectCallCategory}</option>
-                    ${getOptionsHtml(dropdownValues.callCategory)}
-                </select>
-                <label for="reasonInput">${textReason}:</label>
-                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
-                focusConfirm: false,
-                preConfirm: () => {
-                    const callTypeOpts = document.getElementById('callTypeSelect').value;
-                    const callCategoryOpts = document.getElementById('callCategorySelect').value;
-                    const reason = document.getElementById('reasonInput').value;
-
-                    // Validate that all required fields are filled
-                    if (!callTypeOpts || !callCategoryOpts || !reason) {
-                        Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
-                    }
-
-                    return {
-                        callTypeOpts, callCategoryOpts, reason
-                    };
-                },
-                showCancelButton: true,
-                confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
-                cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল"
-            });
-
-            if (selectedValues && !dismiss) {
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'createIssue',
-                    'page': 'home',
-                    'button': 'btnCreateIssue',
-                    'callType': selectedValues.callTypeOpts,
-                    'callCategory': selectedValues.callCategoryOpts,
-                    'reason': selectedValues.reason || reasonInput
-                });
-
-                console.log('apiResponse', apiResponse);
-
-                const issueId = apiResponse.data?.issueId;
-                const issue = issueId ? issueId : null;
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    text: "IssueId: " + issue
-                });
-                playErrorAudio(apiResponse.prompt);
-            } else if (dismiss === Swal.DismissReason.cancel) {
-                // Handle cancel action if needed
-            }
-
-        } catch (error) {
-            console.error('Error in btnCreateIssue click:', error);
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
-
-    const getOptionsHtml = (options) => {
-        return Object.entries(options).map(([value, text]) => `<option value="${value}">${text}</option>`).join('');
-    };
-
-    /*const getOptionsHtml = (options, purpose = 'default') => {
-        return Object.entries(options)
-            .map(([value, text]) => {
-                if (purpose === 'eWallet' && value === 4 && text === 'Request') {
-                    return `<option value="${value}" selected>${text}</option>`;
-                } else {
-                    return `<option value="${value}">${text}</option>`;
-                }
-            })
-            .join('');
-    };*/
-
-    if (currentPath === '/') { // home/root path
-
-        const btnCards = document.getElementById('btnCards');
-        if (btnCards) {
-            btnCards.addEventListener('click', handleCardsButtonClick);
-        }
-
-        const btnCardsDisable = document.getElementById('btnCardsDisable');
-        if (btnCardsDisable) {
-            btnCardsDisable.addEventListener('click', function () {
-                let title = (locale === "en") ? cardsDisableTitleEn : cardsDisableTitleBn;
-                let text = (locale === "en") ? cardsDisableTextEn : cardsDisableTextBn;
-                showActiveYourServiceMessage(title, text);
-            });
-        }
-
-        const accountOrLoan = document.getElementById('btnAccountAndLoan');
-        accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
-
-        addClickEventWithAsyncHandler('btnAgentBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandler('btnESheba', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
-
-        /*const btnESheba = document.getElementById('btnESheba');
-        btnESheba.addEventListener('click', function () {
-            showDownloadOptions('esheba');
+    const btnCardsDisable = document.getElementById('btnCardsDisable');
+    if (btnCardsDisable) {
+        btnCardsDisable.addEventListener('click', function () {
+            let title = (locale === "en") ? cardsDisableTitleEn : cardsDisableTitleBn;
+            let text = (locale === "en") ? cardsDisableTextEn : cardsDisableTextBn;
+            showActiveYourServiceMessage(title, text);
         });
+    }
 
-        const btnSPG = document.getElementById('btnSPG');
-        btnSPG.addEventListener('click', function () {
-            showDownloadOptions('spg');
-        });*/
+    const accountOrLoan = document.getElementById('btnAccountAndLoan');
+    if (accountOrLoan) {
+        accountOrLoan.addEventListener('click', handleAccountOrLoanButtonClick);
+    }
 
-        const btnESheba = document.getElementById('btnESheba');
+    addClickEventWithAsyncHandler('btnAgentBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+    addClickEventWithAsyncHandler('btnAgentBankingMenu', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    const btnESheba = document.getElementById('btnESheba');
+    if (btnESheba) {
         btnESheba.addEventListener('click', function () {
             redirectUserToAppStore('esheba');
         });
+    }
 
-        /*const btnSPG = document.getElementById('btnSPG');
-        btnSPG.addEventListener('click', function () {
-            redirectUserToAppStore('spg');
-        });*/
+    const btnEShebaMenu = document.getElementById('btnEShebaMenu');
+    if (btnEShebaMenu) {
+        btnEShebaMenu.addEventListener('click', function () {
+            redirectUserToAppStore('esheba');
+        });
+    }
 
-        const btnSPG = document.getElementById('btnSPG');
+
+    const btnSPG = document.getElementById('btnSPG');
+    if (btnSPG) {
         btnSPG.addEventListener('click', function () {
             goTo('https://sbl.com.bd:7070/');
         });
+    }
 
-        const btnEWallet = document.getElementById('btnEWallet');
-        if (btnEWallet) {
-            btnEWallet.addEventListener('click', handleEWalletClick);
-        }
+    const btnSPGMenu = document.getElementById('btnSPGMenu');
+    if (btnSPGMenu) {
+        btnSPGMenu.addEventListener('click', function () {
+            goTo('https://sbl.com.bd:7070/');
+        });
+    }
 
-        const btnEWalletDisable = document.getElementById('btnEWalletDisable');
-        if (btnEWalletDisable) {
-            btnEWalletDisable.addEventListener('click', function () {
-                let title = (locale === "en") ? eWalletDisableTitleEn : eWalletDisableTitleBn;
-                let text = (locale === "en") ? eWalletDisableTextEn : eWalletDisableTextBn;
-                showActiveYourServiceMessage(title, text);
+    const btnEWallet = document.getElementById('btnEWallet');
+    if (btnEWallet) {
+        btnEWallet.addEventListener('click', handleEWalletClick);
+    }
+
+    const btnEWalletDisable = document.getElementById('btnEWalletDisable');
+
+    if (btnEWalletDisable) {
+        btnEWalletDisable.addEventListener('click', function () {
+            let title = (locale === "en") ? eWalletDisableTitleEn : eWalletDisableTitleBn;
+            let text = (locale === "en") ? eWalletDisableTextEn : eWalletDisableTextBn;
+            showActiveYourServiceMessage(title, text);
+        });
+    }
+    const btnEWalletDisableMenu = document.getElementById('btnEWalletDisableMenu');
+
+    if (btnEWalletDisableMenu) {
+        btnEWalletDisableMenu.addEventListener('click', function () {
+            let title = (locale === "en") ? eWalletDisableTitleEn : eWalletDisableTitleBn;
+            let text = (locale === "en") ? eWalletDisableTextEn : eWalletDisableTextBn;
+            showActiveYourServiceMessage(title, text);
+        });
+    }
+
+
+    const btnIslamiBanking = document.getElementById('btnIslamiBanking');
+    if (btnIslamiBanking) {
+        btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
+    }
+
+    addClickEventWithAsyncHandler('btnSonaliBankProduct', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+    addClickEventWithAsyncHandler('btnSonaliBankProductMenu', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    const btnCreateIssue = document.getElementById('btnCreateIssue');
+    if (btnCreateIssue) {
+        btnCreateIssue.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
+    }
+    const btnCreateIssueMenu = document.getElementById('btnCreateIssueMenu');
+    if (btnCreateIssueMenu) {
+        btnCreateIssueMenu.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
+    }
+
+    // } else if (currentPath === '/cards') { // end of pathname detects and conditionally assigns event listener
+
+    const btnDebitCardActivate = document.getElementById('btnDebitCard');
+    if (btnDebitCardActivate) {
+        btnDebitCardActivate.addEventListener('click', handleDebitCardPageClick);
+    }
+
+    const btnCreditCard = document.getElementById('btnCreditCard');
+    if (btnCreditCard) {
+        btnCreditCard.addEventListener('click', handleCreditCardPageClick);
+    }
+
+    const btnPrepaidCard = document.getElementById('btnPrepaidCard');
+    if (btnPrepaidCard) {
+        btnPrepaidCard.addEventListener('click', handlePrePaidCardPageClick);
+    }
+
+    // } else if (currentPath === '/account-and-loan') {
+
+    const btnCASASND = document.getElementById('btnCASASND');
+    if (btnCASASND) {
+        btnCASASND.addEventListener('click', handleCASASNDClick);
+    }
+
+    const btnDPS = document.getElementById('btnDPS');
+    if (btnDPS) {
+        btnDPS.addEventListener('click', handleDPSClick);
+    }
+
+    const btnFixedDeposit = document.getElementById('btnFixedDeposit');
+    if (btnFixedDeposit) {
+        btnFixedDeposit.addEventListener('click', handleFixedDepositClick);
+    }
+
+    const btnLoansAndAdvances = document.getElementById('btnLoansAndAdvances');
+    if (btnLoansAndAdvances) {
+        btnLoansAndAdvances.addEventListener('click', handleLoansAndAdvancesClick);
+    }
+
+    // } else if (currentPath === '/islami-banking') {
+
+    const btnIBAccountRelated = document.getElementById('btnIBAccountRelated');
+    if (btnIBAccountRelated) {
+        btnIBAccountRelated.addEventListener('click', handleIBAccountRelatedClick);
+    }
+
+    const btnIBLoansAndAdvances = document.getElementById('btnIBLoansAndAdvances');
+    if (btnIBLoansAndAdvances) {
+        btnIBLoansAndAdvances.addEventListener('click', handleIBARLoansAndAdvancesClick);
+    }
+
+    //  } else if (currentPath === '/sonali-products') {
+
+    addClickEventWithAsyncHandler('btnSBDepositProducts', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSBPForeignCurrencyExchangeRate', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSBPLoanProducts', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSBPOtherProducts', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSBPScheduleOfCharges', showMessageForHelp);
+
+    // } else if (currentPath === '/spg') {
+
+    addClickEventWithAsyncHandler('btnSPGBlazeRemittanceServices', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSPGChallanRelatedServices', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSPGEducationalFeesPayment', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSPGInternetBankingServices', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSPGOnlineBillPaymentService', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnSPGSonaliBankAccountToBkash', showMessageForHelp);
+
+    // } else if (currentPath === '/loans-advances') {
+
+    addClickEventWithAsyncHandler('btnLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnLALoanDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnLADueDateInstallment', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnLAOutstandingLoanBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/fixed-deposit') {
+
+    addClickEventWithAsyncHandler('btnFDEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnFDFixedDepositDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnFDMaturityDate', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/account-dps') {
+
+
+    addClickEventWithAsyncHandler('btnALAccountDPSAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnALDPSDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnALAccountDPSEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnALAccountDPSInstalmentDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/ib-account-related') {
+
+    addClickEventWithAsyncHandler('btnIBARChequeBookLeaf', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARAccountClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARActivateSmsBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBARIslamicBankingProducts', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+
+    // } else if (currentPath === '/ewallet') {
+
+    addClickHandlerForEWalletMenu('btnEWApproveOrReject', 'EW-APPROVE-OR-REJECT', 'Approve wallet request received.');
+    addClickHandlerForEWalletMenu('btnEWApproveOrRejectMenu', 'EW-APPROVE-OR-REJECT', 'Approve wallet request received.');
+
+    addClickHandlerForEWalletMenu('btnEWChangeOrResetEWalletPIN', 'EW-CHANGE-OR-RESET-PIN', 'PIN Change or Reset request received.');
+    addClickHandlerForEWalletMenu('btnEWChangeOrResetEWalletPINMenu', 'EW-CHANGE-OR-RESET-PIN', 'PIN Change or Reset request received.');
+
+    addClickHandlerForEWalletMenu('btnEWDeviceBind', 'EW-DEVICE-BIND', 'Device Bind request received.');
+    addClickHandlerForEWalletMenu('btnEWDeviceBindMenu', 'EW-DEVICE-BIND', 'Device Bind request received.');
+
+    addClickHandlerForEWalletMenu('btnEWLockOrBlock', 'EW-LOCK-BLOCK', 'Wallet Lock Or Block request received.');
+    addClickHandlerForEWalletMenu('btnEWLockOrBlockMenu', 'EW-LOCK-BLOCK', 'Wallet Lock Or Block request received.');
+
+    addClickHandlerForEWalletMenu('btnEWEWalletClose', 'EW-CLOSE-WALLET', 'Wallet closing request received.');
+    addClickHandlerForEWalletMenu('btnEWEWalletCloseMenu', 'EW-CLOSE-WALLET', 'Wallet closing request received.');
+
+    addClickHandlerForEWalletMenu('btnEWUnlockOrActive', 'EW-UNLOCK-ACTIVE', 'Wallet Lock or Active request received.');
+    addClickHandlerForEWalletMenu('btnEWUnlockOrActiveMenu', 'EW-UNLOCK-ACTIVE', 'Wallet Lock or Active request received.');
+
+
+    addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+    addClickEventWithAsyncHandler('btnEWAboutSonaliEWalletMenu', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
+    if (btnCreateIssueEWallet) {
+        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
+    }
+
+    const btnCreateIssueEWalletMenu = document.getElementById('btnCreateIssueEWalletMenu');
+    if (btnCreateIssueEWalletMenu) {
+        btnCreateIssueEWalletMenu.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
+    }
+
+
+    function addClickHandlerForEWalletMenu(buttonId, action, message) {
+        const getButtonElement = document.getElementById(buttonId);
+        if (getButtonElement) {
+            getButtonElement.addEventListener('click', () => {
+                handleAPIRequestWithAccountVerification(action, message, buttonId);
             });
         }
-
-
-        const btnIslamiBanking = document.getElementById('btnIslamiBanking');
-        btnIslamiBanking.addEventListener('click', handleIslamiBankingClick);
-
-        addClickEventWithAsyncHandler('btnSonaliBankProduct', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandler('btnSPG', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
-
-
-        // Event listener for creation issue button
-        /*const btnCreateIssue = document.getElementById('btnCreateIssue');
-        btnCreateIssue.addEventListener('click', handleCreateIssueClick);*/
-
-        const btnCreateIssue = document.getElementById('btnCreateIssue');
-        btnCreateIssue.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
-
-
-    } // end of pathname detects and conditionally assigns event listener
-    else if (currentPath === '/cards') {
-
-        const btnDebitCardActivate = document.getElementById('btnDebitCard');
-        btnDebitCardActivate.addEventListener('click', handleDebitCardPageClick);
-
-        const btnCreditCard = document.getElementById('btnCreditCard');
-        btnCreditCard.addEventListener('click', handleCreditCardPageClick);
-
-        const btnPrepaidCard = document.getElementById('btnPrepaidCard');
-        btnPrepaidCard.addEventListener('click', handlePrePaidCardPageClick);
-
-    } else if (currentPath === '/account-and-loan') {
-
-        const btnCASASND = document.getElementById('btnCASASND');
-        btnCASASND.addEventListener('click', handleCASASNDClick);
-
-        const btnDPS = document.getElementById('btnDPS');
-        btnDPS.addEventListener('click', handleDPSClick);
-
-        const btnFixedDeposit = document.getElementById('btnFixedDeposit');
-        btnFixedDeposit.addEventListener('click', handleFixedDepositClick);
-
-        const btnLoansAndAdvances = document.getElementById('btnLoansAndAdvances');
-        btnLoansAndAdvances.addEventListener('click', handleLoansAndAdvancesClick);
-
-    } else if (currentPath === '/islami-banking') {
-
-        const btnIBAccountRelated = document.getElementById('btnIBAccountRelated');
-        btnIBAccountRelated.addEventListener('click', handleIBAccountRelatedClick);
-
-        const btnIBLoansAndAdvances = document.getElementById('btnIBLoansAndAdvances');
-        btnIBLoansAndAdvances.addEventListener('click', handleIBARLoansAndAdvancesClick);
-
-    } else if (currentPath === '/sonali-products') {
-
-        addClickEventWithAsyncHandler('btnSBDepositProducts', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSBPForeignCurrencyExchangeRate', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSBPLoanProducts', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSBPOtherProducts', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSBPScheduleOfCharges', showMessageForHelp);
-
-    } else if (currentPath === '/spg') {
-
-        addClickEventWithAsyncHandler('btnSPGBlazeRemittanceServices', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSPGChallanRelatedServices', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSPGEducationalFeesPayment', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSPGInternetBankingServices', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSPGOnlineBillPaymentService', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnSPGSonaliBankAccountToBkash', showMessageForHelp);
-
-    } else if (currentPath === '/loans-advances') {
-
-        addClickEventWithAsyncHandler('btnLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnLALoanDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnLALoanDetails', (event, dataset) => handleLALoanDetailsClick(dataset.voice, dataset.text, dataset.title));*/
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnLADueDateInstallment', (event, dataset) => handleLADueDateInstallmentClick(dataset.voice, dataset.text, dataset.title));*/
-
-        addClickEventWithAsyncHandler('btnLADueDateInstallment', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnLAOutstandingLoanBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnLAOutstandingLoanBalance',
-        (event, dataset) => handleLAOutstandingLoanBalanceClick(dataset.voice, dataset.text, dataset.title));*/
-
-    } else if (currentPath === '/fixed-deposit') {
-
-        addClickEventWithAsyncHandler('btnFDEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnFDFixedDepositDetails', (event, dataset) => handleFDFixedDepositDetailsClick(dataset.voice, dataset.text, dataset.title));*/
-        addClickEventWithAsyncHandler('btnFDFixedDepositDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnFDMaturityDate', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnFDMaturityDate',
-        (event, dataset) => handleFDMaturityDateClick(dataset.voice, dataset.text, dataset.title));*/
-
-    } else if (currentPath === '/account-dps') {
-
-        /*
-        // for nid input, use this.
-        addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSAvailableBalance',
-        (event, dataset) => handleALAccountDPSAvailableBalanceClick(dataset.voice,
-        dataset.text, dataset.title));*/
-
-        addClickEventWithAsyncHandler('btnALAccountDPSAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnALDPSDetails', (event, dataset) => handleALDPSDetailsClick(dataset.voice, dataset.text, dataset.title));*/
-
-        addClickEventWithAsyncHandler('btnALDPSDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnALAccountDPSEncashmentProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnALAccountDPSInstalmentDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*addClickEventWithAsyncHandlerForApiCalling('btnALAccountDPSInstalmentDetails',
-        (event, dataset) => handleALAccountDPSInstalmentDetailsClick(dataset.voice, dataset.text, dataset.title));*/
-
-
-    } else if (currentPath === '/ib-account-related') {
-
-        addClickEventWithAsyncHandler('btnIBARChequeBookLeaf', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARAccountClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARActivateSmsBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBARIslamicBankingProducts', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-
-    } else if (currentPath === '/ewallet') {
-
-        const btnEWApproveOrReject = document.getElementById('btnEWApproveOrReject');
-        btnEWApproveOrReject.addEventListener('click', () => {
-            handleAPIRequestWithAccountVerification('EW-APPROVE-OR-REJECT', 'Approve wallet request received.', 'btnEWApproveOrReject');
-        });
-
-        const btnEWChangeOrResetEWalletPIN = document.getElementById('btnEWChangeOrResetEWalletPIN');
-        btnEWChangeOrResetEWalletPIN.addEventListener('click', () => {
-            handleAPIRequestWithAccountVerification('EW-CHANGE-OR-RESET-PIN', 'PIN Change or Reset request received.', 'btnEWChangeOrResetEWalletPIN');
-        });
-
-        const btnEWDeviceBind = document.getElementById('btnEWDeviceBind');
-        btnEWDeviceBind.addEventListener('click', () => {
-            handleAPIRequestWithAccountVerification('EW-DEVICE-BIND', 'Device Bind request received.', 'btnEWDeviceBind');
-        });
-
-        const btnEWLockOrBlock = document.getElementById('btnEWLockOrBlock');
-        btnEWLockOrBlock.addEventListener('click', () => {
-            handleAPIRequestWithAccountVerification('EW-LOCK-BLOCK', 'Wallet Lock Or Block request received.', 'btnEWLockOrBlock');
-        });
-
-        const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
-        btnEWEWalletClose.addEventListener('click', () => {
-            handleAPIRequestWithAccountVerification('EW-CLOSE-WALLET', 'Wallet closing request received.', 'btnEWEWalletClose');
-        });
-
-        const btnEWUnlockOrActive = document.getElementById('btnEWUnlockOrActive');
-        btnEWUnlockOrActive.addEventListener('click', () => {
-            handleAPIRequestWithAccountVerification('EW-UNLOCK-ACTIVE', 'Wallet Lock or Active request received.', 'btnEWUnlockOrActive');
-        });
-
-        addClickEventWithAsyncHandler('btnEWAboutSonaliEWallet', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
-        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssue);
-
-        /*const btnCreateIssueEWallet = document.getElementById('btnCreateIssueEWallet');
-        btnCreateIssueEWallet.addEventListener('click', showCascadingDropdownsForCreatingAnIssueForEWallet);*/
-
-        /*const btnEWChangeOrResetEWalletPIN = document.getElementById('btnEWChangeOrResetEWalletPIN');
-       btnEWChangeOrResetEWalletPIN.addEventListener('click', handleEWChangeOrResetEWalletPINClick);*/
-
-        /*const btnEWDeviceBind = document.getElementById('btnEWDeviceBind');
-        btnEWDeviceBind.addEventListener('click', handleEWDeviceBindClick);*/
-
-        /*const btnEWLockOrBlock = document.getElementById('btnEWLockOrBlock');
-        btnEWLockOrBlock.addEventListener('click', handleEWLockOrBlockClick);*/
-
-        /*const btnEWUnlockOrActive = document.getElementById('btnEWUnlockOrActive');
-        btnEWUnlockOrActive.addEventListener('click', handleEWUnlockOrActiveClick);*/
-
-        /*const btnEWApproveOrReject = document.getElementById('btnEWApproveOrReject');
-        btnEWApproveOrReject.addEventListener('click', handleEWApproveOrRejectClick);*/
-
-        /*addClickEventWithAsyncHandler('btnEWEWalletClose', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
-
-        /*const btnEWEWalletClose = document.getElementById('btnEWEWalletClose');
-        btnEWEWalletClose.addEventListener('click', handleEWCloseWalletClick);*/
-
-    } else if (currentPath === '/esheba') {
-
-        addClickEventWithAsyncHandler('btnESAccountOpening', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnESAboutSonaliESheba', showMessageForHelp);
-        addClickEventWithAsyncHandler('btnESOtherServices', showMessageForHelp);
-
-    } else if (currentPath === '/credit-card') {
-
-        addClickEventWithAsyncHandler('btnCCreditCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditOutstandingBDT', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditOutstandingUSD', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCCreditCardPayment', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-    } else if (currentPath === '/debit-card') {
-
-        addClickEventWithAsyncHandler('btnDCDebitCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnDCDebitCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnDCDebitChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCDebitECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCDebitGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCDebitMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-    } else if (currentPath === '/prepaid-card') {
-
-        addClickEventWithAsyncHandler('btnCPrepaidCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCPrepaidCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCPrepaidChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCPrepaidECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCPrepaidMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCPrepaidGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-    } else if (currentPath === '/agent-banking') {
-        addClickEventWithAsyncHandler('btnABAgentBankingServices', showMessageForHelp);
-    } else if (currentPath === '/casasnd') {
-
-        addClickEventWithAsyncHandler('btnChequeBookLeaf', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnCASAActivateSMSBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*
-        // for nid input, use this.
-        addClickEventWithAsyncHandlerForApiCalling('btnCASAMiniStatement',
-        (event, dataset) => handleCASAMiniStatementClick(dataset.voice, dataset.text, dataset.title));*/
-
-        addClickEventWithAsyncHandler('btnCASAMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-
-        addClickEventWithAsyncHandler('btnFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-
-        addClickEventWithAsyncHandler('btnCASAAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        /*
-        // for nid input, use this.
-        addClickEventWithAsyncHandlerForApiCalling('btnCASAAvailableBalance',
-        (event, dataset) => handleCASAAvailableBalanceClick(dataset.voice, dataset.text, dataset.title));*/
-
-        addClickEventWithAsyncHandler('btnChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnAccountClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-    } else if (currentPath === '/ib-loans-advances') {
-
-        addClickEventWithAsyncHandler('btnIBLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBLALoanDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
-        addClickEventWithAsyncHandler('btnIBLAOutstandingLoanBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-
     }
+
+    // } else if (currentPath === '/esheba') {
+
+    addClickEventWithAsyncHandler('btnESAccountOpening', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnESAboutSonaliESheba', showMessageForHelp);
+    addClickEventWithAsyncHandler('btnESOtherServices', showMessageForHelp);
+
+    // } else if (currentPath === '/credit-card') {
+
+    addClickEventWithAsyncHandler('btnCCreditCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditOutstandingBDT', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditOutstandingUSD', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCCreditCardPayment', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/debit-card') {
+
+    addClickEventWithAsyncHandler('btnDCDebitCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnDCDebitCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnDCDebitChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCDebitECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCDebitGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCDebitMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/prepaid-card') {
+
+    addClickEventWithAsyncHandler('btnCPrepaidCardActivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCPrepaidCardBlock', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCPrepaidChangeOrResetPIN', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCPrepaidECommerceActivationOrDeactivation', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCPrepaidMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCPrepaidGreenPINGeneration', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/agent-banking') {
+    addClickEventWithAsyncHandler('btnABAgentBankingServices', showMessageForHelp);
+    // } else if (currentPath === '/casasnd') {
+
+    addClickEventWithAsyncHandler('btnChequeBookLeaf', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCASAActivateSMSBanking', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCASAMiniStatement', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnFundTransferServices', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCASAAvailableBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnChequeBookRequisition', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnAccountClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // } else if (currentPath === '/ib-loans-advances') {
+
+    addClickEventWithAsyncHandler('btnIBLALoanClosureProcess', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBLALoanDetails', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnIBLAOutstandingLoanBalance', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    // }
 
     async function handleAccountSwitchButtonClick() {
         if (await checkLoginStatus()) {
@@ -995,7 +589,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const btnAccountSwitch = document.getElementById('btnAccountSwitch');
-    btnAccountSwitch.addEventListener('click', handleAccountSwitchButtonClick);
+    if (btnAccountSwitch) {
+        btnAccountSwitch.addEventListener('click', handleAccountSwitchButtonClick);
+    }
 
     async function handleAccountSwitchClick() {
         try {
@@ -1039,27 +635,6 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.addEventListener('click', handleAccountSwitchCommonSubmitButtonClick);
         cancelButton.addEventListener('click', handleAccountSwitchCommonCancelButtonClick);
 
-        /*const accountOptionsDivs = document.querySelectorAll('.account-option');
-
-        accountOptionsDivs.forEach(optionDiv => {
-            optionDiv.addEventListener('click', handleAccountOptionCommonClick);
-        });*/
-
-        /*document.querySelectorAll('.ac-select-button').forEach(button => {
-            button.addEventListener('click', handleSelectCommonButtonClick);
-        });*/
-    }
-
-    function handleAccountOptionCommonClick(event) {
-        const clickedOption = event.currentTarget;
-        const accountId = clickedOption.getAttribute('data-account-id');
-
-        // Reset background color for all options
-        document.querySelectorAll('.account-option').forEach(option => {
-            option.style.backgroundColor = ''; // Reset to default
-        });
-
-        clickedOption.style.backgroundColor = '';
     }
 
     function handleAccountSwitchCommonSubmitButtonClick() {
@@ -1069,16 +644,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedAccountId) {
             console.log('Selected Account Id:', selectedAccountId.value);
 
-            // Perform any additional actions here if needed
-
             axios.post('/save', {"ac": selectedAccountId.value, "purpose": "ACCOUNT-SWITCH"})
                 .then(response => handleSaveResponseCommon(response))
                 .catch(error => console.error('Error saving selected account:', error))
                 .finally(() => hideLoader());
 
-            Swal.close(); // Close the SweetAlert popup
+            Swal.close();
         } else {
-            // Display a message or handle the case where no account is selected
             console.log('No account selected');
         }
     }
@@ -1086,7 +658,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleAccountSwitchCommonCancelButtonClick() {
         Swal.close();
     }
-
 
     function handleSelectCommonButtonClick() {
         const selectedAccountId = this.getAttribute('data-account-id');
@@ -1110,7 +681,6 @@ document.addEventListener('DOMContentLoaded', function () {
             displayErrorMessage(respData.message, errorMessageDiv);
         }
     }
-
 
     async function handleEWChangeOrResetEWalletPINClick() {
         try {
@@ -1148,41 +718,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
-    /*async function handleEWChangeOrResetEWalletPINClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'EW-CHANGE-OR-RESET-PIN',
-                        'page': 'ewallet',
-                        'button': 'btnEWChangeOrResetEWalletPIN',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLAOutstandingLoanBalance click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
 
     async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
         let locale = getSavedLocale();
@@ -1256,8 +791,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         Swal.fire({
                             html: `<img class="" src="./img/icon/${iconAsImg}" />
                             <h2 class="swal2-title"> ${apiResponse.message} </h2>
-                        `, // title: apiResponse.message,
-                            // icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        `,
                             allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
                             customClass: {
@@ -1270,8 +804,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         Swal.fire({
                             html: `<img class="" src="./img/icon/lock-card.svg" />
                             <h2 class="swal2-title"> ${verifyResp.message} </h2>
-                        `, // title: verifyResp.message,
-                            // icon: 'error',
+                        `,
                             allowOutsideClick: false,
                             confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
                             customClass: {
@@ -1291,8 +824,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     html: `<img class="" src="./img/icon/lock-card.svg" />
                             <h2 class="swal2-title"> ${error.message} </h2>
-                        `, //title: error.message,
-                    //icon: 'error',
+                        `,
                     allowOutsideClick: false, customClass: {
                         container: 'user-info-verify-swal-bg'
                     },
@@ -1301,339 +833,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
-    /*const someButton = document.getElementById('someButton');
-    someButton.addEventListener('click', () => {
-        handleAPIRequest('SOME-PURPOSE', 'Some reason for the request');
-    });*/
-
-    /*async function handleEWApproveOrRejectClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                // Prompt for NID and date of birth
-                const {value: nidAndDob} = await Swal.fire({
-                    title: 'Enter NID and Date of Birth',
-                    html: '<input id="swal-input1" class="swal2-input" placeholder="National ID">' + '<input id="swal-input2" class="swal2-input" type="date" placeholder="Date of Birth">',
-                    showCancelButton: true,
-                    cancelButtonText: 'Cancel',
-                    focusConfirm: false,
-                    allowOutsideClick: false,
-                    preConfirm: () => {
-                        const nid = Swal.getPopup().querySelector('#swal-input1').value;
-                        const dob = Swal.getPopup().querySelector('#swal-input2').value;
-                        if (!nid || !/^\d{10,17}$/.test(nid)) {
-                            Swal.showValidationMessage('National ID is required and must be a number with 10 to 17 digits');
-                        }
-                        if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-                            Swal.showValidationMessage('Invalid date format. Please use YYYY-MM-DD');
-                        }
-                        return {nid, dob};
-                    }
-                });
-
-                if (!nidAndDob) {
-                    return;
-                }
-
-                const {nid, dob} = nidAndDob;
-                if (nid && dob) {
-                    showLoader();
-                    let reqObj = {
-                        'purpose': 'USER-INFO-VERIFY',
-                        'page': 'ewallet',
-                        'button': 'btnEWApproveOrReject',
-                        'nid': nid,
-                        'dob': dob
-                    }
-
-                    const verificationResponse = await callDynamicAPI(reqObj);
-
-                    hideLoader();
-                    console.log('verificationResponse', verificationResponse);
-
-                    // Proceed with API call if verification is successful
-                    if (verificationResponse.status === 'success') {
-                        const apiResponse = await callDynamicAPI({
-                            'purpose': 'EW-APPROVE-OR-REJECT',
-                            'page': 'ewallet',
-                            'button': 'btnEWApproveOrReject',
-                            'reason': 'Approve wallet request received.'
-                        });
-                        hideLoader();
-
-                        Swal.fire({
-                            title: apiResponse.message,
-                            icon: apiResponse.status === 'success' ? 'success' : 'error',
-                            allowOutsideClick: false
-                        });
-                        playErrorAudio(apiResponse.prompt);
-                    } else {
-                        // Handle unsuccessful verification
-                        Swal.fire({
-                            title: verificationResponse.message, icon: 'error', allowOutsideClick: false
-                        });
-                        playErrorAudio(verificationResponse.prompt);
-                    }
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            hideLoader();
-            // console.error('Error in btnEWApproveOrReject click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                // playErrorAudio(error.prompt);
-            }
-        }
-    }*/
-
-    /*async function handleEWDeviceBindClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'EW-DEVICE-BIND',
-                        'page': 'ewallet',
-                        'button': 'btnEWDeviceBind',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLAOutstandingLoanBalance click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
-
-    async function handleEWDeviceBindClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                showLoader();
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'EW-DEVICE-BIND',
-                    'reason': 'Device Bind request received.',
-                    'page': 'ewallet',
-                    'button': 'btnEWDeviceBind',
-                });
-                hideLoader();
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false
-                });
-                playErrorAudio(apiResponse.prompt);
-
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLAOutstandingLoanBalance click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleEWCloseWalletClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                showLoader();
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'EW-CLOSE-WALLET',
-                    'reason': 'Wallet closing request received.',
-                    'page': 'ewallet',
-                    'button': 'btnEWEWalletClose',
-                });
-                hideLoader();
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false
-                });
-                playErrorAudio(apiResponse.prompt);
-
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnEWEWalletClose click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleEWLockOrBlockClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-
-                showLoader();
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'EW-LOCK-BLOCK',
-                    'reason': 'Wallet Lock Or Block request received.',
-                    'page': 'ewallet',
-                    'button': 'btnEWLockOrBlock',
-                });
-                hideLoader();
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false
-                });
-                playErrorAudio(apiResponse.prompt);
-
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnEWLockOrBlock click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    /*async function handleEWLockOrBlockClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'EW-LOCK-BLOCK',
-                        'page': 'ewallet',
-                        'button': 'btnEWLockOrBlock',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnEWLockOrBlock click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
-
-    async function handleEWUnlockOrActiveClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                showLoader();
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'EW-UNLOCK-ACTIVE',
-                    'reason': 'Wallet Lock or Active request received.',
-                    'page': 'ewallet',
-                    'button': 'btnEWUnlockOrActive',
-                });
-                hideLoader();
-
-                Swal.fire({
-                    title: apiResponse.message,
-                    icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false
-                });
-                playErrorAudio(apiResponse.prompt);
-
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnEWUnlockOrActive click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    /*async function handleEWUnlockOrActiveClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'EW-UNLOCK-ACTIVE',
-                        'page': 'ewallet',
-                        'button': 'btnEWUnlockOrActive',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnEWUnlockOrActive click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }*/
 
     async function handleIBAccountRelatedClick() {
         try {
@@ -1655,28 +854,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
-    async function handleSonaliBankProductClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-
-                goTo('/sonali-products');
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in handleSonaliBankProductClick :', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
 
     async function handleSPGClick() {
         try {
@@ -1867,573 +1044,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function handleDebitCardActivationClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for debit card activation?', "Please enter the reason for debit card activation.", 'enter-reason-for-debit-card-activation');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'debitCardActivation',
-                        'page': 'cards',
-                        'button': 'btnDebitCard',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnDebitCardActivate click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleCreditCardActivationClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for credit card activation?', "Please enter the reason for credit card activation.", 'enter-reason-for-credit-card-activation');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'creditCardActivation',
-                        'page': 'cards',
-                        'button': 'btnCreditCard',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnCreditCard click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handlePrepaidCardActivationClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for prepaid card activation?', "Please enter the reason for prepaid card activation.", 'enter-reason-for-prepaid-card-activation');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'prepaidCardActivation',
-                        'page': 'cards',
-                        'button': 'btnPrepaidCard',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error'
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnPrepaidCard click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-
-    async function handleChequeBookLeafClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for cheque book leaf?', "Please enter the reason for cheque book leaf process.", 'enter-reason-cheque-book-leaf');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'ChequeBookLeaf',
-                        'page': 'casasnd',
-                        'button': 'btnChequeBookLeaf',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnChequeBookLeaf click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleLADueDateInstallmentClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Please enter loan amount.', "Please enter Sanction/Renewed/Re-Schedule loan amount here.", 'enter-loan-amount-due-date-installment');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'LA-DUE-DATE-INSTALLMENT',
-                        'page': 'loanAndAdvances',
-                        'button': 'btnLADueDateInstallment',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnChequeBookLeaf click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleIBARChequeBookLeafClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Please enter last transaction amount.', "Please enter last transaction amount here.", 'enter-ib-stop-payment-amount');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'IB-AR-CHEQUE-BOOK-LEAF-STOP-PAYMENT',
-                        'page': 'ib-account-related',
-                        'button': 'btnIBARChequeBookLeaf',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnIBARChequeBookLeaf click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleCASAActivateSMSBankingClick() {
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                const reason = await enterReason('Reason for activation of SMS banking?', "Please enter the reason for activation of SMS banking.", 'enter-reason-activate-sms-banking');
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'CASAActivateSMSBanking',
-                        'page': 'casasnd',
-                        'button': 'btnCASAActivateSMSBanking',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnCASAActivateSMSBanking click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleCASAAvailableBalanceClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'CASA-AVAILABLE-BALANCE',
-                        'page': 'casasnd',
-                        'button': 'btnCASAAvailableBalance',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnCASAActivateSMSBanking click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleCASAMiniStatementClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'CASA-MINI-STATEMENT',
-                        'page': 'casasnd',
-                        'button': 'btnCASAMiniStatement',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnCASAMiniStatement click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleLADueDateInstallmentClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'LA-DUE-DATE-INSTALLMENT',
-                        'page': 'loans-advances',
-                        'button': 'btnLADueDateInstallment',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLADueDateInstallment click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleLAOutstandingLoanBalanceClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'LA-OUTSTANDING-LOAN-BALANCE',
-                        'page': 'loans-advances',
-                        'button': 'btnLAOutstandingLoanBalance',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLADueDateInstallment click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleLALoanDetailsClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'LA-LOAN-DETAILS',
-                        'page': 'loans-advances',
-                        'button': 'btnLALoanDetails',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnLALoanDetails click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-
-    async function handleALAccountDPSAvailableBalanceClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'AL-ACCOUNT-DPS-AVAILABLE-BALANCE',
-                        'page': 'account-dps',
-                        'button': 'btnALAccountDPSAvailableBalance',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnALAccountDPSAvailableBalance click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleALAccountDPSInstalmentDetailsClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'AL-ACCOUNT-DPS-INSTALMENT-DETAILS',
-                        'page': 'account-dps',
-                        'button': 'btnALAccountDPSInstalmentDetails',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnALAccountDPSInstalmentDetails click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleALDPSDetailsClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'AL-DPS-DETAILS',
-                        'page': 'account-dps',
-                        'button': 'btnALDPSDetails',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnALDPSDetails click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
-    async function handleFDMaturityDateClick(voice = "", text = "", title = "") {
-
-        try {
-            const isLoggedIn = await checkLoginStatus();
-            if (isLoggedIn) {
-                let {title, text, voice} = getLocalWiseNIDContent();
-                const reason = await enterReason(title, text, voice);
-
-                if (reason.isConfirmed) {
-                    const apiResponse = await callDynamicAPI({
-                        'purpose': 'FD-MATURITY-DATE',
-                        'page': 'fixed-deposit',
-                        'button': 'btnFDMaturityDate',
-                        'reason': reason.value
-                    });
-
-                    Swal.fire({
-                        title: apiResponse.message, icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    });
-                    playErrorAudio(apiResponse.prompt);
-                }
-            } else {
-                showVerificationAlert();
-            }
-        } catch (error) {
-            console.error('Error in btnFDMaturityDate click:', error);
-
-            if (error.status === 'error') {
-                Swal.fire({
-                    title: error.message, icon: 'error'
-                });
-                playErrorAudio(error.prompt);
-            }
-        }
-    }
-
     async function handleFDFixedDepositDetailsClick(voice = "", text = "", title = "") {
 
         try {
@@ -2558,7 +1168,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     function addClickEventWithAsyncHandler(elementId, asyncHandler) {
         const element = document.getElementById(elementId);
 
@@ -2578,8 +1187,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
-
-    // Handling cards functionality from here.
 
     async function handleCardsButtonClick() {
         try {
@@ -2762,39 +1369,4 @@ document.addEventListener('DOMContentLoaded', function () {
         return false;
     }
 
-
-    /*function showDownloadOptions(appName) {
-        let locale = getSavedLocale();
-        Swal.fire({
-            title: (locale === 'en') ? 'Select your app store' : 'অ্যাপ স্টোর নির্বাচন করুন',
-            showCancelButton: true,
-            confirmButtonText: '<img class="transparent-button" src="/img/app-store.png" alt="App Store" width="50" height="50">',
-            cancelButtonText: '<img class="transparent-button" src="/img/google-play.png" alt="Play Store" width="50" height="50">',
-            reverseButtons: true,
-            focusConfirm: false,
-            focusCancel: false
-        }).then((result) => {
-            if (result.isConfirmed) { // apple appStore
-                redirectToAppStore(appName);
-            } else if (result.dismiss === Swal.DismissReason.cancel) { // google playStore
-                redirectToPlayStore(appName);
-            }
-        });
-    }
-
-    function redirectToAppStore(appName) {
-        let appUrl = (appName === 'esheba') ? eShebaiOS : SPGiOS;
-        console.log('appUrl', appUrl);
-        window.open(appUrl, '_blank');
-        // window.location.href = appUrl;
-        return false;
-    }
-
-    function redirectToPlayStore(appName) {
-        let appUrl = (appName === 'esheba') ? eShebaAndroid : SPGAndroid;
-        console.log('appUrl', appUrl);
-        window.open(appUrl, '_blank');
-        // window.location.href = appUrl;
-        return false;
-    }*/
 });

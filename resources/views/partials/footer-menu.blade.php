@@ -43,7 +43,7 @@
 </footer>
 <!-- Footer Area End -->
 
-{{--<script type="application/javascript">
+<script type="application/javascript">
 
     document.addEventListener('DOMContentLoaded', function () {
         const backButton = document.getElementById('btnBack');
@@ -54,5 +54,5 @@
 
     });
 
-</script>--}}
+</script>
 

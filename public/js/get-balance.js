@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let dataTextValue = "";
     const btnTapForBalance = document.getElementById('balance-button');
     const balanceImage = document.querySelector('#balance-container img');
-    const resetAnimationTimeout = 2000; // 2 Secs. Change this value to configure the timeout
+    const resetAnimationTimeout = 2000;
     const balanceText = document.getElementById('balance-text');
 
     function handleBalanceButtonClick() {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
             balanceText.textContent = `${balance}`;
             balanceImage.style.opacity = 0;
             balanceContainer.classList.remove('slide-out');
-            btnTapForBalance.disabled = true; // to prevent second time balance button click
+            btnTapForBalance.disabled = true;
         } else {
             const errorMessage = response?.data?.message || 'Error occurred.';
             showCustomMessage('Error', errorMessage);

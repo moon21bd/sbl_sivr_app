@@ -15,7 +15,7 @@ async function handleImageUpload(event) {
                 text: 'The selected file size exceeds the maximum limit of 10 MB.',
                 allowOutsideClick: false
             });
-            playErrorAudio('/uploads/prompts/photo-upload-limit-exceeded.m4a');
+            // playErrorAudio('/uploads/prompts/photo-upload-limit-exceeded.m4a');
             return;
         }
 
@@ -29,28 +29,23 @@ async function handleImageUpload(event) {
             return;
         }
 
-        showLoader(); // Show the loader while the image is being uploaded
+        showLoader();
 
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
         reader.onload = async () => {
             const base64Image = reader.result;
-
-            // Compress the image before uploading
             const compressedImage = await compressImage(base64Image);
-
-            // Send the compressed base64 image data to the server using an HTTP request (you can use Axios)
             const response = await axios.post('/upload-photo', {
                 photo: compressedImage,
             });
 
-            // Handle the server response (e.g., update the image URL on the page)
             userPhotoIcon.src = response.data.image_url;
             fileInputContainer.innerHTML = '';
             fileInputContainer.style.display = 'none';
 
-            hideLoader(); // Hide the loader after image upload is complete
+            hideLoader();
         };
 
         reader.onerror = (error) => {
@@ -61,18 +56,18 @@ async function handleImageUpload(event) {
                 text: 'An error occurred while reading the file. Please try again.',
                 allowOutsideClick: false
             });
-            hideLoader(); // Hide the loader if there's an error
+            hideLoader();
         };
     } catch (error) {
         console.error('ERROR', error.message, error.response.data, error, event.target.files[0]);
-        playErrorAudio('/uploads/prompts/photo-upload-limit-exceeded.m4a');
+        // playErrorAudio('/uploads/prompts/photo-upload-limit-exceeded.m4a');
         Swal.fire({
             icon: 'error',
             title: 'File Upload Error',
             text: 'An error occurred while uploading the file. Please try again later.',
             allowOutsideClick: false
         });
-        hideLoader(); // Hide the loader if there's an error
+        hideLoader();
     }
 }
 

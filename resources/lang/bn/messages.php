@@ -156,4 +156,6 @@ return [
     'otp-send-success' => 'ওটিপি পাঠানো সফল হয়েছে।',
     'service-access-denied' => 'দুঃখিত ! আপনি এই সেবার অন্তর্ভুক্ত নন ।',
     'service-not-available' => 'পুনরায় সেবা পেতে পরবর্তী :hours ঘন্টার মধ্যে আবার চেষ্টা করুন।',
+    'account-no-text' => 'অ্যাকাউন্ট নং:'
+
 ];
