@@ -80,12 +80,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         html: `
                 <div>
                 <label for="callCategorySelect">${textCallCategory}:</label>
+                </div>
+                
                 <select id="callCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
                 </select>
-                </div>
-
 
                 <label for="callSubCategorySelect">${textCallSubCategory}:</label>
                 <select id="callSubCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
