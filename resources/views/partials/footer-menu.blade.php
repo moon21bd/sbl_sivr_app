@@ -49,9 +49,15 @@
         const backButton = document.getElementById('btnBack');
         const btnHome = document.getElementById('btnHome');
 
-        btnHome.addEventListener('click', () => goTo());
-        backButton.addEventListener('click', () => goTo());
+        const navigateToHomeIfNotAlready = () => {
+            const currentPath = window.location.pathname;
+            if (currentPath !== "/") {
+                goTo();
+            }
+        };
 
+        btnHome.addEventListener('click', navigateToHomeIfNotAlready);
+        backButton.addEventListener('click', navigateToHomeIfNotAlready);
     });
 
 </script>

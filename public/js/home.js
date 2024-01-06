@@ -48,31 +48,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function showCascadingDropdownsForCreatingAnIssue() {
+
         let locale = getSavedLocale();
         try {
-            showLoader();
-            const callCategoryDropdownValuesResponse = await callDynamicAPI({
-                'purpose': 'GET-CALL-CATEGORY-OPTIONS', 'page': 'home', 'button': 'createIssue'
-            });
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
 
-            const callCategoryDropdownValues = callCategoryDropdownValuesResponse.data;
-            hideLoader();
+                try {
+                    showLoader();
+                    const callCategoryDropdownValuesResponse = await callDynamicAPI({
+                        'purpose': 'GET-CALL-CATEGORY-OPTIONS', 'page': 'home', 'button': 'createIssue'
+                    });
 
-            let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
-            let textCallCategory = (locale === 'en') ? "Complaint Type" : "অভিযোগের ধরণ";
-            let textCallSubCategory = (locale === 'en') ? "Complaint Sub Type" : "অভিযোগের উপ ধরণ";
-            let textCallSubSubCategory = (locale === 'en') ? "Complaint Sub Sub Type" : "অভিযোগের উপ-উপ ধরণ";
-            let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "অভিযোগের উপ ধরণ নির্বাচন করুন";
-            let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
-            let textSelectCallCategory = (locale === 'en') ? "Select Complaint Type" : "অভিযোগের ধরণ নির্বাচন করুন";
-            let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Complaint Type" : "অভিযোগের উপ-উপ ধরণ নির্বাচন করুন";
-            let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
-            let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
+                    const callCategoryDropdownValues = callCategoryDropdownValuesResponse.data;
+                    hideLoader();
 
-            const swalOptions = {
-                // title: textSubmitComplaint,
-                title: `<h3 class="complaint-title"> ${textSubmitComplaint}</h3>`,
-                html: `<label for="callCategorySelect">${textCallCategory}:</label>
+                    let textCallType = (locale === 'en') ? "Call Type" : "কল টাইপ";
+                    let textCallCategory = (locale === 'en') ? "Complaint Type" : "অভিযোগের ধরণ";
+                    let textCallSubCategory = (locale === 'en') ? "Complaint Sub Type" : "অভিযোগের উপ ধরণ";
+                    let textCallSubSubCategory = (locale === 'en') ? "Complaint Sub Sub Type" : "অভিযোগের উপ-উপ ধরণ";
+                    let textSelectSubCallCategory = (locale === 'en') ? "Select Sub Category" : "অভিযোগের উপ ধরণ নির্বাচন করুন";
+                    let textSelectCallType = (locale === 'en') ? "Select Type" : "টাইপ নির্বাচন করুন";
+                    let textSelectCallCategory = (locale === 'en') ? "Select Complaint Type" : "অভিযোগের ধরণ নির্বাচন করুন";
+                    let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Complaint Type" : "অভিযোগের উপ-উপ ধরণ নির্বাচন করুন";
+                    let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
+                    let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
+
+                    const swalOptions = {
+                        // title: textSubmitComplaint,
+                        title: `<h3 class="complaint-title"> ${textSubmitComplaint}</h3>`,
+                        html: `<label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
@@ -89,138 +94,157 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <label for="reasonInput">${textReason}:</label>
                 <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
-                focusConfirm: false,
-                preConfirm: () => {
-                    // const callTypeOpts = document.getElementById('callTypeSelect').value;
-                    const callTypeOpts = 2; // service request
-                    const callCategoryOpts = document.getElementById('callCategorySelect').value;
-                    const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
-                    const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
-                    const reason = document.getElementById('reasonInput').value;
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            // const callTypeOpts = document.getElementById('callTypeSelect').value;
+                            const callTypeOpts = 2; // service request
+                            const callCategoryOpts = document.getElementById('callCategorySelect').value;
+                            const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
+                            const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
+                            const reason = document.getElementById('reasonInput').value;
 
-                    if (!callTypeOpts || !callCategoryOpts || !callSubCategoryOpts || !callSubSubCategoryOpts || !reason) {
-                        Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
-                    }
+                            if (!callTypeOpts || !callCategoryOpts || !callSubCategoryOpts || !callSubSubCategoryOpts || !reason) {
+                                Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
+                            }
 
-                    // console.log('SUBMIT', callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason);
+                            // console.log('SUBMIT', callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason);
 
-                    return {
-                        callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                            return {
+                                callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                            };
+                        },
+                        showCancelButton: true,
+                        customClass: {
+                            container: 'complaint-swal-bg'
+                        },
+                        confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
+                        cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+                        didOpen: () => {
+                            // Initialize Select2 after the Swal modal is shown
+                            // $('.select2').select2();
+
+                            // const callTypeSelect = document.getElementById('callTypeSelect');
+                            const callTypeSelect = 2;
+                            const callCategorySelect = document.getElementById('callCategorySelect');
+                            const callSubCategorySelect = document.getElementById('callSubCategorySelect');
+                            const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
+
+                            // CALL TYPE EVENT
+                            /*callTypeSelect.addEventListener('change', async () => {
+                                const callType = callTypeSelect.value;
+                                const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
+                                const categoryDataValues = callCategories.data;
+                                callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
+                            });*/
+
+                            // CALL CATEGORY EVENT
+                            callCategorySelect.addEventListener('change', async () => {
+                                const callTypeVal = callTypeSelect;
+                                const callCategoryVal = callCategorySelect.value;
+                                const callSubCategoryVal = callSubCategorySelect.value;
+                                console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal);
+
+                                const callSubCategories = await fetchDropdownOptions('callSubCategorySelect', {
+                                    "callType": callTypeVal, "callCategory": callCategoryVal
+                                });
+
+                                const subCategoryDataValues = callSubCategories.data;
+                                // console.log('subCategoryDataValues', subCategoryDataValues)
+                                callSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubCallCategory}</option>` + getOptionsHtml(subCategoryDataValues);
+                            });
+
+                            // CALL SUB CATEGORY EVENT
+                            callSubCategorySelect.addEventListener('change', async () => {
+                                const callTypeVal = callTypeSelect;
+                                const callCategoryVal = callCategorySelect.value;
+                                const callSubCategoryVal = callSubCategorySelect.value;
+                                const callSubSubCategoryVal = callSubSubCategorySelect.value;
+
+                                console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
+
+                                const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
+                                    "callType": callTypeVal,
+                                    "callCategory": callCategoryVal,
+                                    "callSubCategory": callSubCategoryVal
+                                });
+
+                                const subSubCategoryDataValues = callSubSubCategories.data;
+                                // console.log('subSubCategoryDataValues', subSubCategoryDataValues)
+                                callSubSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubSubCallCategory}</option>` + getOptionsHtml(subSubCategoryDataValues);
+                            });
+                        },
                     };
-                },
-                showCancelButton: true,
-                customClass: {
-                    container: 'complaint-swal-bg'
-                },
-                confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
-                cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-                didOpen: () => {
-                    // Initialize Select2 after the Swal modal is shown
-                    // $('.select2').select2();
 
-                    // const callTypeSelect = document.getElementById('callTypeSelect');
-                    const callTypeSelect = 2;
-                    const callCategorySelect = document.getElementById('callCategorySelect');
-                    const callSubCategorySelect = document.getElementById('callSubCategorySelect');
-                    const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
+                    const {value: selectedValues, dismiss} = await Swal.fire(swalOptions);
+                    // console.log('selectedValues', selectedValues, dismiss);
 
-                    // CALL TYPE EVENT
-                    /*callTypeSelect.addEventListener('change', async () => {
-                        const callType = callTypeSelect.value;
-                        const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
-                        const categoryDataValues = callCategories.data;
-                        callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
-                    });*/
+                    if (selectedValues && !dismiss) {
+                        const {
+                            callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                        } = selectedValues;
 
-                    // CALL CATEGORY EVENT
-                    callCategorySelect.addEventListener('change', async () => {
-                        const callTypeVal = callTypeSelect;
-                        const callCategoryVal = callCategorySelect.value;
-                        const callSubCategoryVal = callSubCategorySelect.value;
-                        console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal);
+                        /*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason);*/
 
-                        const callSubCategories = await fetchDropdownOptions('callSubCategorySelect', {
-                            "callType": callTypeVal, "callCategory": callCategoryVal
+                        const apiResponse = await callDynamicAPI({
+                            'purpose': 'CREATEISSUE', 'page': 'home', 'button': 'btnCreateIssue', ...selectedValues
                         });
+                        // console.log('apiResponse', apiResponse);
 
-                        const subCategoryDataValues = callSubCategories.data;
-                        // console.log('subCategoryDataValues', subCategoryDataValues)
-                        callSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubCallCategory}</option>` + getOptionsHtml(subCategoryDataValues);
-                    });
-
-                    // CALL SUB CATEGORY EVENT
-                    callSubCategorySelect.addEventListener('change', async () => {
-                        const callTypeVal = callTypeSelect;
-                        const callCategoryVal = callCategorySelect.value;
-                        const callSubCategoryVal = callSubCategorySelect.value;
-                        const callSubSubCategoryVal = callSubSubCategorySelect.value;
-
-                        console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
-
-                        const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
-                            "callType": callTypeVal,
-                            "callCategory": callCategoryVal,
-                            "callSubCategory": callSubCategoryVal
-                        });
-
-                        const subSubCategoryDataValues = callSubSubCategories.data;
-                        // console.log('subSubCategoryDataValues', subSubCategoryDataValues)
-                        callSubSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubSubCallCategory}</option>` + getOptionsHtml(subSubCategoryDataValues);
-                    });
-                },
-            };
-
-            const {value: selectedValues, dismiss} = await Swal.fire(swalOptions);
-            // console.log('selectedValues', selectedValues, dismiss);
-
-            if (selectedValues && !dismiss) {
-                const {
-                    callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
-                } = selectedValues;
-
-                /*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason);*/
-
-                const apiResponse = await callDynamicAPI({
-                    'purpose': 'CREATEISSUE', 'page': 'home', 'button': 'btnCreateIssue', ...selectedValues
-                });
-                // console.log('apiResponse', apiResponse);
-
-                const issueId = apiResponse.data?.issueId;
-                const issue = issueId ? issueId : null;
-                Swal.fire({
-                    // title: apiResponse.message,
-                    html: `<img class="" src="./img/icon/checkmark.svg" />
+                        const issueId = apiResponse.data?.issueId;
+                        const issue = issueId ? issueId : null;
+                        Swal.fire({
+                            // title: apiResponse.message,
+                            html: `<img class="" src="./img/icon/checkmark.svg" />
                         <h2 class="swal2-title"> ${apiResponse.message} </h2>
                         <p>${"IssueId: " + issue}</p>
                         `, // icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false, // text: "IssueId: " + issue,
-                    confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে", customClass: {
-                        container: 'issueid-swal-bg'
-                    },
+                            allowOutsideClick: false, // text: "IssueId: " + issue,
+                            confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে", customClass: {
+                                container: 'issueid-swal-bg'
+                            },
 
-                });
-                playErrorAudio(apiResponse.prompt);
-            } else if (dismiss === Swal.DismissReason.cancel) {
-                // Handle cancel action if needed
-                hideLoader();
-            }
-        } catch (error) {
-            console.error('Error in btnCreateIssue click:', error);
-            if (error.status === 'error') {
-                Swal.fire({
-                    // title: error.message,
-                    // icon: 'error',
-                    html: `<img class="" src="./img/icon/lock-card.svg" />
+                        });
+                        playErrorAudio(apiResponse.prompt);
+                    } else if (dismiss === Swal.DismissReason.cancel) {
+                        // Handle cancel action if needed
+                        hideLoader();
+                    }
+                } catch (error) {
+                    console.error('Error in btnCreateIssue click:', error);
+                    if (error.status === 'error') {
+                        Swal.fire({
+                            // title: error.message,
+                            // icon: 'error',
+                            html: `<img class="" src="./img/icon/lock-card.svg" />
                         <h2 class="swal2-title"> ${error.message} </h2>
                         `, allowOutsideClick: false, customClass: {
-                        container: 'issueid-swal-bg'
+                                container: 'issueid-swal-bg'
+                            },
+                        });
+                        playErrorAudio(error.prompt);
+                    }
+                } finally {
+                    hideLoader();
+                }
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in showActiveYourServiceMessage :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error',
+                    focusConfirm: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'active-your-service-swal-bg'
                     },
                 });
-                playErrorAudio(error.prompt);
+                // playErrorAudio(error.prompt);
             }
-        } finally {
-            hideLoader();
         }
+
     }
 
     async function fetchDropdownOptions(targetDropdownId, selectedValues = {}) {
@@ -608,12 +632,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // stopAllAudio();
 
         const accountOptions = accounts.map(account => `
-    <div class="account-option">
+    <div class="account-option" style="width: 100%">
         <label for="account-${account.accEnc}">
          <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
             <div class="account-details">
-                <p>Account Name: ${account.accountName}</p>
-                <p>Account No: ${account.accountNo}</p>
+                <p style="text-align: left;">Account Name: ${account.accountName}</p>
+                <p style="text-align: left;">Account No: ${account.accountNo}</p>
             </div>
         </label>
     </div>`).join('');
@@ -1324,19 +1348,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function showActiveYourServiceMessage(title, message) {
-        Swal.fire({
-            title: title,
-            text: message,
-            icon: 'error',
-            confirmButtonText: (locale === 'en') ? "Ok" : "ঠিক আছে",
-            cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
-            focusConfirm: false,
-            allowOutsideClick: false,
-            customClass: {
-                container: 'active-your-service-swal-bg'
-            },
-        });
+    async function showActiveYourServiceMessage(title, message) {
+
+        try {
+            const isLoggedIn = await checkLoginStatus();
+            if (isLoggedIn) {
+                Swal.fire({
+                    title: title,
+                    text: message,
+                    icon: 'error',
+                    confirmButtonText: (locale === 'en') ? "Ok" : "ঠিক আছে",
+                    cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+                    focusConfirm: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'active-your-service-swal-bg'
+                    },
+                });
+            } else {
+                showVerificationAlert();
+            }
+        } catch (error) {
+            console.error('Error in showActiveYourServiceMessage :', error);
+
+            if (error.status === 'error') {
+                Swal.fire({
+                    title: error.message, icon: 'error',
+                    focusConfirm: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'active-your-service-swal-bg'
+                    },
+                });
+                // playErrorAudio(error.prompt);
+            }
+        }
+
+
     }
 
     function isAndroid() {

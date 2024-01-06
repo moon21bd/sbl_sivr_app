@@ -155,5 +155,7 @@ return [
     'service-access-denied' => "Apologies! This service doesn't include you.",
     'service-not-available' => 'Try again in the next :hours hours to avail the service.',
     'account-no-text' => 'A/C No:',
+    'processing' => 'Processing...',
+
 
 ];

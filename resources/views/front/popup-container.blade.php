@@ -2,6 +2,10 @@
 <div class="popup-container mob-popup-get-started fixed top-0 right-0 left-0 bottom-0 h-full w-full z-50"
      style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
 
+    <div class="absolute top-11 right-5 w-8 h-8">
+        <button id="toggleAudio"
+                class="play playAudioBtn cursor-pointer w-8 h-8 bg-no-repeat z-40"></button>
+    </div>
     <!-- BG Dots -->
     <div class="top-right absolute -top-28 right-0 overflow-hidden z-0">
         <img src="{{ asset('img/bg/top-right.svg') }}" alt="">
@@ -53,20 +57,21 @@
                            class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-4">English</a>
                     </div>--}}
 
-                    <div class="flex relative top-5">
+                    <div class="flex gap-3 justify-center my-6">
 
                         <button id="bnButton" type="submit" data-locale="bn"
-                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-3">
+                                class="language-button text-white text-lg px-4 py-1 hover:bg-[#0F5DA8]  rounded-full border-2 font-bold border-white cursor-pointer transition-colors duration-300 ease-in-out">
                             বাংলা
                         </button>
 
+
                         <button id="enButton" type="submit" data-locale="en"
-                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-3">
+                                class="language-button text-white text-lg px-4 py-1 hover:bg-[#0F5DA8]  rounded-full border-2 font-bold border-white cursor-pointer transition-colors duration-300 ease-in-out">
                             English
                         </button>
 
                         <button id="skipButton" type="submit" data-skip="yes"
-                                class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-3">
+                                class="text-white text-lg font-bold">
                             Skip
                         </button>
                     </div>
@@ -82,6 +87,8 @@
 
 <script type="application/javascript">
     document.addEventListener('DOMContentLoaded', function () {
+        let currentAudio = null;
+
         const popupContainer = document.querySelector('.popup-container');
         const bnButton = document.getElementById('bnButton');
         const enButton = document.getElementById('enButton');
@@ -114,14 +121,31 @@
                 $(`#${locale}Button`).addClass('selected-language');
                 setSavedLocale(locale);
 
+                // Pause the currently playing audio if any
+                if (currentAudio) {
+                    currentAudio.pause();
+                }
+
                 const audio = new Audio(voiceContent);
+
+                if (!this.hasToggledSound) {
+                    toggleSound();
+                    this.hasToggledSound = true;
+                }
+
+                playGSAudio(audio);
+
+                // Set the current audio to the new audio
+                currentAudio = audio;
+
+                /*const audio = new Audio(voiceContent);
                 audio.addEventListener('canplaythrough', () => {
                     if (!this.hasToggledSound) {
                         toggleSound();
                         this.hasToggledSound = true;
                     }
                     playGSAudio(audio);
-                });
+                });*/
 
                 audio.addEventListener('ended', async () => {
                     hidePopupContainer();
@@ -132,6 +156,7 @@
                 // console.error(`Element with attribute data-text-${locale} not found.`);
             }
         }
+
 
         async function doSwitchLangRequest(locale) {
 
@@ -204,4 +229,5 @@
         }
 
     });
+
 </script>

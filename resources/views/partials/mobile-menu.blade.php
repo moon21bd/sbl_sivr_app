@@ -31,18 +31,16 @@
                         <p class="text-white text-base">{{ __('messages.account-no-text') }} {{ $accountForMenu }}</p>
                     @endif
 
-                    <div class="flex flex-col gap-4 mt-3 w-full">
+                    @if(session()->has('logInfo') && session('logInfo.is_logged'))
+                        <div class="flex flex-col gap-4 mt-3 w-full">
+                            <button id="btnAccountSwitch"
+                                    class="text-base text-white w-full h-12 rounded-full bg-[#7367EF]">{{ __('messages.account-switch') }}
+                            </button>
 
-                        <button id="btnAccountSwitch"
-                                class="text-base text-white w-full h-12 rounded-full bg-[#7367EF]">{{ __('messages.account-switch') }}
-                        </button>
-
-                        @if(session()->has('logInfo') && session('logInfo.is_logged'))
                             <button id="btnLogout"
                                     class="text-base text-white w-full h-12 rounded-full bg-[#7367EF]">{{ __('messages.log-out') }}</button>
-                        @endif
-
-                    </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="flex flex-col py-4">

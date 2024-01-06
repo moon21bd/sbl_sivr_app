@@ -168,12 +168,12 @@ document.addEventListener('DOMContentLoaded', function () {
         stopAllAudio();
 
         const accountOptions = accounts.map(account => `
-    <div class="account-option">
+    <div class="account-option" style="width: 100%">
         <label for="account-${account.accEnc}">
         <input type="radio" name="selectedAccount" value="${account.accEnc}" id="account-${account.accEnc}">
             <div class="account-details">
-                <p>Account Name: ${account.accountName}</p>
-                <p>Account No: ${account.accountNo}</p>
+                <p style="text-align: left;">Account Name: ${account.accountName}</p>
+                <p style="text-align: left;">Account No: ${account.accountNo}</p>
             </div>
         </label>
     </div>`).join('');
