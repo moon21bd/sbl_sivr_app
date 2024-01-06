@@ -2527,6 +2527,10 @@ input[type="radio"] {
     margin-top: 0 !important;
 }
 
+.complaint-swal-bg select {
+    margin-top: 0 !important;
+}
+
 .default-verification-swal-bg .swal2-title {
     color: #ffffff;
     font-size: 29px;
