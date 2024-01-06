@@ -2336,6 +2336,14 @@ input[type="radio"] {
     font-size: 24px;
     text-align: left;
     color: rgba(115, 103, 239, 1);
+    margin-left: 25px;
+}
+
+.verify-account-title {
+    font-size: 24px;
+    text-align: left;
+    color: rgba(115, 103, 239, 1);
+    margin-left: 50px;
 }
 
 .complaint-title {
@@ -2399,6 +2407,16 @@ input[type="radio"] {
     width: 100%;
 }
 
+.verify-button-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-left: 28px;
+}
+
+
 .button-container button {
     margin: 0;
     border-color: rgba(115, 103, 239, 1);
@@ -2418,8 +2436,8 @@ input[type="radio"] {
 .ac-cancel-button {
     display: inline-block;
     padding: 10px 20px;
-    margin: 0 10px; /* Add some margin between buttons */
-    background-color: #4caf50; /* Green color for Submit button */
+    margin: 0 10px;
+    background-color: #4caf50;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -2441,6 +2459,43 @@ input[type="radio"] {
 }
 
 .ac-cancel-button:hover {
+    background-color: #c9302c; /* Darker red on hover for Cancel button */
+}
+
+
+.verify-button-container button.verify-submit-button {
+    margin-right: 20px;
+    background-color: rgba(115, 103, 239, 1);
+    color: #fff;
+}
+
+.verify-submit-button,
+.verify-cancel-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.verify-cancel-button {
+    background-color: #545454;
+}
+
+.verify-submit-button:hover,
+.verify-cancel-button:hover {
+    background-color: #45a049;
+}
+
+.verify-cancel-button:hover {
     background-color: #c9302c; /* Darker red on hover for Cancel button */
 }
 
@@ -2561,6 +2616,7 @@ input[type="radio"] {
 .user-info-verify-swal-bg .swal2-title {
     color: #ffffff;
     font-size: 24px;
+    margin-top: 15px;
 }
 
 @media only screen and (max-width: 768.88px), (max-device-width: 768.88px) {

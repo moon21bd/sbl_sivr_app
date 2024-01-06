@@ -91,6 +91,23 @@ class ApiController extends ResponseController
 
     private function sendOtp($mobileNo, $isResend = false)
     {
+
+        if (!$mobileNo) return;
+
+        // if mobile number isn't matched with sonali phone, then send an error message.
+        $getAccountList = $this->fetchSavingsDeposits($mobileNo);
+        $acLists = $getAccountList['accountList'] ?? [];
+        if (empty($acLists)) { // no account matched with the phone number.
+            $responseOut = [
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'status' => 'error',
+                'message' => __('messages.no-account-matched-with-phone'),
+                'prompt' => null
+            ];
+            Log::info('NO-ACCOUNT-MATCHED-WITH-PHONE-DURING-SEND-OTP|'. $mobileNo);
+            return $this->sendResponse($responseOut, $responseOut['code']);
+        }
+
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.send_otp_url');
         $strRefId = $mobileNo . randomDigits();

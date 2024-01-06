@@ -33,7 +33,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
+    {{--<link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">--}}
 
     <script type="application/javascript">
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
@@ -74,7 +74,8 @@
 
 <body class="w-full min-h-screen" style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
 
-<div class="flex absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 loader bg-gradient-to-r from-[#E9B308] to-[#1D629F] p-3 rounded-md z-20 hidden">
+<div
+    class="flex absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 loader bg-gradient-to-r from-[#E9B308] to-[#1D629F] p-3 rounded-md z-20 hidden">
     <div class="flex flex-col text-center items-center gap-2">
         <img class="animate-spin w-20 h-20" src="{{ asset('img/logo.png') }}" alt="">
         <span class="animate-bounce text-white">{{ __('messages.processing') }}</span>

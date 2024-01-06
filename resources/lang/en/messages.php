@@ -156,6 +156,8 @@ return [
     'service-not-available' => 'Try again in the next :hours hours to avail the service.',
     'account-no-text' => 'A/C No:',
     'processing' => 'Processing...',
+    'no-account-matched-with-phone' => 'No account number matches your phone number.',
+
 
 
 ];

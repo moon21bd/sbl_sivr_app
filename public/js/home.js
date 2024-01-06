@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div>
                 <label for="callCategorySelect">${textCallCategory}:</label>
                 </div>
-                
+
                 <select id="callCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
@@ -238,10 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error',
-                    focusConfirm: false,
-                    allowOutsideClick: false,
-                    customClass: {
+                    title: error.message, icon: 'error', focusConfirm: false, allowOutsideClick: false, customClass: {
                         container: 'active-your-service-swal-bg'
                     },
                 });
@@ -748,18 +745,192 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
+        try {
+            const isLoggedIn = await checkLoginStatus();
+
+            if (!isLoggedIn) {
+                showVerificationAlert();
+                return;
+            }
+
+            const locale = getSavedLocale();
+            const dobText = (locale === 'en') ? "YYYY-MM-DD" : "YYYY-MM-DD";
+
+            const swalResult = await Swal.fire({
+                title: `<h3 class="verify-account-title"> ${(locale === 'en') ? 'Enter Account & Date of Birth.' : 'অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।'}</h3>`,
+                html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en') ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার'}">
+                <input id="swal-input2" readonly class="swal2-input" placeholder="${dobText}" min="1945-01-01" max="2099-12-31">
+                <div class="verify-button-container">
+                    <button class="verify-submit-button">${(locale === 'en') ? 'Submit' : 'জমা দিন'}</button>
+                    <button class="verify-cancel-button">${(locale === 'en') ? 'Cancel' : 'বাতিল'}</button>
+                </div>`,
+                showCancelButton: false,
+                showConfirmButton: false,
+                focusConfirm: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: 'user-info-verify-swal-bg swal2-overflow'
+                },
+                didOpen: function () {
+                    const $swalInput2 = $('#swal-input2');
+
+                    $swalInput2.datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: '1945:2099',
+                        theme: 'smoothness'
+                    });
+
+                    const submitButton = document.querySelector('.verify-submit-button');
+                    submitButton.addEventListener('click', async () => {
+                        try {
+                            const account = Swal.getPopup().querySelector('#swal-input1').value;
+                            const dob = Swal.getPopup().querySelector('#swal-input2').value;
+
+                            if (!account || !/^\d{10,20}$/.test(account) || !dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+                                Swal.showValidationMessage((locale === 'en') ? 'Invalid input. Please check your account and date of birth.' : 'অবৈধ ইনপুট। আপনার অ্যাকাউন্ট এবং জন্ম তারিখটি চেষ্টা করুন।');
+                                return;
+                            }
+
+                            const accountAndDob = {account, dob};
+                            // showLoader();
+
+                            const verifyResp = await callDynamicAPI({
+                                'purpose': 'USER-INFO-VERIFY',
+                                'page': pageName,
+                                'button': btnName,
+                                'account': account,
+                                'dob': dob
+                            });
+
+                            // hideLoader();
+
+                            if (verifyResp.status === 'success') {
+                                // showLoader();
+
+                                try {
+                                    const apiResponse = await callDynamicAPI({
+                                        'purpose': apiPurpose, 'page': 'ewallet', 'button': btnName, 'reason': apiReason
+                                    });
+
+                                    // hideLoader();
+                                    handleEWVerificationApiResponse(apiResponse, locale);
+                                } catch (error) {
+                                    handleEWVerificationApiError(error, locale);
+                                } finally {
+                                    // hideLoader();
+                                }
+                            } else {
+                                handleEWVerificationError(verifyResp, locale);
+                            }
+                        } catch (error) {
+                            console.error('Error during verification:', error);
+                            handleEWVerificationError(error, locale);
+                        } finally {
+                            // hideLoader();
+                        }
+                    });
+
+                    const cancelButton = document.querySelector('.verify-cancel-button');
+                    cancelButton.addEventListener('click', () => {
+                        // console.log('close called');
+                        Swal.close();
+                    });
+                },
+                preConfirm: () => {
+                    const account = Swal.getPopup().querySelector('#swal-input1').value;
+                    const dob = Swal.getPopup().querySelector('#swal-input2').value;
+
+                    if (!account || !/^\d{10,20}$/.test(account) || !dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+                        Swal.showValidationMessage((locale === 'en') ? 'Invalid input. Please check your account and date of birth.' : 'অবৈধ ইনপুট। আপনার অ্যাকাউন্ট এবং জন্ম তারিখটি চেষ্টা করুন।');
+                    }
+
+                    return {account, dob};
+                },
+            });
+        } catch (error) {
+            // hideLoader();
+            console.error('Error in handleAPIRequestWithAccountVerification:', error);
+            if (error.status === 'error') {
+                Swal.fire({
+                    html: `<img class="" src="./img/icon/lock-card.svg" />
+                <h2 class="swal2-title"> ${error.message} </h2>`, allowOutsideClick: false, customClass: {
+                        container: 'user-info-verify-swal-bg'
+                    },
+                });
+            }
+        } finally {
+            // hideLoader();
+        }
+    }
+
+    function handleEWVerificationApiResponse(apiResponse, locale) {
+        console.log('apiResponse', apiResponse);
+
+        let iconAsImg = 'lock-card.svg';
+        if (apiResponse.status === 'success') {
+            iconAsImg = 'checkmark.svg';
+        }
+
+        Swal.fire({
+            html: `<img class="" src="./img/icon/${iconAsImg}" />
+            <h2 class="swal2-title"> ${apiResponse.message} </h2>
+        `, allowOutsideClick: false, confirmButtonText: (locale === 'en') ? 'OK' : 'ঠিক আছে', customClass: {
+                container: 'user-info-verify-swal-bg'
+            },
+        });
+
+        playErrorAudio(apiResponse.prompt);
+    }
+
+    function handleEWVerificationApiError(error, locale) {
+        // console.error('Error from callDynamicAPI:', error);
+
+        Swal.fire({
+            html: `<img class="" src="./img/icon/lock-card.svg" />
+            <h2 class="swal2-title"> ${error.message || 'An error occurred'} </h2>
+        `, allowOutsideClick: false, customClass: {
+                container: 'user-info-verify-swal-bg'
+            },
+        });
+    }
+
+    function handleEWVerificationError(verifyResp, locale) {
+        console.log('verifyResp', verifyResp);
+
+        Swal.fire({
+            html: `<img class="" src="./img/icon/lock-card.svg" />
+            <h2 class="swal2-title"> ${verifyResp.message} </h2>
+        `, allowOutsideClick: false, confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে', customClass: {
+                container: 'user-info-verify-swal-bg'
+            },
+        });
+    }
+
+    /*
+    // LAST TIME OK CODE
+    async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
         let locale = getSavedLocale();
+        let isSwalOpen = false;
+        let accountAndDob;
+
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
+
                 const dobText = (locale === 'en') ? "YYYY-MM-DD" : "YYYY-MM-DD";
-                const {value: accountAndDob} = await Swal.fire({
-                    title: (locale === 'en') ? "Enter Account & Date of Birth." : "অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।",
-                    html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en' ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার')}">
-                    <input id="swal-input2" readonly class="swal2-input" placeholder="${dobText}" min="1945-01-01" max="2099-12-31">`,
-                    showCancelButton: true,
-                    confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
-                    cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
+
+                const swalResult = await Swal.fire({
+                    title: `<h3 class="verify-account-title"> ${(locale === 'en') ? 'Enter Account & Date of Birth.' : 'অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।'}</h3>`,
+                    html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en') ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার'}">
+                    <input id="swal-input2" readonly class="swal2-input" placeholder="${dobText}" min="1945-01-01" max="2099-12-31">
+                    <div class="verify-button-container">
+                        <button class="verify-submit-button">${(locale === 'en') ? 'Submit' : 'জমা দিন'}</button>
+                        <button class="verify-cancel-button">${(locale === 'en') ? 'Cancel' : 'বাতিল'}</button>
+                    </div>`,
+                    showCancelButton: false,
+                    showConfirmButton: false,
                     focusConfirm: false,
                     allowOutsideClick: false,
                     customClass: {
@@ -773,94 +944,171 @@ document.addEventListener('DOMContentLoaded', function () {
                             yearRange: '1945:2099',
                             theme: 'smoothness'
                         });
+
+                        const submitButton = document.querySelector('.verify-submit-button');
+                        submitButton.addEventListener('click', async () => {
+                            isSwalOpen = false; // Reset the flag
+
+                            const account = Swal.getPopup().querySelector('#swal-input1').value;
+                            const dob = Swal.getPopup().querySelector('#swal-input2').value;
+
+                            if (!account || !/^\d{10,20}$/.test(account)) {
+                                Swal.showValidationMessage((locale === 'en') ? 'Account is required and must be a number with 10 to 20 digits.' : 'অ্যাকাউন্ট নাম্বার আবশ্যক এবং ১০ থেকে ২০ সংখ্যা বিশিষ্ট হতে হবে।');
+                                return;
+                            }
+
+                            if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+                                Swal.showValidationMessage((locale === 'en') ? 'Invalid date format.' : 'তারিখ ভুল হয়েছে ।');
+                                return;
+                            }
+
+                            accountAndDob = {account, dob}; // Set the accountAndDob value
+
+                            // Handle the submission logic
+                            showLoader();
+                            console.log('Before callDynamicAPI');
+                            try {
+                                const verifyResp = await callDynamicAPI({
+                                    'purpose': 'USER-INFO-VERIFY',
+                                    'page': pageName,
+                                    'button': btnName,
+                                    'account': account,
+                                    'dob': dob
+                                });
+                                console.log('After callDynamicAPI', verifyResp);
+
+                                hideLoader();
+
+                                console.log('verifyResp-MOOON', verifyResp.status);
+
+                                if (verifyResp.status === 'success') {
+                                    // Verification succeeded, proceed with the API call
+                                    console.log('Before callDynamicAPI ', apiPurpose);
+                                    try {
+                                        const apiResponse = await callDynamicAPI({
+                                            'purpose': apiPurpose,
+                                            'page': 'ewallet',
+                                            'button': btnName,
+                                            'reason': apiReason
+                                        });
+                                        console.log('After callDynamicAPI ', apiResponse);
+                                        hideLoader();
+
+                                        console.log('apiResponse', apiResponse);
+
+                                        let iconAsImg = 'lock-card.svg';
+                                        if (apiResponse.status === 'success') {
+                                            iconAsImg = 'checkmark.svg';
+                                        }
+
+                                        Swal.fire({
+                                            html: `<img class="" src="./img/icon/${iconAsImg}" />
+                                    <h2 class="swal2-title"> ${apiResponse.message} </h2>
+                                `,
+                                            allowOutsideClick: false,
+                                            confirmButtonText: (locale === 'en') ? 'OK' : 'ঠিক আছে',
+                                            customClass: {
+                                                container: 'user-info-verify-swal-bg'
+                                            },
+                                        });
+                                        playErrorAudio(apiResponse.prompt);
+
+                                    } catch (error) {
+                                        console.error('Error from callDynamicAPI:', error);
+                                        Swal.fire({
+                                            html: `<img class="" src="./img/icon/lock-card.svg" />
+                                        <h2 class="swal2-title"> ${error.message || 'An error occurred'} </h2>
+                                        `,
+                                            allowOutsideClick: false,
+                                            customClass: {
+                                                container: 'user-info-verify-swal-bg'
+                                            },
+                                        });
+                                    } finally {
+                                        hideLoader();
+                                    }
+
+                                } else {
+                                    console.log('verifyResp', verifyResp);
+                                    // Handle unsuccessful verification
+                                    Swal.fire({
+                                        html: `<img class="" src="./img/icon/lock-card.svg" />
+                                    <h2 class="swal2-title"> ${verifyResp.message} </h2>
+                                `,
+                                        allowOutsideClick: false,
+                                        confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে',
+                                        customClass: {
+                                            container: 'user-info-verify-swal-bg'
+                                        },
+                                    });
+                                    // playErrorAudio(verifyResp.prompt);
+
+                                }
+                            } catch (error) {
+                                console.error(`Error from callDynamicAPI USER-INFO-VERIFY:`, error);
+                                // Handle unsuccessful verification
+                                Swal.fire({
+                                    html: `<img class="" src="./img/icon/lock-card.svg" />
+                                    <h2 class="swal2-title"> ${error.message} </h2>
+                                `,
+                                    allowOutsideClick: false,
+                                    confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে',
+                                    customClass: {
+                                        container: 'user-info-verify-swal-bg'
+                                    },
+                                });
+                                // playErrorAudio(verifyResp.prompt);
+
+                            } finally {
+                                hideLoader();
+                            }
+
+                        });
+
+                        const cancelButton = document.querySelector('.verify-cancel-button');
+                        cancelButton.addEventListener('click', () => {
+                            console.log('close called');
+                            Swal.close();
+                        });
                     },
                     preConfirm: () => {
                         const account = Swal.getPopup().querySelector('#swal-input1').value;
                         const dob = Swal.getPopup().querySelector('#swal-input2').value;
                         if (!account || !/^\d{10,20}$/.test(account)) {
-                            Swal.showValidationMessage((locale === 'en') ? "Account is required and must be a number with 10 to 20 digits." : "অ্যাকাউন্ট নাম্বার আবশ্যক এবং ১০ থেকে ২০ সংখ্যা বিশিষ্ট হতে হবে।");
+                            Swal.showValidationMessage((locale === 'en') ? 'Account is required and must be a number with 10 to 20 digits.' : 'অ্যাকাউন্ট নাম্বার আবশ্যক এবং ১০ থেকে ২০ সংখ্যা বিশিষ্ট হতে হবে।');
                         }
                         if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-                            Swal.showValidationMessage((locale === 'en') ? "Invalid date format." : "তারিখ ভুল হয়েছে ।");
+                            Swal.showValidationMessage((locale === 'en') ? 'Invalid date format.' : 'তারিখ ভুল হয়েছে ।');
                         }
                         return {account, dob};
-                    }
+                    },
                 });
 
-                if (!accountAndDob) {
-                    return;
-                }
-
-                const {account, dob} = accountAndDob;
-                if (account && dob) {
-                    showLoader();
-
-                    const verifyResp = await callDynamicAPI({
-                        'purpose': 'USER-INFO-VERIFY',
-                        'page': pageName,
-                        'button': btnName,
-                        'account': account,
-                        'dob': dob
-                    });
-
-                    hideLoader();
-                    // console.log('verifyResp', verifyResp);
-                    if (verifyResp.status === 'success') {
-                        const apiResponse = await callDynamicAPI({
-                            'purpose': apiPurpose, 'page': 'ewallet', 'button': btnName, 'reason': apiReason
-                        });
-
-                        hideLoader();
-                        let locale = getSavedLocale();
-                        let iconAsImg = 'lock-card.svg';
-                        if (apiResponse.status === 'success') {
-                            iconAsImg = 'checkmark.svg';
-                        }
-                        Swal.fire({
-                            html: `<img class="" src="./img/icon/${iconAsImg}" />
-                            <h2 class="swal2-title"> ${apiResponse.message} </h2>
-                        `,
-                            allowOutsideClick: false,
-                            confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে",
-                            customClass: {
-                                container: 'user-info-verify-swal-bg'
-                            },
-                        });
-                        playErrorAudio(apiResponse.prompt);
-                    } else {
-                        // Handle unsuccessful verification
-                        Swal.fire({
-                            html: `<img class="" src="./img/icon/lock-card.svg" />
-                            <h2 class="swal2-title"> ${verifyResp.message} </h2>
-                        `,
-                            allowOutsideClick: false,
-                            confirmButtonText: (locale === 'en') ? "OK" : "ওকে",
-                            customClass: {
-                                container: 'user-info-verify-swal-bg'
-                            },
-                        });
-                        playErrorAudio(verifyResp.prompt);
-                    }
-                }
             } else {
                 showVerificationAlert();
             }
         } catch (error) {
             hideLoader();
-
+            console.log('error.status', error);
             if (error.status === 'error') {
                 Swal.fire({
                     html: `<img class="" src="./img/icon/lock-card.svg" />
-                            <h2 class="swal2-title"> ${error.message} </h2>
-                        `,
-                    allowOutsideClick: false, customClass: {
+                    <h2 class="swal2-title"> ${error.message} </h2>
+                `,
+                    allowOutsideClick: false,
+                    customClass: {
                         container: 'user-info-verify-swal-bg'
                     },
                 });
                 // playErrorAudio(error.prompt);
             }
+        } finally {
+            // If the modal is still open, close it
+            if (isSwalOpen) {
+                Swal.close();
+            }
         }
-    }
+    }*/
 
     async function handleIBAccountRelatedClick() {
         try {
@@ -1377,10 +1625,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error',
-                    focusConfirm: false,
-                    allowOutsideClick: false,
-                    customClass: {
+                    title: error.message, icon: 'error', focusConfirm: false, allowOutsideClick: false, customClass: {
                         container: 'active-your-service-swal-bg'
                     },
                 });
