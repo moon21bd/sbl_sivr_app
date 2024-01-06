@@ -77,11 +77,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     const swalOptions = {
                         // title: textSubmitComplaint,
                         title: `<h3 class="complaint-title"> ${textSubmitComplaint}</h3>`,
-                        html: `<label for="callCategorySelect">${textCallCategory}:</label>
+                        html: `
+                <div>
+                <label for="callCategorySelect">${textCallCategory}:</label>
                 <select id="callCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectCallCategory}" required>
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
                 </select>
+                </div>
+
 
                 <label for="callSubCategorySelect">${textCallSubCategory}:</label>
                 <select id="callSubCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>

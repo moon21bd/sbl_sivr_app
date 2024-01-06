@@ -2528,7 +2528,8 @@ input[type="radio"] {
 }
 
 .complaint-swal-bg select {
-    margin-top: 0 !important;
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
 }
 
 .default-verification-swal-bg .swal2-title {
