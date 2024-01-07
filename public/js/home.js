@@ -132,21 +132,23 @@ document.addEventListener('DOMContentLoaded', function () {
                         didOpen: () => {
                             const style = document.createElement('style');
                             style.innerHTML = `
-      .complaint-swal-bg .swal2-html-container > div {
+      .complaint-swal-bg.swal2-shown .swal2-html-container > div {
         text-align: left;
       }
 
-      .complaint-swal-bg .swal2-html-container label {
+      .complaint-swal-bg.swal2-shown .swal2-html-container label {
         display: block;
         margin-bottom: 5px;
+        text-align: left !important;
       }
 
-      .complaint-swal-bg .swal2-html-container select,
-      .complaint-swal-bg .swal2-html-container input {
+      .complaint-swal-bg.swal2-shown .swal2-html-container select,
+      .complaint-swal-bg.swal2-shown .swal2-html-container input {
         width: 100% !important;
         box-sizing: border-box;
       }
     `;
+                            document.head.appendChild(style);
                             document.head.appendChild(style);
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
