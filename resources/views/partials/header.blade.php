@@ -71,6 +71,21 @@
     </script>
 
     <style>
+        .complaint-swal-bg div {
+            text-align: left;
+        }
+
+        .complaint-swal-bg label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .complaint-swal-bg select,
+        .complaint-swal-bg input {
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
         .complaint-swal-bg .swal2-html-container > div {
             text-align: left;
         }
