@@ -71,17 +71,12 @@
     </script>
 
     <style>
-        .complaint-swal-bg .swal2-container .swal2-html-container label {
-            text-align: left !important;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .swal2-popup .swal2-html-container label {
+        .swal2-popup.complaint-swal-bg .swal2-html-container label {
             text-align: left !important;
             display: block !important;
             margin-bottom: 5px !important;
         }
+
     </style>
 </head>
 
