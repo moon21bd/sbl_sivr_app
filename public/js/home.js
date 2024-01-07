@@ -144,6 +144,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                         element.style.width = '100%';
                                         element.style.boxSizing = 'border-box';
                                     }
+
+                                    // Add a right margin of 225px
+                                    element.style.marginRight = '225px';
                                 });
                             }
                             const callTypeSelect = 2;
