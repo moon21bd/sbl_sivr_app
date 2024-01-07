@@ -71,27 +71,14 @@
     </script>
 
     <style>
-        .swal2-popup .swal2-html-container label {
+        .swal2-popup .swal2-html-container > div > label {
             text-align: left !important;
             display: block !important;
-            margin-bottom: 10px !important;
-            padding-left: 20px !important; /* Adjust the padding to control the left spacing */
-            font-size: 16px !important;
-            color: #333 !important;
-            font-weight: bold !important;
-            /* Add any other styling properties you need */
+            margin-bottom: 5px !important;
+            margin-left: 0 !important;
         }
 
-     .swal2-html-container label {
-            text-align: left !important;
-            display: block !important;
-            margin-bottom: 10px !important;
-            padding-left: 30px !important; /* Match the padding with the .complaint-title */
-            font-size: 21px !important; /* Match the font size with the .complaint-title */
-            color: rgba(115, 103, 239, 1) !important;
-            font-weight: bold !important;
-            /* Add any other styling properties you need */
-        }
+
 
     </style>
 </head>
