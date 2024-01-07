@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         didOpen: () => {
 
                             const styleElement = document.createElement('style');
-                            styleElement.innerHTML = `
+                            styleElement.textContent = `
       .swal2-popup.complaint-swal-bg .swal2-html-container label {
         text-align: left !important;
         display: block !important;
@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
                             document.head.appendChild(styleElement);
 
+                            
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
