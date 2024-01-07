@@ -80,6 +80,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     const swalOptions = {
                         // title: textSubmitComplaint,
                         title: `<h3 class="complaint-title"> ${textSubmitComplaint}</h3>`,
+                        onOpen: () => {
+                            const style = document.createElement('style');
+                            style.innerHTML = `
+      .complaint-swal-bg .swal2-html-container > div {
+        text-align: left;
+      }
+
+      .complaint-swal-bg .swal2-html-container label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .complaint-swal-bg .swal2-html-container select,
+      .complaint-swal-bg .swal2-html-container input {
+        width: 100% !important;
+        box-sizing: border-box;
+      }
+    `;
+                            document.head.appendChild(style);
+                        },
                         html: `
                 <div>
                 <label for="callCategorySelect">${textCallCategory}:</label>
