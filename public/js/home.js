@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     `;
                             document.head.appendChild(style);
-                            document.head.appendChild(style);
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
