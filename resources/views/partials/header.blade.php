@@ -71,21 +71,12 @@
     </script>
 
     <style>
-        .complaint-swal-bg.swal2-container.swal2-shown .swal2-html-container > div {
-            text-align: left;
-        }
-
-        .complaint-swal-bg.swal2-container.swal2-shown .swal2-html-container label {
+        .complaint-swal-bg .swal2-container .swal2-html-container label {
+            text-align: left !important;
             display: block;
             margin-bottom: 5px;
-            text-align: left !important;
         }
 
-        .complaint-swal-bg.swal2-container.swal2-shown .swal2-html-container select,
-        .complaint-swal-bg.swal2-container.swal2-shown .swal2-html-container input {
-            width: 100% !important;
-            box-sizing: border-box;
-        }
     </style>
 </head>
 

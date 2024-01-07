@@ -131,28 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                         didOpen: () => {
 
-                            const container = document.querySelector('.complaint-swal-bg');
-                            if (container) {
-                                const elementsToStyle = container.querySelectorAll('.swal2-html-container > div, .swal2-html-container label, .swal2-html-container select, .swal2-html-container input');
-                                elementsToStyle.forEach(element => {
-                                    element.style.textAlign = 'left';
-                                    if (element.tagName === 'LABEL') {
-                                        element.style.display = 'block';
-                                        element.style.marginBottom = '5px';
-                                    }
-                                    if (element.tagName === 'SELECT' || element.tagName === 'INPUT') {
-                                        element.style.width = '100%';
-                                        element.style.boxSizing = 'border-box';
-                                    }
-
-                                    // Calculate available width and set a dynamic margin
-                                    const availableWidth = container.offsetWidth - element.offsetWidth;
-                                    const dynamicMargin = Math.max(0, availableWidth - 10); // Adjust as needed
-                                    element.style.marginRight = dynamicMargin + 'px';
-                                });
-                            }
-                            
-
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
