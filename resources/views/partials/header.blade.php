@@ -71,11 +71,11 @@
     </script>
 
     <style>
-        .swal2-popup.complaint-swal-bg .swal2-html-container label {
+        .swal2-popup .swal2-html-container label {
             text-align: left !important;
             display: block !important;
             margin-bottom: 5px !important;
-            margin-left: 0 !important; /* Add this line to reset any potential left margin */
+            margin-left: 0 !important;
         }
 
     </style>
