@@ -75,6 +75,7 @@
             text-align: left !important;
             display: block !important;
             margin-bottom: 5px !important;
+            margin-left: 0 !important; /* Add this line to reset any potential left margin */
         }
 
     </style>
