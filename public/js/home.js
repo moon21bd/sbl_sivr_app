@@ -145,10 +145,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                         element.style.boxSizing = 'border-box';
                                     }
 
-                                    // Add a right margin of 225px
-                                    element.style.marginRight = '225px';
+                                    // Calculate available width and set a dynamic margin
+                                    const availableWidth = container.offsetWidth - element.offsetWidth;
+                                    const dynamicMargin = Math.max(0, availableWidth - 10); // Adjust as needed
+                                    element.style.marginRight = dynamicMargin + 'px';
                                 });
                             }
+                            
+
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
