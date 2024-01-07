@@ -72,9 +72,9 @@
 
     <style>
         .swal2-popup .swal2-html-container label {
-            text-align: left !important;
             display: block !important;
             margin-bottom: 5px !important;
+            clear: left;
         }
 
         .swal2-popup .swal2-html-container select {
