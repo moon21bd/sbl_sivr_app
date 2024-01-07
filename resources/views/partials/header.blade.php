@@ -82,14 +82,16 @@
             /* Add any other styling properties you need */
         }
 
-        .swal2-popup .swal2-html-container select,
-        .swal2-popup .swal2-html-container input {
-            width: 100% !important; /* Make the input and select elements take up the full width */
-            box-sizing: border-box !important; /* Include padding and border in the element's total width and height */
-            margin-bottom: 10px !important; /* Adjust the spacing between the input/select elements */
-            padding: 10px !important; /* Add padding for a comfortable input/select appearance */
+     .swal2-html-container label {
+            text-align: left !important;
+            display: block !important;
+            margin-bottom: 10px !important;
+            padding-left: 30px !important; /* Match the padding with the .complaint-title */
+            font-size: 21px !important; /* Match the font size with the .complaint-title */
+            color: rgba(115, 103, 239, 1) !important;
+            font-weight: bold !important;
+            /* Add any other styling properties you need */
         }
-
 
     </style>
 </head>
