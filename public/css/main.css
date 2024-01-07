@@ -2349,6 +2349,7 @@ input[type="radio"] {
 .complaint-title {
     font-size: 21px;
     text-align: left;
+    padding-left: 30px;
     color: rgba(115, 103, 239, 1);
 }
 
