@@ -131,6 +131,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                         didOpen: () => {
 
+                            const styleElement = document.createElement('style');
+                            styleElement.innerHTML = `
+      .swal2-popup.complaint-swal-bg .swal2-html-container label {
+        text-align: left !important;
+        display: block !important;
+        margin-bottom: 5px !important;
+        margin-left: 0 !important;
+      }
+    `;
+                            document.head.appendChild(styleElement);
+
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
