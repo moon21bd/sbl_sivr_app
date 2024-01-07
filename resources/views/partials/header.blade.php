@@ -75,8 +75,9 @@
             text-align: left !important;
             display: block !important;
             margin-bottom: 5px !important;
-            margin-left: 0 !important;
+            padding-left: 15px !important; /* Adjust the padding to control the left spacing */
         }
+
 
     </style>
 </head>
