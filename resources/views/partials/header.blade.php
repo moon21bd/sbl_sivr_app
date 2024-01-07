@@ -70,22 +70,6 @@
         ;
     </script>
 
-    <style>
-        /*.swal2-html-container label {*/
-        /*    text-align: left;*/
-        /*    display: block;*/
-        /*    margin-bottom: 5px;*/
-        /*    margin-left: 0;*/
-        /*}*/
-
-        .swal2-html-container > div > label {
-            text-align: left !important;
-            display: block !important;
-            margin-bottom: 5px !important;
-            margin-left: 0 !important;
-        }
-
-    </style>
 </head>
 
 <body class="w-full min-h-screen" style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
