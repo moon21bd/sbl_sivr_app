@@ -64,6 +64,9 @@ function showVerificationAlert() {
         allowOutsideClick: false,
         customClass: {
             container: 'default-verification-swal-bg'
+        },
+        willClose: () => {
+            stopAllAudioPlayback();
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -298,7 +301,6 @@ function getData(key) {
     return null;
 }
 
-
 function toggleAudio() {
     const audioElement = document.getElementById('playMedia');
     const toggleButton = document.getElementById('toggleAudio');
@@ -389,6 +391,27 @@ function showToast(title, message, icon, timer = 3000) {
         icon: icon,
         title: title,
         text: message,
-        allowOutsideClick: false
+        allowOutsideClick: false,
+        willClose: () => {
+            stopAllAudioPlayback();
+        }
     });
 }
+
+function stopAllAudioPlayback() {
+    console.log('stopAllAudioPlayback Called.');
+
+    const allAudioElements = document.querySelectorAll('audio');
+    allAudioElements.forEach(audio => {
+        audio.pause();
+    });
+
+    const audioToggleButtons = document.querySelectorAll('.playAudioBtn, .audioBtn');
+
+    audioToggleButtons.forEach(button => {
+        if (button.classList.contains('pause')) {
+            button.classList.remove('pause');
+        }
+    });
+}
+

@@ -2,10 +2,10 @@
 <div class="popup-container mob-popup-get-started fixed top-0 right-0 left-0 bottom-0 h-full w-full z-50"
      style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
 
-    <div class="absolute top-11 right-5 w-8 h-8">
-        <button id="toggleAudio"
-                class="play playAudioBtn cursor-pointer w-8 h-8 bg-no-repeat z-40"></button>
+    <div class="absolute top-11 right-5 w-8 h-8 z-50">
+        <button id="toggleAudioGS" class="play playAudioBtn cursor-pointer w-8 h-8 bg-no-repeat z-50"></button>
     </div>
+
     <!-- BG Dots -->
     <div class="top-right absolute -top-28 right-0 overflow-hidden z-0">
         <img src="{{ asset('img/bg/top-right.svg') }}" alt="">
@@ -41,21 +41,7 @@
                     <p class="get-started-text text-[color:var(--brand-color-gray)] text-lg">{{ config('voices.defaultGetStarted.text.bn') }}</p>
                 </div>
 
-                {{--<div class="w-full z-10">
-                    <button type="submit" id="getStartedBtn"
-                            class="get-started-btn text-[color:var(--brand-color-blue)] text-xl font-bold bg-white rounded-md h-12 w-full cursor-pointer">
-                        {{ __('messages.get-started-btn') }}
-                    </button>
-                </div>--}}
-
                 <div class="relative" style="bottom: 15px;">
-
-                    {{--<div class="flex relative top-5">
-                        <a data-locale="bn" id="bnButton" onclick="selectLanguage('bn')"
-                           class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out transition-150 font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 mr-5 cursor-pointer px-4">বাংলা</a>
-                        <a data-locale="en" id="enButton" onclick="selectLanguage('en')"
-                           class="language-button text-white text-lg font-medium  hover:bg-[color:#0F5DA8] transition-colors duration-300 ease-in-out font-bold bg-brand-color-blue rounded-full border-2 border-white py-3 cursor-pointer px-4">English</a>
-                    </div>--}}
 
                     <div class="flex gap-3 justify-center my-6">
 
@@ -63,7 +49,6 @@
                                 class="language-button text-white text-lg px-4 py-1 hover:bg-[#0F5DA8]  rounded-full border-2 font-bold border-white cursor-pointer transition-colors duration-300 ease-in-out">
                             বাংলা
                         </button>
-
 
                         <button id="enButton" type="submit" data-locale="en"
                                 class="language-button text-white text-lg px-4 py-1 hover:bg-[#0F5DA8]  rounded-full border-2 font-bold border-white cursor-pointer transition-colors duration-300 ease-in-out">
@@ -85,8 +70,9 @@
 
 <!-- End of Popup Container -->
 
-<script type="application/javascript">
+{{--<script type="application/javascript">
     document.addEventListener('DOMContentLoaded', function () {
+        let isAudioPlaying = false;
         let currentAudio = null;
 
         const popupContainer = document.querySelector('.popup-container');
@@ -95,20 +81,57 @@
         const skipButton = document.getElementById('skipButton');
         let showGetStartedBtn = true;
 
+        const toggleAudioGS = document.getElementById('toggleAudioGS');
+
+        function playPauseAudio() {
+            if (currentAudio) {
+                isAudioPlaying = !isAudioPlaying;
+
+                if (isAudioPlaying) {
+                    currentAudio.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                } else {
+                    currentAudio.pause();
+                }
+
+                toggleAudioGS.classList.toggle('play', !isAudioPlaying);
+                toggleAudioGS.classList.toggle('pause', isAudioPlaying);
+            }
+        }
+
+        if (toggleAudioGS) {
+            toggleAudioGS.addEventListener('click', function (event) {
+                event.preventDefault();
+                playPauseAudio();
+            });
+        }
+
+
         try {
             showGetStartedBtn = sessionStorage.getItem('hideGetStartedBtn') !== 'show';
         } catch (error) {
             console.error('Error retrieving data from sessionStorage:', error);
         }
 
-        // console.log('showGetStartedBtn-Val', showGetStartedBtn)
         popupContainer.style.display = showGetStartedBtn ? 'block' : 'none';
 
         function playGSAudio(audio) {
-            audio.play().catch(error => {
+            audio.play().then(() => {
+                isAudioPlaying = true;
+                toggleAudioGS.classList.add('pause');
+                toggleAudioGS.classList.remove('play');
+            }).catch(error => {
                 console.error('Error playing audio:', error);
             });
+
+            audio.addEventListener('pause', () => {
+                isAudioPlaying = false;
+                toggleAudioGS.classList.remove('pause');
+                toggleAudioGS.classList.add('play');
+            });
         }
+
 
         function handleLanguageButtonClick(locale) {
             const selector = `[data-text-${locale}]`;
@@ -128,24 +151,10 @@
 
                 const audio = new Audio(voiceContent);
 
-                if (!this.hasToggledSound) {
-                    toggleSound();
-                    this.hasToggledSound = true;
-                }
-
                 playGSAudio(audio);
 
                 // Set the current audio to the new audio
                 currentAudio = audio;
-
-                /*const audio = new Audio(voiceContent);
-                audio.addEventListener('canplaythrough', () => {
-                    if (!this.hasToggledSound) {
-                        toggleSound();
-                        this.hasToggledSound = true;
-                    }
-                    playGSAudio(audio);
-                });*/
 
                 audio.addEventListener('ended', async () => {
                     hidePopupContainer();
@@ -156,7 +165,6 @@
                 // console.error(`Element with attribute data-text-${locale} not found.`);
             }
         }
-
 
         async function doSwitchLangRequest(locale) {
 
@@ -177,7 +185,6 @@
             if (button) {
                 button.addEventListener('click', function (event) {
                     event.preventDefault();
-                    this.hasToggledSound = false;
                     const locale = this.getAttribute('data-locale');
                     handleLanguageButtonClick(locale);
                 });
@@ -220,7 +227,7 @@
                 setShowHide('show');
                 tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': button});
             } catch (error) {
-                console.error('Error saving data in sessionStorage:', error);
+                // console.error('Error saving data in sessionStorage:', error);
             }
         }
 
@@ -230,4 +237,172 @@
 
     });
 
+</script>--}}
+
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        let isAudioPlaying = false;
+        let currentAudio = null;
+
+        const popupContainer = document.querySelector('.popup-container');
+        const bnButton = document.getElementById('bnButton');
+        const enButton = document.getElementById('enButton');
+        const skipButton = document.getElementById('skipButton');
+        let showGetStartedBtn = true;
+
+        const toggleAudioGS = document.getElementById('toggleAudioGS');
+
+        function playPauseAudio() {
+            if (currentAudio) {
+                isAudioPlaying = !isAudioPlaying;
+
+                if (isAudioPlaying) {
+                    currentAudio.play().catch(error => handleError('Error playing audio:', error));
+                } else {
+                    currentAudio.pause();
+                }
+
+                toggleAudioGS.classList.toggle('play', !isAudioPlaying);
+                toggleAudioGS.classList.toggle('pause', isAudioPlaying);
+            }
+        }
+
+        if (toggleAudioGS) {
+            toggleAudioGS.addEventListener('click', function (event) {
+                event.preventDefault();
+                playPauseAudio();
+            });
+        }
+
+        try {
+            showGetStartedBtn = sessionStorage.getItem('hideGetStartedBtn') !== 'show';
+        } catch (error) {
+            handleError('Error retrieving data from sessionStorage:', error);
+        }
+
+        popupContainer.style.display = showGetStartedBtn ? 'block' : 'none';
+
+        function playGSAudio(audio) {
+            audio.play().then(() => {
+                isAudioPlaying = true;
+                toggleAudioGS.classList.add('pause');
+                toggleAudioGS.classList.remove('play');
+            }).catch(error => handleError('Error playing audio:', error));
+
+            audio.addEventListener('pause', () => {
+                isAudioPlaying = false;
+                toggleAudioGS.classList.remove('pause');
+                toggleAudioGS.classList.add('play');
+            });
+        }
+
+        function handleError(message, error) {
+            console.error(message, error);
+        }
+
+        function handleLanguageButtonClick(locale) {
+            const selector = `[data-text-${locale}]`;
+            const textContent = document.querySelector(selector)?.getAttribute(`data-text-${locale}`);
+            const voiceContent = document.querySelector(selector)?.getAttribute(`data-voice-${locale}`);
+
+            if (textContent !== null) {
+                updateGetStartedText(textContent);
+                updateSelectedLanguageButton(locale);
+
+                if (currentAudio) {
+                    currentAudio.pause();
+                }
+
+                const audio = new Audio(voiceContent);
+                playGSAudio(audio);
+
+                currentAudio = audio;
+
+                audio.addEventListener('ended', async () => {
+                    hidePopupContainer();
+                    saveUserConsent(locale);
+                    await doSwitchLangRequest(locale);
+                });
+            }
+        }
+
+        function updateGetStartedText(textContent) {
+            const getStartedText = document.querySelector('.get-started-text');
+            if (getStartedText) {
+                getStartedText.textContent = textContent;
+            }
+        }
+
+        function updateSelectedLanguageButton(locale) {
+            const languageButtons = document.querySelectorAll('.language-button');
+            languageButtons.forEach(button => button.classList.remove('selected-language'));
+            document.getElementById(`${locale}Button`)?.classList.add('selected-language');
+
+            setSavedLocale(locale);
+        }
+
+        async function doSwitchLangRequest(locale) {
+            try {
+                const response = await axios.post('/change-locale', {locale});
+                console.log(response.data);
+                goTo(response.data.redirect);
+            } catch (error) {
+                handleError('Language switch request failed:', error);
+            } finally {
+                console.info('Language Switch AJAX request completed.');
+            }
+        }
+
+        function addLanguageButtonEventListener(button, locale) {
+            if (button) {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    handleLanguageButtonClick(locale);
+                });
+            }
+        }
+
+        addLanguageButtonEventListener(enButton, 'en');
+        addLanguageButtonEventListener(bnButton, 'bn');
+
+        if (skipButton) {
+            skipButton.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const skip = this.getAttribute('data-skip');
+                if (skip === 'yes') {
+                    await processSkipOperation('bn');
+                }
+            });
+        }
+
+        async function processSkipOperation(localeToBeDecide) {
+            hidePopupContainer();
+            setShowHide('show');
+            setSavedLocale(localeToBeDecide);
+
+            if (bnButton && enButton) {
+                bnButton.style.display = 'none';
+                enButton.style.display = 'none';
+            }
+
+            await doSwitchLangRequest(localeToBeDecide);
+        }
+
+        function hidePopupContainer() {
+            popupContainer.style.display = 'none';
+        }
+
+        function saveUserConsent(button) {
+            try {
+                setShowHide('show');
+                tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': button});
+            } catch (error) {
+                handleError('Error saving data in sessionStorage:', error);
+            }
+        }
+
+        function setShowHide(val) {
+            sessionStorage.setItem('hideGetStartedBtn', val);
+        }
+    });
 </script>

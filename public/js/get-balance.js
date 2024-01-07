@@ -111,6 +111,9 @@ document.addEventListener('DOMContentLoaded', function () {
             customClass: {
                 container: 'show-custom-message-swal-bg'
             },
+            willClose: () => {
+                stopAllAudioPlayback();
+            }
         });
     }
 

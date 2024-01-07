@@ -13,7 +13,13 @@ async function handleImageUpload(event) {
                 icon: 'error',
                 title: 'File Size Exceeded',
                 text: 'The selected file size exceeds the maximum limit of 10 MB.',
-                allowOutsideClick: false
+                allowOutsideClick: false,
+                willClose: () => {
+                    stopAllAudioPlayback();
+                },
+                customClass: {
+                    container: 'active-your-service-swal-bg'
+                },
             });
             // playErrorAudio('/uploads/prompts/photo-upload-limit-exceeded.m4a');
             return;
@@ -24,7 +30,13 @@ async function handleImageUpload(event) {
                 icon: 'error',
                 title: 'Invalid File Type',
                 text: 'Please select an image file (JPEG, PNG, GIF, etc.).',
-                allowOutsideClick: false
+                allowOutsideClick: false,
+                willClose: () => {
+                    stopAllAudioPlayback();
+                },
+                customClass: {
+                    container: 'active-your-service-swal-bg'
+                },
             });
             return;
         }
@@ -54,18 +66,30 @@ async function handleImageUpload(event) {
                 icon: 'error',
                 title: 'File Read Error',
                 text: 'An error occurred while reading the file. Please try again.',
-                allowOutsideClick: false
+                allowOutsideClick: false,
+                willClose: () => {
+                    stopAllAudioPlayback();
+                },
+                customClass: {
+                    container: 'active-your-service-swal-bg'
+                },
             });
             hideLoader();
         };
     } catch (error) {
         console.error('ERROR', error.message, error.response.data, error, event.target.files[0]);
-        // playErrorAudio('/uploads/prompts/photo-upload-limit-exceeded.m4a');
+
         Swal.fire({
             icon: 'error',
             title: 'File Upload Error',
             text: 'An error occurred while uploading the file. Please try again later.',
-            allowOutsideClick: false
+            allowOutsideClick: false,
+            willClose: () => {
+                stopAllAudioPlayback();
+            },
+            customClass: {
+                container: 'active-your-service-swal-bg'
+            },
         });
         hideLoader();
     }

@@ -1,7 +1,6 @@
 /**
  * File: home.js
  * Author: Raqibul Hasan Moon
- * Created: 2023-06-20
  * Description: This file contains ui/ux related JavaScripts codes for the project.
  */
 

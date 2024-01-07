@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     return message;
                 }
                 return null;
+            },
+            willClose: () => {
+                stopAllAudioPlayback();
             }
         }).then((result) => {
             if (popupAudio) {
@@ -111,8 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
                             }
 
-                            // console.log('SUBMIT', callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason);
-
                             return {
                                 callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
                             };
@@ -124,22 +125,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                         cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                         didOpen: () => {
-                            // Initialize Select2 after the Swal modal is shown
-                            // $('.select2').select2();
-
-                            // const callTypeSelect = document.getElementById('callTypeSelect');
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
                             const callSubSubCategorySelect = document.getElementById('callSubSubCategorySelect');
-
-                            // CALL TYPE EVENT
-                            /*callTypeSelect.addEventListener('change', async () => {
-                                const callType = callTypeSelect.value;
-                                const callCategories = await fetchDropdownOptions('callCategorySelect', {'callType': callType});
-                                const categoryDataValues = callCategories.data;
-                                callCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectCallCategory}</option>` + getOptionsHtml(categoryDataValues);
-                            });*/
 
                             // CALL CATEGORY EVENT
                             callCategorySelect.addEventListener('change', async () => {
@@ -153,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
 
                                 const subCategoryDataValues = callSubCategories.data;
-                                // console.log('subCategoryDataValues', subCategoryDataValues)
                                 callSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubCallCategory}</option>` + getOptionsHtml(subCategoryDataValues);
                             });
 
@@ -164,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const callSubCategoryVal = callSubCategorySelect.value;
                                 const callSubSubCategoryVal = callSubSubCategorySelect.value;
 
-                                console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
+                                // console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
 
                                 const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
                                     "callType": callTypeVal,
@@ -177,10 +165,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 callSubSubCategorySelect.innerHTML = `<option value="" disabled selected>${textSelectSubSubCallCategory}</option>` + getOptionsHtml(subSubCategoryDataValues);
                             });
                         },
+                        willClose: () => {
+                            stopAllAudioPlayback();
+                        }
                     };
 
                     const {value: selectedValues, dismiss} = await Swal.fire(swalOptions);
-                    // console.log('selectedValues', selectedValues, dismiss);
 
                     if (selectedValues && !dismiss) {
                         const {
@@ -201,11 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             html: `<img class="" src="./img/icon/checkmark.svg" />
                         <h2 class="swal2-title"> ${apiResponse.message} </h2>
                         <p>${"IssueId: " + issue}</p>
-                        `, // icon: apiResponse.status === 'success' ? 'success' : 'error',
+                        `,
                             allowOutsideClick: false, // text: "IssueId: " + issue,
                             confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে", customClass: {
                                 container: 'issueid-swal-bg'
                             },
+                            willClose: () => {
+                                stopAllAudioPlayback();
+                            }
 
                         });
                         playErrorAudio(apiResponse.prompt);
@@ -217,13 +210,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('Error in btnCreateIssue click:', error);
                     if (error.status === 'error') {
                         Swal.fire({
-                            // title: error.message,
-                            // icon: 'error',
                             html: `<img class="" src="./img/icon/lock-card.svg" />
                         <h2 class="swal2-title"> ${error.message} </h2>
                         `, allowOutsideClick: false, customClass: {
                                 container: 'issueid-swal-bg'
                             },
+                            willClose: () => {
+                                stopAllAudioPlayback();
+                            }
                         });
                         playErrorAudio(error.prompt);
                     }
@@ -238,9 +232,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error', focusConfirm: false, allowOutsideClick: false, customClass: {
+                    title: error.message,
+                    icon: 'error',
+                    focusConfirm: false,
+                    allowOutsideClick: false,
+                    customClass: {
                         container: 'active-your-service-swal-bg'
                     },
+                    willClose: () => {
+                        stopAllAudioPlayback();
+                    }
                 });
                 // playErrorAudio(error.prompt);
             }
@@ -651,7 +652,12 @@ document.addEventListener('DOMContentLoaded', function () {
             <button class="ac-submit-button" >${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
             <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
         </div>
-    `, showConfirmButton: false, allowOutsideClick: false
+    `,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            willClose: () => {
+                stopAllAudioPlayback();
+            }
         });
 
         const submitButton = document.querySelector('.ac-submit-button');
@@ -725,7 +731,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     title: apiResponse.message,
                     icon: apiResponse.status === 'success' ? 'success' : 'error',
-                    allowOutsideClick: false
+                    allowOutsideClick: false,
+                    willClose: () => {
+                        stopAllAudioPlayback();
+                    }
                 });
                 playErrorAudio(apiResponse.prompt);
 
@@ -737,7 +746,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false
+                    title: error.message, icon: 'error', allowOutsideClick: false,
+                    willClose: () => {
+                        stopAllAudioPlayback();
+                    }
                 });
                 playErrorAudio(error.prompt);
             }
@@ -848,6 +860,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     return {account, dob};
                 },
+                willClose: () => {
+                    stopAllAudioPlayback();
+                }
             });
         } catch (error) {
             // hideLoader();
@@ -858,6 +873,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h2 class="swal2-title"> ${error.message} </h2>`, allowOutsideClick: false, customClass: {
                         container: 'user-info-verify-swal-bg'
                     },
+                    willClose: () => {
+                        stopAllAudioPlayback();
+                    }
                 });
             }
         } finally {
@@ -879,6 +897,9 @@ document.addEventListener('DOMContentLoaded', function () {
         `, allowOutsideClick: false, confirmButtonText: (locale === 'en') ? 'OK' : 'ঠিক আছে', customClass: {
                 container: 'user-info-verify-swal-bg'
             },
+            willClose: () => {
+                stopAllAudioPlayback();
+            }
         });
 
         playErrorAudio(apiResponse.prompt);
@@ -893,6 +914,9 @@ document.addEventListener('DOMContentLoaded', function () {
         `, allowOutsideClick: false, customClass: {
                 container: 'user-info-verify-swal-bg'
             },
+            willClose: () => {
+                stopAllAudioPlayback();
+            }
         });
     }
 
@@ -905,6 +929,9 @@ document.addEventListener('DOMContentLoaded', function () {
         `, allowOutsideClick: false, confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে', customClass: {
                 container: 'user-info-verify-swal-bg'
             },
+            willClose: () => {
+                stopAllAudioPlayback();
+            }
         });
     }
 
@@ -1427,15 +1454,16 @@ document.addEventListener('DOMContentLoaded', function () {
         playErrorAudio(voiceToPlay);
         const result = await Swal.fire({
             html: `<img class="" src="./img/icon/default-call-center.svg" /> <h2 class="swal2-title"> ${defaultContactOurCallCenter} </h2>
-             <p>${textToDisplay}</p>`, // icon: 'info',
-            // title: defaultContactOurCallCenter,
-            // text: textToDisplay,
+             <p>${textToDisplay}</p>`,
             showCancelButton: true,
             confirmButtonText: defaultConfirmButtonText,
             cancelButtonText: defaultCancelButtonText,
             reverseButtons: true,
             customClass: {
                 container: 'default-call-center-swal-bg'
+            },
+            willClose: () => {
+                stopAllAudioPlayback();
             }
         });
 
@@ -1616,6 +1644,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     customClass: {
                         container: 'active-your-service-swal-bg'
                     },
+                    willClose: () => {
+                        stopAllAudioPlayback();
+                    }
                 });
             } else {
                 showVerificationAlert();
@@ -1628,7 +1659,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: error.message, icon: 'error', focusConfirm: false, allowOutsideClick: false, customClass: {
                         container: 'active-your-service-swal-bg'
                     },
+                    willClose: () => {
+                        stopAllAudioPlayback();
+                    }
                 });
+
                 // playErrorAudio(error.prompt);
             }
         }

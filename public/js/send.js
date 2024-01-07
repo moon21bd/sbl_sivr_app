@@ -25,14 +25,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 let respData = response.data, statusCode = response.status;
 
                 if (statusCode === 200) {
-                    console.log('Success');
-                    console.log('URL:', respData.url);
+                    // console.log('Success');
+                    // console.log('URL:', respData.url);
                     goTo(respData.url);
                 } else {
-                    console.log('ErrorCode:', statusCode);
-                    console.log('Message:', respData.message);
+                    // console.log('ErrorCode:', statusCode);
+                    // console.log('Message:', respData.message);
                     const audioUrl = respData.prompt;
-                    console.log('audioUrl', audioUrl)
+                    // console.log('audioUrl', audioUrl)
                     playErrorAudio(audioUrl);
                     hideLoader();
                     displayErrorMessage(respData.message, errorMessageDiv);
@@ -41,12 +41,11 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(function (error) {
                 let errMsg = error.response.data;
-                console.log('catch statusCode', error.response.status);
-                console.log('catch error', errMsg);
+                // console.log('catch statusCode', error.response.status);
+                // console.log('catch error', errMsg);
                 const audioUrl = errMsg.prompt;
-                console.log('audioUrl', audioUrl)
+                // console.log('audioUrl', audioUrl)
                 playErrorAudio(audioUrl);
-
                 hideLoader();
                 displayErrorMessage(errMsg.message, errorMessageDiv);
             });
