@@ -89,17 +89,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     <option value="" disabled selected>${textSelectCallCategory}</option>
                     ${getOptionsHtml(callCategoryDropdownValues)}
                 </select>
-
+                <div>
                 <label for="callSubCategorySelect">${textCallSubCategory}:</label>
+                </div>
                 <select id="callSubCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textCallSubCategory}" required>
                     <option value="" disabled selected>${textSelectSubCallCategory}</option>
                 </select>
+                <div>
                 <label for="callSubSubCategorySelect">${textCallSubSubCategory}:</label>
+                </div>
                 <select id="callSubSubCategorySelect" class="swal2-input select2" style="width: 100% !important;" placeholder="${textSelectSubSubCallCategory}" required>
                     <option value="" disabled selected>${textSelectSubSubCallCategory}</option>
                 </select>
 
+                <div>
                 <label for="reasonInput">${textReason}:</label>
+                </div>
                 <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
                         focusConfirm: false,
                         preConfirm: () => {
@@ -152,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const callSubCategoryVal = callSubCategorySelect.value;
                                 const callSubSubCategoryVal = callSubSubCategorySelect.value;
 
-                                // console.log('callTypeVal', callTypeVal, 'callCategoryVal', callCategoryVal, 'callSubCategoryVal', callSubCategoryVal, 'callSubSubCategoryVal', callSubSubCategoryVal);
 
                                 const callSubSubCategories = await fetchDropdownOptions('callSubSubCategorySelect', {
                                     "callType": callTypeVal,
@@ -187,7 +191,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         const issueId = apiResponse.data?.issueId;
                         const issue = issueId ? issueId : null;
                         Swal.fire({
-                            // title: apiResponse.message,
                             html: `<img class="" src="./img/icon/checkmark.svg" />
                         <h2 class="swal2-title"> ${apiResponse.message} </h2>
                         <p>${"IssueId: " + issue}</p>

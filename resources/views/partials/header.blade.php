@@ -70,6 +70,22 @@
         ;
     </script>
 
+    <style>
+        .complaint-swal-bg .swal2-html-container > div {
+            text-align: left;
+        }
+
+        .complaint-swal-bg .swal2-html-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .complaint-swal-bg .swal2-html-container select,
+        .complaint-swal-bg .swal2-html-container input {
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 
 <body class="w-full min-h-screen" style="background: linear-gradient(21.64deg, #D9A629 19.97%, #0F5DA8 80.91%);">
