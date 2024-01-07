@@ -71,13 +71,23 @@
     </script>
 
     <style>
-        .swal2-popup .swal2-html-container > div > label {
-            text-align: left !important;
-            display: block !important;
-            margin-bottom: 5px !important;
-            margin-left: 0 !important;
-            margin-inline-start: -10%;
+        .swal2-popup .swal2-html-container > div {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
         }
+
+        .swal2-popup .swal2-html-container > div > label {
+            margin-bottom: 5px !important;
+        }
+
+        .swal2-popup .swal2-html-container > div > select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
 
     </style>
 </head>
