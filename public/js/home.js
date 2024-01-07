@@ -130,25 +130,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                         cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                         didOpen: () => {
-                            const style = document.createElement('style');
-                            style.innerHTML = `
-      .complaint-swal-bg.swal2-shown .swal2-html-container > div {
-        text-align: left;
-      }
 
-      .complaint-swal-bg.swal2-shown .swal2-html-container label {
-        display: block;
-        margin-bottom: 5px;
-        text-align: left !important;
-      }
-
-      .complaint-swal-bg.swal2-shown .swal2-html-container select,
-      .complaint-swal-bg.swal2-shown .swal2-html-container input {
-        width: 100% !important;
-        box-sizing: border-box;
-      }
-    `;
-                            document.head.appendChild(style);
+                            const container = document.querySelector('.complaint-swal-bg');
+                            if (container) {
+                                const elementsToStyle = container.querySelectorAll('.swal2-html-container > div, .swal2-html-container label, .swal2-html-container select, .swal2-html-container input');
+                                elementsToStyle.forEach(element => {
+                                    element.style.textAlign = 'left';
+                                    if (element.tagName === 'LABEL') {
+                                        element.style.display = 'block';
+                                        element.style.marginBottom = '5px';
+                                    }
+                                    if (element.tagName === 'SELECT' || element.tagName === 'INPUT') {
+                                        element.style.width = '100%';
+                                        element.style.boxSizing = 'border-box';
+                                    }
+                                });
+                            }
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
                             const callSubCategorySelect = document.getElementById('callSubCategorySelect');
