@@ -76,7 +76,7 @@
             display: block !important;
             margin-bottom: 5px !important;
             margin-left: 0 !important;
-            margin-inline-start: -200px !important;
+            margin-inline-start: -10%;
         }
 
     </style>
