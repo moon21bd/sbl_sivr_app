@@ -71,23 +71,18 @@
     </script>
 
     <style>
-        .swal2-popup .swal2-html-container > div {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .swal2-popup .swal2-html-container > div > label {
+        .swal2-popup .swal2-html-container label {
+            text-align: left !important;
+            display: block !important;
             margin-bottom: 5px !important;
         }
 
-        .swal2-popup .swal2-html-container > div > select {
-            width: 100%;
+        .swal2-popup .swal2-html-container select {
+            width: 100% !important;
             box-sizing: border-box;
             padding: 8px;
             margin-bottom: 10px;
         }
-
 
     </style>
 </head>
