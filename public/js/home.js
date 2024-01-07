@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                         cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                         didOpen: () => {
-                            
+
 
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
