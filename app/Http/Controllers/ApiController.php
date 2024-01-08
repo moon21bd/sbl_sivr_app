@@ -77,7 +77,6 @@ class ApiController extends ResponseController
 
     public function resendOtp(Request $request)
     {
-
         /*$request->validate([
             'mobile_no' => $this->phoneValidationRules()
         ], $this->phoneValidationErrorMessages());
@@ -104,7 +103,7 @@ class ApiController extends ResponseController
                 'message' => __('messages.no-account-matched-with-phone'),
                 'prompt' => null
             ];
-            Log::info('NO-ACCOUNT-MATCHED-WITH-PHONE-DURING-SEND-OTP|'. $mobileNo);
+            Log::info('NO-ACCOUNT-MATCHED-WITH-PHONE-DURING-SEND-OTP|' . $mobileNo);
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
 
@@ -396,38 +395,6 @@ class ApiController extends ResponseController
         $mobileNo = Session::get('otp.otp_phone');
         $strRefId = Session::get('otp.strRefId');
 
-        // WILL BE REMOVED LATER
-        /*// call api to get user account name.
-        $otpInfo = Session::get('otp');
-        $statusCode = Response::HTTP_OK;
-        $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
-
-        Session::put('logInfo', [
-            'is_logged' => base64_encode(true),
-            'otp_info' => $otpInfo,
-            'account_info' => $getAccountList['data'],
-        ]);
-
-        Session::forget('otp');
-
-        $responseOut = [
-            'code' => $statusCode,
-            'status' => 'success',
-            'message' => __('messages.verification-success-after-login'),
-            'prompt' => null,
-            'pn' => $mobileNo,
-            'an' => $getAccountList['data']['accountName'] ?? null,
-            'acn' => $getAccountList['data']['accountNo'] ?? null,
-            'url' => url('/')
-        ];
-
-        // Set the flash message
-        session()->flash('status', $responseOut['status']);
-        session()->flash('message', $responseOut['message']);
-
-        return $this->sendResponse($responseOut, $responseOut['code']);*/
-        // WILL BE REMOVED LATER
-
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.verify_otp_url');
         $response = $apiHandler->postCall($url, [
@@ -459,32 +426,6 @@ class ApiController extends ResponseController
                     // Make the user as logged-in user, set a flag to verify the user.
                     // call api to get user account name.
 
-                    /*$otpInfo = Session::get('otp');
-                    $getAccountList = $this->fetchGetWalletDetails($otpInfo['otp_phone']);
-
-                    Session::put('logInfo', [
-                        'is_logged' => base64_encode(true),
-                        'otp_info' => $otpInfo,
-                        'account_info' => $getAccountList['data'],
-                    ]);
-                    Session::forget('otp');
-
-                    $responseOut = [
-                        'code' => $statusCode,
-                        'status' => 'success',
-                        'message' => __('messages.verification-success-after-login'),
-                        'prompt' => null,
-                        'pn' => $mobileNo,
-                        'an' => $getAccountList['data']['accountName'] ?? null,
-                        'acn' => $getAccountList['data']['accountNo'] ?? null,
-                        'url' => url('/')
-                    ];
-
-                    // Set the flash message
-                    session()->flash('status', $responseOut['status']);
-                    session()->flash('message', $responseOut['message']);*/
-
-                    // $getAccountList = $this->fetchGetWalletDetails($mobileNo);
                     $getAccountList = $this->fetchSavingsDeposits($mobileNo);
 
                     $acLists = $getAccountList['accountList'] ?? [];
@@ -501,6 +442,7 @@ class ApiController extends ResponseController
 
                     $acListArr['acList'][] = $testNewArray;*/
                     // will be removed later.
+
 
                     // store encrypted accountList in session
                     self::storeAcListInSession($acListArr);
@@ -595,8 +537,7 @@ class ApiController extends ResponseController
             $mobileNo = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
 
             $eWalletAccountReport = $this->processEWalletAccountVerification($selectedAccount);
-
-            // Log::info('EWALLET-ACCOUNT-REPORT|' . $eWalletAccountReport . "|SELECTED-ACCOUNT|" . $selectedAccount);
+            Log::info('EWALLET-ACCOUNT-REPORT|' . $eWalletAccountReport . "|SELECTED-ACCOUNT|" . $selectedAccount);
 
             $responseOut = [
                 'code' => Response::HTTP_OK,
@@ -1186,9 +1127,21 @@ class ApiController extends ResponseController
         if ($response['status'] === 'success' && $response['code'] === Response::HTTP_OK) { // success
 
             $userActualDOB = $response['data']['dateOfBirth'] ?? null;
-            $userActualACNo = $response['data']['accountNo'];
+            // $userActualACNo = $response['data']['accountNo'];
 
-            if ($userActualACNo == $account && self::compareDateOfBirths($dob, $userActualDOB)) {
+            $userInputAccountNo = $account;
+            $accountList = $response['data']['accountList'] ?? [];
+            $isAccountMatched = false;
+
+            foreach ($accountList as $accountInfo) {
+                if ($accountInfo['accountNo'] == $userInputAccountNo) {
+                    // Match found
+                    $isAccountMatched = true;
+                    break;
+                }
+            }
+
+            if ($isAccountMatched && self::compareDateOfBirths($dob, $userActualDOB)) {
 
                 return [
                     'code' => Response::HTTP_OK,

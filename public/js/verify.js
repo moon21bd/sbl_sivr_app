@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'purpose': 'RESEND-OTP', 'page': 'home', 'button': 'resendOtpBtn', 'mobile_no': getData('pn')
             });
 
-            console.log('Resend OTP API Response:', apiResponse);
+            // console.log('Resend OTP API Response:', apiResponse);
 
             if (apiResponse.code === 200) {
                 console.log('Success');
