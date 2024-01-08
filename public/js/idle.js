@@ -1,4 +1,4 @@
-let isPageRefreshed = false;
+/*let isPageRefreshed = false;
 
 // Detect page refresh
 window.addEventListener('beforeunload', function (event) {
@@ -8,13 +8,13 @@ window.addEventListener('beforeunload', function (event) {
         // Page is being refreshed
         isPageRefreshed = true;
     }
-});
+});*/
 
 window.addEventListener('unload', function (event) {
-    if (!isPageRefreshed) {
-        // Page is being closed, show a prompt
-        expireSession(isPageRefreshed);
-    }
+    //if (!isPageRefreshed) {
+    // Page is being closed, show a prompt
+    expireSession();
+    //}
 });
 
 /*
@@ -42,13 +42,13 @@ function resetIdleTimer() {
     }, idleTimeout);
 }
 
-function expireSession(data = null) {
+function expireSession() {
 
     fetch('/loc', {
         method: 'POST', headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        }, body: JSON.stringify({action: 'expireSession', data: data}),
+        }, body: JSON.stringify({action: 'expireSession'}),
     })
         .then(response => {
             console.log('loc-response', response)
