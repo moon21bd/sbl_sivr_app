@@ -403,7 +403,7 @@ class ApiController extends ResponseController
             'strReOTP' => $request->input('code') ?? null,
         ]);
 
-        if ($response['status'] === 'success' && $response['statusCode'] === 200) { // successful api response found from apihandler end.
+        if ($response['status'] === 'success' && $response['statusCode'] === 200) { // successful api response found from api handler end.
 
             $firstData = json_decode($response['data']);
             $secondData = json_decode($firstData);
@@ -424,25 +424,12 @@ class ApiController extends ResponseController
 
                     // After Verification
                     // Make the user as logged-in user, set a flag to verify the user.
-                    // call api to get user account name.
+                    // Call api to get user account name.
 
                     $getAccountList = $this->fetchSavingsDeposits($mobileNo);
 
                     $acLists = $getAccountList['accountList'] ?? [];
                     $acListArr = self::processMaskedAccountLists($acLists);
-
-                    // will be removed later.
-                    /*$acNoTest = "5107801027727";
-                    $testNewArray = [
-                        "accountNo" => self::maskAccountNumber($acNoTest),
-                        "accountName" => "Raqibul Hasan Moon",
-                        "branchCode" => "ABC123",
-                        "accEnc" => openSSLEncryptDecrypt($acNoTest)
-                    ];
-
-                    $acListArr['acList'][] = $testNewArray;*/
-                    // will be removed later.
-
 
                     // store encrypted accountList in session
                     self::storeAcListInSession($acListArr);

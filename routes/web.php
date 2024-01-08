@@ -19,6 +19,10 @@ Route::middleware(['web'])->group(function () {
     Route::post('/resend', [\App\Http\Controllers\ApiController::class, 'resendOtp'])->name('resendOtp');
     Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
     Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
+
+    Route::post('/loc', [\App\Http\Controllers\AuthController::class, 'logoutOnClose']);
+
+    // Route::post('/exitintent', [\App\Http\Controllers\AuthController::class, 'exitIntentDetection']);
 });
 
 Route::middleware(['web', 'verify.login'])->group(function () {
@@ -59,9 +63,10 @@ Route::middleware(['web', 'verify.login'])->group(function () {
     Route::post('/upload-photo', [\App\Http\Controllers\MainController::class, 'uploadUserPhoto'])->name('uploadUserPhoto');
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
-    Route::post('/logout-on-close', 'AuthController@logoutOnClose')->name('logoutOnClose');
+
 
 });
+
 
 // web api routes
 Route::get('/example', [\App\Http\Controllers\MainController::class, 'encryptWeb']);

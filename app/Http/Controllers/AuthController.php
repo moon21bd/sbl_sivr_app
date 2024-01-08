@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -23,10 +24,28 @@ class AuthController extends Controller
         return response()->json(['message' => 'Good bye !']);
     }
 
-    public function logoutOnClose()
+    public function logoutOnClose(Request $request)
     {
-        // Session::put('is_logged_in', false);
         Session::flush();
-        return response()->json(['message' => 'Good bye']);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        $referer = $_SERVER['HTTP_REFERER'];
+
+        session()->flash('status', 'error');
+        session()->flash('message', 'You are being logged out.');
+
+        Log::info("LOGOUT-ON-CLOSE|REQUEST|" . json_encode($request->all()) . "|REFERER|" . $referer);
+
+        return response()->json(['success' => true, 'message' => 'Logged out successfully']);
+    }
+
+    public function exitIntentDetection(Request $request)
+    {
+        $referer = $request->header('referer');
+        $requests = $request->all();
+        $referer2 = $_SERVER['HTTP_REFERER'];
+
+        Log::info("exitIntentDetection-Request-Received|Referer|" . $referer . "|" . $referer2 . "|Request|" . json_encode($requests));
+
     }
 }
