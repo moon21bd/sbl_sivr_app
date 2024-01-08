@@ -27,8 +27,8 @@ class AuthController extends Controller
     public function logoutOnClose(Request $request)
     {
         Session::flush();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
         $referer = $_SERVER['HTTP_REFERER'];
 
         session()->flash('status', 'error');

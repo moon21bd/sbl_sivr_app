@@ -1,4 +1,4 @@
-/*let isPageRefreshed = false;
+let isPageRefreshed = false;
 
 // Detect page refresh
 window.addEventListener('beforeunload', function (event) {
@@ -8,13 +8,13 @@ window.addEventListener('beforeunload', function (event) {
         // Page is being refreshed
         isPageRefreshed = true;
     }
-});*/
+});
 
 window.addEventListener('unload', function (event) {
-    //if (!isPageRefreshed) {
-    // Page is being closed, show a prompt
-    expireSession();
-    //}
+    if (!isPageRefreshed) {
+        // Page is being closed, show a prompt
+        expireSession();
+    }
 });
 
 /*
