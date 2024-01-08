@@ -1,4 +1,4 @@
-let isPageRefreshed = false;
+/*let isPageRefreshed = false;
 
 // Detect page refresh
 window.addEventListener('beforeunload', function (event) {
@@ -15,7 +15,7 @@ window.addEventListener('unload', function (event) {
         // Page is being closed, show a prompt
         expireSession();
     }
-});
+});*/
 
 /*
 // WORKS ONLY FOR TAB CLOSE. NOT TRIGGERED IF PAGE RELOADED OR BEING REFRESHED.
