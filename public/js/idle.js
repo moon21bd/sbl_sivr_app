@@ -47,7 +47,7 @@ function expireSession() {
     fetch('/loc', {
         method: 'POST', headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         }, body: JSON.stringify({action: 'expireSession'}),
     })
         .then(response => {
