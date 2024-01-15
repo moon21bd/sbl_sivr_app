@@ -5,7 +5,8 @@ return [
         'username' => 'callcen',
         'password' => 'dbBadSbl$erz'
     ],
-    'base_url' => 'https://sblapi2022.sblesheba.com:8877/', // Sandbox base URL
+    // 'base_url' => 'https://sblapi2022.sblesheba.com:8877/', // Sandbox base URL
+    'base_url' => 'http://10.32.83.29/', // Production base URL
     'send_otp_url' => 'api/callcenter/SendOTP',
     'verify_otp_url' => 'api/callcenter/VerifyOTP',
     'get_account_list_url' => 'api/callcenter/GetAccountList',
@@ -18,12 +19,6 @@ return [
     'create_issue_url' => 'api/callcenter/createIssue',
     'lock_wallet_url' => 'api/callcenter/lockWallet',
     'crm_ticket_base_url' => 'https://10.249.3.201/', // Sandbox base URL
-
-    /*'crm_ticket_login_info' => [
-        'userid' => '#SBL_05',
-        'password' => 'Abc12345678@'
-    ],*/
-
     'crm_ticket_login_info' => [
         'userid' => '#SBL_SMART_IVR',
         'password' => 'Abcd1234@'
