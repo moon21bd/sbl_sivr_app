@@ -1441,6 +1441,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     async function showMessageForHelp(voice = "", text = "") {
+        commonCloseNav();
         showLoader();
         await new Promise(resolve => setTimeout(resolve, 500));
         hideLoader();

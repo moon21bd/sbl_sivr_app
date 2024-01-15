@@ -415,3 +415,18 @@ function stopAllAudioPlayback() {
     });
 }
 
+function commonOpenNav() {
+    let elem = document.getElementById("mobileMenu");
+    if (elem) {
+        elem.style.display = 'flex';
+    }
+}
+
+function commonCloseNav() {
+    let elem = document.getElementById("mobileMenu");
+    if (elem) {
+        elem.style.display = 'none';
+    }
+
+}
+
