@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function showCascadingDropdownsForCreatingAnIssue() {
+        commonCloseNav();
 
         let locale = getSavedLocale();
         try {
@@ -196,12 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             html: `<img class="" src="./img/icon/checkmark.svg" />
                         <h2 class="swal2-title"> ${apiResponse.message} </h2>
                         <p>${"IssueId: " + issue}</p>
-                        `,
-                            allowOutsideClick: false, // text: "IssueId: " + issue,
+                        `, allowOutsideClick: false, // text: "IssueId: " + issue,
                             confirmButtonText: (locale === 'en') ? "OK" : "ঠিক আছে", customClass: {
                                 container: 'issueid-swal-bg'
-                            },
-                            willClose: () => {
+                            }, willClose: () => {
                                 stopAllAudioPlayback();
                             }
 
@@ -219,8 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h2 class="swal2-title"> ${error.message} </h2>
                         `, allowOutsideClick: false, customClass: {
                                 container: 'issueid-swal-bg'
-                            },
-                            willClose: () => {
+                            }, willClose: () => {
                                 stopAllAudioPlayback();
                             }
                         });
@@ -237,14 +235,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message,
-                    icon: 'error',
-                    focusConfirm: false,
-                    allowOutsideClick: false,
-                    customClass: {
+                    title: error.message, icon: 'error', focusConfirm: false, allowOutsideClick: false, customClass: {
                         container: 'active-your-service-swal-bg'
-                    },
-                    willClose: () => {
+                    }, willClose: () => {
                         stopAllAudioPlayback();
                     }
                 });
@@ -521,6 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function addClickHandlerForEWalletMenu(buttonId, action, message) {
+        commonCloseNav();
         const getButtonElement = document.getElementById(buttonId);
         if (getButtonElement) {
             getButtonElement.addEventListener('click', () => {
@@ -612,6 +606,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // }
 
     async function handleAccountSwitchButtonClick() {
+        commonCloseNav();
         if (await checkLoginStatus()) {
             await handleAccountSwitchClick();
         } else {
@@ -657,10 +652,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <button class="ac-submit-button" >${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
             <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
         </div>
-    `,
-            showConfirmButton: false,
-            allowOutsideClick: false,
-            willClose: () => {
+    `, showConfirmButton: false, allowOutsideClick: false, willClose: () => {
                 stopAllAudioPlayback();
             }
         });
@@ -751,8 +743,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (error.status === 'error') {
                 Swal.fire({
-                    title: error.message, icon: 'error', allowOutsideClick: false,
-                    willClose: () => {
+                    title: error.message, icon: 'error', allowOutsideClick: false, willClose: () => {
                         stopAllAudioPlayback();
                     }
                 });
@@ -762,6 +753,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
+        commonCloseNav();
         try {
             const isLoggedIn = await checkLoginStatus();
 
@@ -842,7 +834,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 handleEWVerificationError(verifyResp, locale);
                             }
                         } catch (error) {
-                            console.error('Error during verification:', error);
+                            // console.error('Error during verification:', error);
                             handleEWVerificationError(error, locale);
                         } finally {
                             // hideLoader();
@@ -871,14 +863,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         } catch (error) {
             // hideLoader();
-            console.error('Error in handleAPIRequestWithAccountVerification:', error);
+            // console.error('Error in handleAPIRequestWithAccountVerification:', error);
             if (error.status === 'error') {
                 Swal.fire({
                     html: `<img class="" src="./img/icon/lock-card.svg" />
                 <h2 class="swal2-title"> ${error.message} </h2>`, allowOutsideClick: false, customClass: {
                         container: 'user-info-verify-swal-bg'
-                    },
-                    willClose: () => {
+                    }, willClose: () => {
                         stopAllAudioPlayback();
                     }
                 });
@@ -889,8 +880,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleEWVerificationApiResponse(apiResponse, locale) {
+        commonCloseNav();
         console.log('apiResponse', apiResponse);
-
         let iconAsImg = 'lock-card.svg';
         if (apiResponse.status === 'success') {
             iconAsImg = 'checkmark.svg';
@@ -901,8 +892,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <h2 class="swal2-title"> ${apiResponse.message} </h2>
         `, allowOutsideClick: false, confirmButtonText: (locale === 'en') ? 'OK' : 'ঠিক আছে', customClass: {
                 container: 'user-info-verify-swal-bg'
-            },
-            willClose: () => {
+            }, willClose: () => {
                 stopAllAudioPlayback();
             }
         });
@@ -918,23 +908,21 @@ document.addEventListener('DOMContentLoaded', function () {
             <h2 class="swal2-title"> ${error.message || 'An error occurred'} </h2>
         `, allowOutsideClick: false, customClass: {
                 container: 'user-info-verify-swal-bg'
-            },
-            willClose: () => {
+            }, willClose: () => {
                 stopAllAudioPlayback();
             }
         });
     }
 
     function handleEWVerificationError(verifyResp, locale) {
-        console.log('verifyResp', verifyResp);
+        // console.log('verifyResp', verifyResp);
 
         Swal.fire({
             html: `<img class="" src="./img/icon/lock-card.svg" />
             <h2 class="swal2-title"> ${verifyResp.message} </h2>
         `, allowOutsideClick: false, confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে', customClass: {
                 container: 'user-info-verify-swal-bg'
-            },
-            willClose: () => {
+            }, willClose: () => {
                 stopAllAudioPlayback();
             }
         });
@@ -1635,7 +1623,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function showActiveYourServiceMessage(title, message) {
-
+        commonCloseNav();
         try {
             const isLoggedIn = await checkLoginStatus();
             if (isLoggedIn) {
@@ -1664,8 +1652,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     title: error.message, icon: 'error', focusConfirm: false, allowOutsideClick: false, customClass: {
                         container: 'active-your-service-swal-bg'
-                    },
-                    willClose: () => {
+                    }, willClose: () => {
                         stopAllAudioPlayback();
                     }
                 });
@@ -1700,7 +1687,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (appStoreLink) {
             window.location.href = appStoreLink;
         } else {
-            console.error('Unsupported platform or invalid app type');
+            // console.error('Unsupported platform or invalid app type');
             window.location.href = (appType === 'esheba') ? eShebaAndroid : SPGAndroid;
         }
 

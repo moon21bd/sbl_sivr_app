@@ -45,6 +45,7 @@ function checkLoginStatus() {
 }
 
 function showVerificationAlert() {
+    commonCloseNav();
     const getLocaleFromLS = getSavedLocale();
     playErrorAudio(`/uploads/prompts/common/verify-your-account-${getLocaleFromLS}.m4a`); // Play the error audio
 
