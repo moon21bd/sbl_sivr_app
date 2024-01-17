@@ -5,12 +5,15 @@
  */
 
 // Menu Start
+const mobileMenu = document.getElementById('mobileMenu');
 function openNav() {
-    document.getElementById("mobileMenu").style.width = "100%";
+    // document.getElementById("mobileMenu").style.width = "100%";
+    document.getElementById("mobileMenu").style.display = 'flex';
 }
 
 function closeNav() {
-    document.getElementById("mobileMenu").style.width = "0%";
+    // document.getElementById("mobileMenu").style.width = "0%";
+    document.getElementById("mobileMenu").style.display = 'none';
 }
 
 // Menu End

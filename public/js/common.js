@@ -45,6 +45,7 @@ function checkLoginStatus() {
 }
 
 function showVerificationAlert() {
+    commonCloseNav();
     const getLocaleFromLS = getSavedLocale();
     playErrorAudio(`/uploads/prompts/common/verify-your-account-${getLocaleFromLS}.m4a`); // Play the error audio
 
@@ -413,5 +414,20 @@ function stopAllAudioPlayback() {
             button.classList.remove('pause');
         }
     });
+}
+
+function commonOpenNav() {
+    let elem = document.getElementById("mobileMenu");
+    if (elem) {
+        elem.style.display = 'flex';
+    }
+}
+
+function commonCloseNav() {
+    let elem = document.getElementById("mobileMenu");
+    if (elem) {
+        elem.style.display = 'none';
+    }
+
 }
 
