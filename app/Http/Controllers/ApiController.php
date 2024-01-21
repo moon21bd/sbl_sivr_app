@@ -130,6 +130,71 @@ class ApiController extends ResponseController
                 Log::info("isValidData1:" . json_encode($isValidData));
 
                 if (!is_array($isValidData)) {
+                    Log::error("Invalid data format received from API");
+                    $responseOut = [
+                        'code' => Response::HTTP_EXPECTATION_FAILED,
+                        'status' => 'error',
+                        'message' => __('messages.apologies-something-went-wrong'),
+                        'prompt' => null
+                    ];
+                    return $this->sendResponse($responseOut, $responseOut['code']);
+
+                } else {
+                    $dataString = json_decode($isValidData, true);
+
+                    if (!is_array($dataString)) {
+                        Log::error("Invalid inner JSON format received from API");
+                        $responseOut = [
+                            'code' => Response::HTTP_EXPECTATION_FAILED,
+                            'status' => 'error',
+                            'message' => __('messages.apologies-something-went-wrong'),
+                            'prompt' => null
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+                    } else {
+                        // Continue processing $dataString
+
+                        if (isset($dataString['StatusCode'])) {
+                            $statusCode = intval($dataString['StatusCode']);
+
+                            if ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
+                                Session::put('otp', [
+                                    'phone_masked' => $this->hidePhoneNumber($mobileNo),
+                                    'otp_phone' => $mobileNo,
+                                    'strRefId' => $strRefId
+                                ]);
+
+                                $responseOut = [
+                                    'code' => $statusCode,
+                                    'status' => 'success',
+                                    'message' => __('messages.otp-send-success'),
+                                    'url' => url('verify-otp')
+                                ];
+                                return $this->sendResponse($responseOut, $responseOut['code']);
+
+                            } else {
+                                $responseOut = [
+                                    'code' => Response::HTTP_EXPECTATION_FAILED,
+                                    'status' => 'error',
+                                    'message' => __('messages.apologies-something-went-wrong'),
+                                    'prompt' => getPromptPath('common/request-failed-en')
+                                ];
+                                return $this->sendResponse($responseOut, $responseOut['code']);
+                            }
+                        } else {
+                            Log::error("Missing 'StatusCode' in inner JSON");
+                            $responseOut = [
+                                'code' => Response::HTTP_EXPECTATION_FAILED,
+                                'status' => 'error',
+                                'message' => __('messages.apologies-something-went-wrong'),
+                                'prompt' => null
+                            ];
+                            return $this->sendResponse($responseOut, $responseOut['code']);
+                        }
+                    }
+                }
+
+/*                if (!is_array($isValidData)) {
                     // Use the decoded data directly
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
@@ -144,14 +209,8 @@ class ApiController extends ResponseController
                     Log::info("isValidData2 (retry):" . json_encode($data));
                 }
 
-                /*if ($isValidData !== null) {
-                    $data = $this->decodeJsonIfValid($isValidData);
-                    Log::info("isValidData2:" . json_encode($data));*/
 
                 if ($data !== null) {
-                     // $data = $this->decodeJsonIfValid($response['data']);
-                    // $statusCode = intval($data['StatusCode']);
-
                     if (isset($data['StatusCode'])) {
                         $statusCode = intval($data['StatusCode']);
                         // Continue processing $statusCode
@@ -192,33 +251,7 @@ class ApiController extends ResponseController
                         return $this->sendResponse($responseOut, $responseOut['code']);
                     }
 
-
-                    /*$statusCode = isset($data['StatusCode']) ? intval($data['StatusCode']) : null;
-                    if ($statusCode === null) {
-                        $responseOut = [
-                            'code' => Response::HTTP_EXPECTATION_FAILED,
-                            'status' => 'error',
-                            'message' => __('messages.apologies-something-went-wrong'),
-                            'prompt' => null
-                        ];
-                        return $this->sendResponse($responseOut, $responseOut['code']);
-                    }*/
-
-
-
                 } else {
-                    $responseOut = [
-                        'code' => Response::HTTP_EXPECTATION_FAILED,
-                        'status' => 'error',
-                        'message' => __('messages.apologies-something-went-wrong'), // Null response
-                        'prompt' => getPromptPath('common/request-failed-en')
-                    ];
-                    return $this->sendResponse($responseOut, $responseOut['code']);
-                }
-
-
-                /*} else { // invalid data found from api
-
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
