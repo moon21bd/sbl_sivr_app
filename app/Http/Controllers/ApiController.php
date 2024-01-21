@@ -149,7 +149,7 @@ class ApiController extends ResponseController
                     $statusCode = isset($data['StatusCode']) ? intval($data['StatusCode']) : null;
                     if ($statusCode === null) {
                         $responseOut = [
-                            'code' => $statusCode,
+                            'code' => Response::HTTP_EXPECTATION_FAILED,
                             'status' => 'error',
                             'message' => __('messages.apologies-something-went-wrong'),
                             'prompt' => null
