@@ -133,7 +133,7 @@ class ApiController extends ResponseController
                         $responseOut = [
                             'code' => $statusCode,
                             'status' => 'error',
-                            'message' => __('messages.entered-phone-number-invalid'),
+                            'message' => __('messages.apologies-something-went-wrong'),
                             'prompt' => null
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
