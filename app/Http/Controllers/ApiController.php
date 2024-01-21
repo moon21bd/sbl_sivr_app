@@ -183,7 +183,7 @@ class ApiController extends ResponseController
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
-        }  catch (Exception $e) {
+        } catch (Exception $e) {
             $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
             Log::error('API ERROR:: ' . $msg);
             $responseOut = [
@@ -409,64 +409,77 @@ class ApiController extends ResponseController
 
         $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.verify_otp_url');
-        $response = $apiHandler->postCall($url, [
-            'strRequstId' => $strRefId,
-            'strAcMobileNo' => $mobileNo,
-            'strReOTP' => $request->input('code') ?? null,
-        ]);
 
-        if ($response['status'] === 'success' && $response['statusCode'] === 200) { // successful api response found from api handler end.
+        try {
+            $response = $apiHandler->postCall($url, [
+                'strRequstId' => $strRefId,
+                'strAcMobileNo' => $mobileNo,
+                'strReOTP' => $request->input('code') ?? null,
+            ]);
 
-            $firstData = json_decode($response['data']);
-            $secondData = json_decode($firstData);
-            $apiStatus = (bool)$secondData->Status;
-            $statusCode = $response['statusCode'];
+            if ($response['status'] === 'success' && $response['statusCode'] === 200) { // successful api response found from api handler end.
 
-            if ($statusCode === Response::HTTP_OK) {
-                if ($apiStatus === false) {
-                    // Verification failed. Possible reason, OTP expired.
+                $firstData = json_decode($response['data']);
+                $secondData = json_decode($firstData);
+                $apiStatus = (bool)$secondData->Status;
+                $statusCode = $response['statusCode'];
+
+                if ($statusCode === Response::HTTP_OK) {
+                    if ($apiStatus === false) {
+                        // Verification failed. Possible reason, OTP expired.
+                        $responseOut = [
+                            'code' => Response::HTTP_EXPECTATION_FAILED,
+                            'status' => 'error',
+                            'message' => __('messages.apologies-something-went-wrong'),
+                            'prompt' => getPromptPath('common/request-failed-en')
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+                    } else { // success
+
+                        // After Verification
+                        // Make the user as logged-in user, set a flag to verify the user.
+                        // Call api to get user account name.
+
+                        $getAccountList = $this->fetchSavingsDeposits($mobileNo);
+
+                        $acLists = $getAccountList['accountList'] ?? [];
+                        $acListArr = self::processMaskedAccountLists($acLists);
+
+                        // store encrypted accountList in session
+                        self::storeAcListInSession($acListArr);
+
+                        $responseOut = [
+                            'code' => $statusCode,
+                            'status' => 'success',
+                            'message' => __('messages.verification-success-after-login'),
+                            'prompt' => null,
+                            'acLists' => $acListArr,
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+                    }
+                } else {
                     $responseOut = [
-                        'code' => Response::HTTP_EXPECTATION_FAILED,
+                        'code' => $statusCode,
                         'status' => 'error',
                         'message' => __('messages.apologies-something-went-wrong'),
                         'prompt' => getPromptPath('common/request-failed-en')
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
-                } else { // success
-
-                    // After Verification
-                    // Make the user as logged-in user, set a flag to verify the user.
-                    // Call api to get user account name.
-
-                    $getAccountList = $this->fetchSavingsDeposits($mobileNo);
-
-                    $acLists = $getAccountList['accountList'] ?? [];
-                    $acListArr = self::processMaskedAccountLists($acLists);
-
-                    // store encrypted accountList in session
-                    self::storeAcListInSession($acListArr);
-
-                    $responseOut = [
-                        'code' => $statusCode,
-                        'status' => 'success',
-                        'message' => __('messages.verification-success-after-login'),
-                        'prompt' => null,
-                        'acLists' => $acListArr,
-                    ];
-                    return $this->sendResponse($responseOut, $responseOut['code']);
                 }
+
             } else {
+
+                $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
+                Log::error('API ERROR:: ' . $msg);
                 $responseOut = [
-                    'code' => $statusCode,
+                    'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
                     'message' => __('messages.apologies-something-went-wrong'),
                     'prompt' => getPromptPath('common/request-failed-en')
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
-
-        } else {
-
+        } catch (Exception $e) {
             $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
             Log::error('API ERROR:: ' . $msg);
             $responseOut = [
@@ -477,6 +490,7 @@ class ApiController extends ResponseController
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
+
 
     }
 
@@ -614,6 +628,7 @@ class ApiController extends ResponseController
 
     public static function processMaskedAccountLists($acLists)
     {
+
         return ['acList' => collect($acLists)->map(function ($account) {
             $accountNo = $account['AccountNo'];
             return [
