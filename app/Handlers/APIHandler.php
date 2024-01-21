@@ -177,7 +177,8 @@ class APIHandler
             'data' => null,
             'api_url' => $url,
             'exceptionType' => get_class($e),
-            'exceptionMessage' => $e->getMessage(),
+            // 'exceptionMessage' => $e->getMessage(),
+            'exceptionMessage' => __('messages.apologies-something-went-wrong'),
         ];
 
         Log::error('EXCEPTION-HAPPEN-DURING-API-CALL:: ' . json_encode($exceptions));
