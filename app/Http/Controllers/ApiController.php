@@ -154,9 +154,9 @@ class ApiController extends ResponseController
                     } else {
                         // Continue processing $dataString
 
+                        Log::info('STATUSCODE: ' . $dataString['StatusCode']);
                         if (isset($dataString['StatusCode'])) {
                             $statusCode = intval($dataString['StatusCode']);
-
                             if ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
                                 Session::put('otp', [
                                     'phone_masked' => $this->hidePhoneNumber($mobileNo),
