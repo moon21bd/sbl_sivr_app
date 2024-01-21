@@ -144,7 +144,7 @@ class ApiController extends ResponseController
                     Log::info("isValidData2:" . json_encode($data));*/
 
                 if ($data !== null) {
-                    // $data = $this->decodeJsonIfValid($response['data']);
+                     $data = $this->decodeJsonIfValid($response['data']);
                     // $statusCode = intval($data['StatusCode']);
                     $statusCode = isset($data['StatusCode']) ? intval($data['StatusCode']) : null;
                     Log::info('STATUS_CODE: ' . json_encode($data['StatusCode']));
