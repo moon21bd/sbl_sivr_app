@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const dob = Swal.getPopup().querySelector('#swal-input2').value;
 
                     if (!account || !/^\d{10,20}$/.test(account) || !dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-                        Swal.showValidationMessage((locale === 'en') ? 'Invalid input. Please check your account and date of birth.' : 'অবৈধ ইনপুট। আপনার অ্যাকাউন্ট এবং জন্ম তারিখটি চেষ্টা করুন।');
+                        Swal.showValidationMessage((locale === 'en') ? 'Invalid input. Please check your account and date of birth.' : 'ভুল ইনপুট দেয়া হয়েছে । আপনার অ্যাকাউন্ট এবং জন্ম তারিখটি লিখে পুনরায় চেষ্টা করুন ।');
                     }
 
                     return {account, dob};
