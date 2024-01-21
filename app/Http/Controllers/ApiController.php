@@ -147,7 +147,7 @@ class ApiController extends ResponseController
                     // $data = $this->decodeJsonIfValid($response['data']);
                     // $statusCode = intval($data['StatusCode']);
                     $statusCode = isset($data['StatusCode']) ? intval($data['StatusCode']) : null;
-                    Log::info('STATUS_CODE: ' . $data['StatusCode']);
+                    Log::info('STATUS_CODE: ' . json_encode($data['StatusCode']));
                     if ($statusCode === null) {
                         $responseOut = [
                             'code' => Response::HTTP_EXPECTATION_FAILED,
