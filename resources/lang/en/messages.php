@@ -156,7 +156,7 @@ return [
     'service-not-available' => 'Try again in the next :hours hours to avail the service.',
     'account-no-text' => 'A/C No:',
     'processing' => 'Processing...',
-    'no-account-matched-with-phone' => 'No account number matches your phone number.',
+    'no-account-matched-with-phone' => 'No account number matches your phone number. Please try again with valid number.',
     'csrf_token_expired_re_login' => 'আপনার সেশনের মেয়াদ শেষ । অব্যাহত সেবা নিশ্চিত করতে পুনরায় অ্যাকাউন্টটি যাচাই করার প্রয়োজন ৷ ধন্যবাদ ।',
 
 
