@@ -157,7 +157,7 @@ return [
     'account-no-text' => 'A/C No:',
     'processing' => 'Processing...',
     'no-account-matched-with-phone' => 'No account number matches your phone number.',
-
+    'csrf_token_expired_re_login' => 'আপনার সেশনের মেয়াদ শেষ । অব্যাহত সেবা নিশ্চিত করতে পুনরায় অ্যাকাউন্টটি যাচাই করার প্রয়োজন ৷ ধন্যবাদ ।',
 
 
 ];

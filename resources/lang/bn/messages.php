@@ -159,4 +159,5 @@ return [
     'account-no-text' => 'অ্যাকাউন্ট নং:',
     'processing' => 'প্রক্রিয়াধীন...',
     'no-account-matched-with-phone' => 'আপনার ফোন নাম্বার দিয়ে কোন অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।',
+    'csrf_token_expired_re_login' => 'Session expired. Please re-verify your account for continued access. Thank you.',
 ];
