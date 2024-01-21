@@ -142,7 +142,7 @@ class APIHandler
             }
 
             Log::error('API-RESPONSE: ' . json_encode($responseData));
-            
+
         } catch (Exception $e) {
             $responseData = $this->handleException($url, $e);
         } catch (ConnectException $e) {

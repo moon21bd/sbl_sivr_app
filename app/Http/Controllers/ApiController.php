@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Exception;
 
 
 class ApiController extends ResponseController
@@ -122,6 +123,12 @@ class ApiController extends ResponseController
         }
 
         $response = $apiHandler->postCall($url, $apiPayload);
+
+        try {
+
+        }  catch (Exception $e) {
+            $responseData = $this->handleException($url, $e);
+        }
 
         if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
             $isValidData = $this->decodeJsonIfValid($response['data']);
@@ -578,7 +585,7 @@ class ApiController extends ResponseController
             Session::put(self::ACCOUNT_VERIFICATION_STATUS_KEY, $isAccountVerified);
             // Log::info('isAccountVerified ' . $isAccountVerified);
             return $isAccountVerified;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Handle exceptions (log or rethrow if needed)
             Log::error('Error in processEWalletAccountVerification: ' . $e->getMessage());
             return false;
@@ -1164,11 +1171,11 @@ class ApiController extends ResponseController
             } elseif ($userActualDob instanceof \DateTime) {
                 $userActualDobDateTime = $userActualDob;
             } else {
-                throw new \Exception("Invalid data type for user actual DOB.");
+                throw new Exception("Invalid data type for user actual DOB.");
             }
 
             return $userInputedDOBDateTime->format('Y-m-d') == $userActualDobDateTime->format('Y-m-d');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
