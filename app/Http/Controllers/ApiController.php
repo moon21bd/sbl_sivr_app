@@ -124,6 +124,8 @@ class ApiController extends ResponseController
             $response = $apiHandler->postCall($url, $apiPayload);
             if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
 
+                Log::info('SEND-OTP-API-RESPONSE: ' . json_encode($response['data']));
+
                 $firstSendData = json_decode($response['data']);
                 $secondSendData = json_decode($firstSendData);
                 $sendStatusCode = (int)$secondSendData->StatusCode;
@@ -153,7 +155,6 @@ class ApiController extends ResponseController
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
 
-
             } else { // UNEXPECTED API RESPONSE
                 $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
                 Log::error('API ERROR:: ' . $msg);
@@ -167,7 +168,7 @@ class ApiController extends ResponseController
             }
         } catch (Exception $e) {
             $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
-            Log::error('API ERROR:: ' . $msg);
+            Log::error('SEND-OTP-API ERROR:: ' . $msg);
             $responseOut = [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
@@ -473,7 +474,6 @@ class ApiController extends ResponseController
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
-
 
     }
 
