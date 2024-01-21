@@ -91,7 +91,6 @@ class ApiController extends ResponseController
 
     private function sendOtp($mobileNo, $isResend = false)
     {
-
         if (!$mobileNo) return;
 
         // if mobile number isn't matched with sonali phone, then send an error message.

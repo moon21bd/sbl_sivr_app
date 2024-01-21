@@ -50,17 +50,13 @@ class APIHandler
                 $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
             }
 
-        } catch (Exception $e) {
-            $responseData = $this->handleException($url, $e);
-        } catch (ConnectException $e) {
-            $responseData = $this->handleException($url, $e);
-        } catch (GuzzleException $e) {
+        } catch (Exception|GuzzleException $e) {
             $responseData = $this->handleException($url, $e);
         }
 
         $responseTime = microtime(true) - $startTime;
-
         $this->storeApiLog(getIPAddress(), $url, $options, $responseData, $responseTime, $this->getServerInfo());
+        Log::info('API-RESPONSE : ' . json_encode($responseData));
 
         return $responseData;
     }
