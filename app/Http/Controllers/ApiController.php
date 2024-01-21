@@ -144,6 +144,7 @@ class ApiController extends ResponseController
                     Log::info("isValidData2:" . json_encode($data));*/
 
                 if ($data !== null) {
+                    $data = $this->decodeJsonIfValid($response['data']);
                     $statusCode = intval($data['StatusCode']);
                     if ($statusCode === Response::HTTP_BAD_REQUEST) {
                         $responseOut = [
