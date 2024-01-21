@@ -144,9 +144,10 @@ class ApiController extends ResponseController
                     Log::info("isValidData2:" . json_encode($data));*/
 
                 if ($data !== null) {
-                    $data = $this->decodeJsonIfValid($response['data']);
-                    $statusCode = intval($data['StatusCode']);
-                    if ($statusCode === Response::HTTP_BAD_REQUEST) {
+                    // $data = $this->decodeJsonIfValid($response['data']);
+                    // $statusCode = intval($data['StatusCode']);
+                    $statusCode = isset($data['StatusCode']) ? intval($data['StatusCode']) : null;
+                    if ($statusCode === null) {
                         $responseOut = [
                             'code' => $statusCode,
                             'status' => 'error',
@@ -154,7 +155,10 @@ class ApiController extends ResponseController
                             'prompt' => null
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
-                    } elseif ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
+                    }
+
+
+                    if ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
 
                         Session::put('otp', [
                             'phone_masked' => $this->hidePhoneNumber($mobileNo),
@@ -170,7 +174,7 @@ class ApiController extends ResponseController
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
 
-                    } else { // OTP SENDING FAILED
+                    } else {
                         $responseOut = [
                             'code' => Response::HTTP_EXPECTATION_FAILED,
                             'status' => 'error',
