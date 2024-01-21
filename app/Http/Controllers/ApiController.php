@@ -128,56 +128,57 @@ class ApiController extends ResponseController
 
                 $isValidData = $this->decodeJsonIfValid($response['data']);
                 Log::info("isValidData1:" . json_encode($isValidData));
+
                 if ($isValidData !== null) {
-                    $data = $this->decodeJsonIfValid($isValidData);
+                    // Use the decoded data directly
+                    $data = $isValidData;
                     Log::info("isValidData2:" . json_encode($data));
-                    if ($data !== null) {
-                        $statusCode = intval($data['StatusCode']);
-                        if ($statusCode === Response::HTTP_BAD_REQUEST) {
-                            $responseOut = [
-                                'code' => $statusCode,
-                                'status' => 'error',
-                                'message' => __('messages.apologies-something-went-wrong'),
-                                'prompt' => null
-                            ];
-                            return $this->sendResponse($responseOut, $responseOut['code']);
-                        } elseif ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
+                } else {
+                    // Attempt a second decoding if needed
+                    $data = $this->decodeJsonIfValid($response['data']);
+                    Log::info("isValidData2 (retry):" . json_encode($data));
+                }
 
-                            Session::put('otp', [
-                                'phone_masked' => $this->hidePhoneNumber($mobileNo),
-                                'otp_phone' => $mobileNo,
-                                'strRefId' => $strRefId
-                            ]);
+                /*if ($isValidData !== null) {
+                    $data = $this->decodeJsonIfValid($isValidData);
+                    Log::info("isValidData2:" . json_encode($data));*/
 
-                            $responseOut = [
-                                'code' => $statusCode,
-                                'status' => 'success',
-                                'message' => __('messages.otp-send-success'),
-                                'url' => url('verify-otp')
-                            ];
-                            return $this->sendResponse($responseOut, $responseOut['code']);
+                if ($data !== null) {
+                    $statusCode = intval($data['StatusCode']);
+                    if ($statusCode === Response::HTTP_BAD_REQUEST) {
+                        $responseOut = [
+                            'code' => $statusCode,
+                            'status' => 'error',
+                            'message' => __('messages.apologies-something-went-wrong'),
+                            'prompt' => null
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+                    } elseif ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
 
-                        } else { // OTP SENDING FAILED
-                            $responseOut = [
-                                'code' => Response::HTTP_EXPECTATION_FAILED,
-                                'status' => 'error',
-                                'message' => __('messages.apologies-something-went-wrong'),
-                                'prompt' => getPromptPath('common/request-failed-en')
-                            ];
-                            return $this->sendResponse($responseOut, $responseOut['code']);
-                        }
-                    } else {
+                        Session::put('otp', [
+                            'phone_masked' => $this->hidePhoneNumber($mobileNo),
+                            'otp_phone' => $mobileNo,
+                            'strRefId' => $strRefId
+                        ]);
+
+                        $responseOut = [
+                            'code' => $statusCode,
+                            'status' => 'success',
+                            'message' => __('messages.otp-send-success'),
+                            'url' => url('verify-otp')
+                        ];
+                        return $this->sendResponse($responseOut, $responseOut['code']);
+
+                    } else { // OTP SENDING FAILED
                         $responseOut = [
                             'code' => Response::HTTP_EXPECTATION_FAILED,
                             'status' => 'error',
-                            'message' => __('messages.apologies-something-went-wrong'), // Null response
+                            'message' => __('messages.apologies-something-went-wrong'),
                             'prompt' => getPromptPath('common/request-failed-en')
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
                     }
-
-                } else { // invalid data found from api
-
+                } else {
                     $responseOut = [
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
@@ -186,6 +187,19 @@ class ApiController extends ResponseController
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
+
+
+                /*} else { // invalid data found from api
+
+                    $responseOut = [
+                        'code' => Response::HTTP_EXPECTATION_FAILED,
+                        'status' => 'error',
+                        'message' => __('messages.apologies-something-went-wrong'), // Null response
+                        'prompt' => getPromptPath('common/request-failed-en')
+                    ];
+                    return $this->sendResponse($responseOut, $responseOut['code']);
+                }*/
+
             } else { // UNEXPECTED API RESPONSE
                 $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
                 Log::error('API ERROR:: ' . $msg);
