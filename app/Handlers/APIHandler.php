@@ -140,6 +140,9 @@ class APIHandler
             if (!is_numeric($responseData['statusCode']) || $responseData['statusCode'] === 0) {
                 $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
             }
+
+            Log::error('API-RESPONSE: ' . json_encode($responseData));
+            
         } catch (Exception $e) {
             $responseData = $this->handleException($url, $e);
         } catch (ConnectException $e) {
