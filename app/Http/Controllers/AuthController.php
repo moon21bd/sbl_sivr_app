@@ -32,7 +32,7 @@ class AuthController extends Controller
         $referer = $_SERVER['HTTP_REFERER'];
 
         session()->flash('status', 'error');
-        session()->flash('message', 'You are being logged out.');
+        session()->flash('message', __('messages.you_are_being_logged_out'));
 
         Log::info("LOGOUT-ON-CLOSE|REQUEST|" . json_encode($request->all()) . "|REFERER|" . $referer);
 

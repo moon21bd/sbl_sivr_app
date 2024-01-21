@@ -5,7 +5,6 @@ namespace app\Handlers;
 use App\Models\ApiLog;
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -92,11 +91,9 @@ class APIHandler
                 $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
             }
 
-        } catch (Exception $e) {
-            $responseData = $this->handleException($url, $e);
-        } catch (ConnectException $e) {
-            $responseData = $this->handleException($url, $e);
-        } catch (GuzzleException $e) {
+            Log::info('API-RESPONSE : ' . json_encode($responseData));
+
+        } catch (Exception|GuzzleException $e) {
             $responseData = $this->handleException($url, $e);
         }
 
@@ -139,11 +136,7 @@ class APIHandler
 
             Log::error('API-RESPONSE: ' . json_encode($responseData));
 
-        } catch (Exception $e) {
-            $responseData = $this->handleException($url, $e);
-        } catch (ConnectException $e) {
-            $responseData = $this->handleException($url, $e);
-        } catch (GuzzleException $e) {
+        } catch (Exception|GuzzleException $e) {
             $responseData = $this->handleException($url, $e);
         }
 
@@ -167,7 +160,7 @@ class APIHandler
     {
         $statusCode = $e->getCode();
         if (!is_numeric($statusCode) || $statusCode === 0) {
-            $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $statusCode = Response::HTTP_EXPECTATION_FAILED;
         }
 
         $exceptions = [
@@ -176,7 +169,6 @@ class APIHandler
             'data' => null,
             'api_url' => $url,
             'exceptionType' => get_class($e),
-            // 'exceptionMessage' => $e->getMessage(),
             'exceptionMessage' => __('messages.apologies-something-went-wrong'),
         ];
 

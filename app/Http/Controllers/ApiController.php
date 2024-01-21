@@ -96,7 +96,7 @@ class ApiController extends ResponseController
         // if mobile number isn't matched with sonali phone, then send an error message.
         $getAccountList = $this->fetchSavingsDeposits($mobileNo);
         $acLists = $getAccountList['accountList'] ?? [];
-        if (empty($acLists)) { // no account matched with the phone number.
+        if (empty($acLists) || !is_array($acLists)) { // no account matched with the phone number.
             $responseOut = [
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
@@ -107,56 +107,70 @@ class ApiController extends ResponseController
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
 
-        $apiHandler = new APIHandler();
-        $url = config('api.base_url') . config('api.send_otp_url');
-        $strRefId = $mobileNo . randomDigits();
-
-        $apiPayload = [
-            'strRefId' => $strRefId,
-            'strMobileNo' => $mobileNo,
-            'isEncPwd' => true,
-        ];
-
-        if ($isResend) {
-            Log::info('RE-SEND-OTP-API-CALLED : ' . json_encode($apiPayload));
-        }
-
         try {
+            $apiHandler = new APIHandler();
+            $url = config('api.base_url') . config('api.send_otp_url');
+            $strRefId = $mobileNo . randomDigits();
+
+            $apiPayload = [
+                'strRefId' => $strRefId,
+                'strMobileNo' => $mobileNo,
+                'isEncPwd' => true,
+            ];
+
+            if ($isResend) {
+                Log::info('RE-SEND-OTP-API-CALLED : ' . json_encode($apiPayload));
+            }
             $response = $apiHandler->postCall($url, $apiPayload);
             if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
+
+                Log::error('BLANK_RESPONSE_DETECTION: ' . json_encode($response['data']));
+
                 $isValidData = $this->decodeJsonIfValid($response['data']);
+                Log::info("isValidData1:" . json_encode($isValidData));
                 if ($isValidData !== null) {
                     $data = $this->decodeJsonIfValid($isValidData);
-                    $statusCode = intval($data['StatusCode']);
-                    if ($statusCode === Response::HTTP_BAD_REQUEST) {
-                        $responseOut = [
-                            'code' => $statusCode,
-                            'status' => 'error',
-                            'message' => __('messages.apologies-something-went-wrong'),
-                            'prompt' => null
-                        ];
-                        return $this->sendResponse($responseOut, $responseOut['code']);
-                    } elseif ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
+                    Log::info("isValidData2:" . json_encode($data));
+                    if ($data !== null) {
+                        $statusCode = intval($data['StatusCode']);
+                        if ($statusCode === Response::HTTP_BAD_REQUEST) {
+                            $responseOut = [
+                                'code' => $statusCode,
+                                'status' => 'error',
+                                'message' => __('messages.apologies-something-went-wrong'),
+                                'prompt' => null
+                            ];
+                            return $this->sendResponse($responseOut, $responseOut['code']);
+                        } elseif ($statusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
 
-                        Session::put('otp', [
-                            'phone_masked' => $this->hidePhoneNumber($mobileNo),
-                            'otp_phone' => $mobileNo,
-                            'strRefId' => $strRefId
-                        ]);
+                            Session::put('otp', [
+                                'phone_masked' => $this->hidePhoneNumber($mobileNo),
+                                'otp_phone' => $mobileNo,
+                                'strRefId' => $strRefId
+                            ]);
 
-                        $responseOut = [
-                            'code' => $statusCode,
-                            'status' => 'success',
-                            'message' => __('messages.otp-send-success'),
-                            'url' => url('verify-otp')
-                        ];
-                        return $this->sendResponse($responseOut, $responseOut['code']);
+                            $responseOut = [
+                                'code' => $statusCode,
+                                'status' => 'success',
+                                'message' => __('messages.otp-send-success'),
+                                'url' => url('verify-otp')
+                            ];
+                            return $this->sendResponse($responseOut, $responseOut['code']);
 
-                    } else { // OTP SENDING FAILED
+                        } else { // OTP SENDING FAILED
+                            $responseOut = [
+                                'code' => Response::HTTP_EXPECTATION_FAILED,
+                                'status' => 'error',
+                                'message' => __('messages.apologies-something-went-wrong'),
+                                'prompt' => getPromptPath('common/request-failed-en')
+                            ];
+                            return $this->sendResponse($responseOut, $responseOut['code']);
+                        }
+                    } else {
                         $responseOut = [
                             'code' => Response::HTTP_EXPECTATION_FAILED,
                             'status' => 'error',
-                            'message' => __('messages.apologies-something-went-wrong'),
+                            'message' => __('messages.apologies-something-went-wrong'), // Null response
                             'prompt' => getPromptPath('common/request-failed-en')
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
@@ -407,10 +421,11 @@ class ApiController extends ResponseController
         $mobileNo = Session::get('otp.otp_phone');
         $strRefId = Session::get('otp.strRefId');
 
-        $apiHandler = new APIHandler();
         $url = config('api.base_url') . config('api.verify_otp_url');
 
         try {
+            $apiHandler = new APIHandler();
+
             $response = $apiHandler->postCall($url, [
                 'strRequstId' => $strRefId,
                 'strAcMobileNo' => $mobileNo,
@@ -653,26 +668,34 @@ class ApiController extends ResponseController
     public static function fetchSavingsDeposits($phoneNumber): array
     {
         $url = config('api.base_url') . config('api.get_account_list_url');
-        $apiHandler = new APIHandler();
-        $response = $apiHandler->postCall($url, ['MobileNo' => $phoneNumber]);
 
-        if ($response['status'] === 'success' && $response['statusCode'] === 200) {
-            $data = json_decode($response['data'], true);
-            if (isset($data['StatusCode']) && intval($data['StatusCode']) === Response::HTTP_OK) {
-                $accountList = $data['GetAccountList'];
+        try {
 
-                $returnArr['accountList'] = array_map(function ($account) {
-                    return [
-                        'AccountName' => $account['AccountName'],
-                        'AccountNo' => $account['AccountNo'],
-                        'ProductCode' => $account['ProductCode'],
-                        'ProductName' => $account['ProductName'],
-                    ];
-                }, $accountList);
-                return $returnArr;
+            $apiHandler = new APIHandler();
+            $response = $apiHandler->postCall($url, ['MobileNo' => $phoneNumber]);
+            if ($response['status'] === 'success' && $response['statusCode'] === 200) {
+                $data = json_decode($response['data'], true);
+                if (isset($data['StatusCode']) && intval($data['StatusCode']) === Response::HTTP_OK) {
+                    $accountList = $data['GetAccountList'];
+
+                    $returnArr['accountList'] = array_map(function ($account) {
+                        return [
+                            'AccountName' => $account['AccountName'],
+                            'AccountNo' => $account['AccountNo'],
+                            'ProductCode' => $account['ProductCode'],
+                            'ProductName' => $account['ProductName'],
+                        ];
+                    }, $accountList);
+
+                    return $returnArr;
+                }
             }
-        }
 
+        } catch (Exception $e) {
+            $msg = $response['exceptionMessage'] ?? "Unexpected response structure.";
+            Log::error('API ERROR:: ' . $msg);
+            return [];
+        }
         return [];
     }
 

@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -53,6 +54,7 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof TokenMismatchException) {
             // Custom logic for CSRF token mismatch
+            Log::info("CSRF-TOKEN-MISMATCH-ERROR-HAPPEN-AND-REDIRECT-TO SEND-OTP");
             return redirect()->route('send-otp')->withErrors(['csrf_error' => __('messages.csrf_token_expired_re_login')]);
         }
 
