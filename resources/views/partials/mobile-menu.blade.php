@@ -64,9 +64,9 @@
 
                         <div class="flex flex-col mb-2">
 
-                            <a class="flex items-center ml-5 py-2 text-[color:var(--brand-color-blue)] text-lg font-bold"
+                            {{--<a class="flex items-center ml-5 py-2 text-[color:var(--brand-color-blue)] text-lg font-bold"
                                href="javascript:void(0)"
-                               id="btnEWApproveOrRejectMenu">{{ __('messages.ew-approve-or-reject-btn') }}</a>
+                               id="btnEWApproveOrRejectMenu">{{ __('messages.ew-approve-or-reject-btn') }}</a>--}}
 
                             <a class="flex items-center ml-5 text-[color:var(--brand-color-blue)] text-lg font-bold"
                                href="javascript:void(0)"

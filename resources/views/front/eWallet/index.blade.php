@@ -3,7 +3,7 @@
 
     <div class="grid grid-cols-12 gap-4">
 
-        <div class="col-span-4 z-10">
+        {{--<div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnEWApproveOrReject"
                class="flex flex-col gap-3 lg:gap-4 justify-center items-center bg-white rounded-md px-2 py-4 lg:px-4 lg:py-6 cursor-pointer">
                 <div
@@ -13,7 +13,7 @@
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.ew-approve-or-reject-btn') }}</h3>
             </a>
-        </div>
+        </div>--}}
 
         <div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnEWChangeOrResetEWalletPIN"

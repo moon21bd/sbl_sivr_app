@@ -480,8 +480,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // } else if (currentPath === '/ewallet') {
 
-    addClickHandlerForEWalletMenu('btnEWApproveOrReject', 'EW-APPROVE-OR-REJECT', 'Approve wallet request received.');
-    addClickHandlerForEWalletMenu('btnEWApproveOrRejectMenu', 'EW-APPROVE-OR-REJECT', 'Approve wallet request received.');
+    /*addClickHandlerForEWalletMenu('btnEWApproveOrReject', 'EW-APPROVE-OR-REJECT', 'Approve wallet request received.');
+    addClickHandlerForEWalletMenu('btnEWApproveOrRejectMenu', 'EW-APPROVE-OR-REJECT', 'Approve wallet request received.');*/
 
     addClickHandlerForEWalletMenu('btnEWChangeOrResetEWalletPIN', 'EW-CHANGE-OR-RESET-PIN', 'PIN Change or Reset request received.');
     addClickHandlerForEWalletMenu('btnEWChangeOrResetEWalletPINMenu', 'EW-CHANGE-OR-RESET-PIN', 'PIN Change or Reset request received.');
