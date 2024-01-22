@@ -41,7 +41,7 @@ class ApiController extends ResponseController
             'balance' => 0
         ];
 
-        if (!createUserTicketHistory('ACCOUNT_BALANCE', $phoneNumber)) { // Ticket Creation Failed
+        /*if (!createUserTicketHistory('ACCOUNT_BALANCE', $phoneNumber)) { // Ticket Creation Failed
 
             ['message' => $message] = getExecutionTime('ACCOUNT_BALANCE');
             return [
@@ -51,7 +51,7 @@ class ApiController extends ResponseController
                 'prompt' => null,
                 'balance' => null,
             ];
-        }
+        }*/
 
         $response = self::fetchGetWalletDetails($phoneNumber);
 
