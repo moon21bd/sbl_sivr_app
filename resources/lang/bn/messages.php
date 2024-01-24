@@ -59,7 +59,7 @@ return [
     'mini-statement-btn' => 'মিনি স্টেটমেন্ট',
     'account-dps-available-balance-btn' => 'ব্যালেন্স',
     'account-dps-details-btn' => 'ডিপিএস ডিটেইলস',
-    'account-dps-encashment-process-btn' => 'এনক্যাশমেন্ট প্রসেস',
+    'account-dps-encashment-process-btn' => 'নগদায়ন',
     'account-dps-instalment-details-btn' => 'ইনস্টলমেন্ট ডিটেইলস',
     'fd-encashment-process-btn' => 'নগদকরণ প্রক্রিয়া',
     'fd-fixed-deposit-details-btn' => 'ফিক্সড ডিপোজিট',

@@ -34,11 +34,15 @@ Route::post('/tuj', [\App\Http\Controllers\UserJourneyController::class, 'track'
 
 Route::middleware(['web', 'verify.login', 'check.wallet.access'])->group(function () {
     Route::get('/ewallet', [\App\Http\Controllers\MainController::class, 'eWallet'])->name('ewallet');
-    Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
+
+    /*
+     * Cards api now disabled by bank
+     * Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
     Route::get('/credit-card', [\App\Http\Controllers\MainController::class, 'creditCard'])->name('credit-card');
 
     Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
-    Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class, 'prePaidCard'])->name('prepaid-card');
+    Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class,
+    'prePaidCard'])->name('prepaid-card');*/
 });
 
 Route::middleware(['web', 'verify.login'])->group(function () {

@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     let textSelectCallCategory = (locale === 'en') ? "Select Complaint Type" : "অভিযোগের ধরণ নির্বাচন করুন";
                     let textSelectSubSubCallCategory = (locale === 'en') ? "Select Sub Sub Complaint Type" : "অভিযোগের উপ-উপ ধরণ নির্বাচন করুন";
                     let textReason = (locale === 'en') ? "Reason" : "অভিযোগের কারণ";
+                    let textEmail = (locale === 'en') ? "Email" : "ইমেইল";
                     let textSubmitComplaint = (locale === 'en') ? 'Submit Complaint' : "অভিযোগ জমা দিন";
 
                     const swalOptions = {
@@ -106,7 +107,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div>
                 <label for="reasonInput">${textReason}:</label>
                 </div>
-                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />`,
+                <input id="reasonInput" class="swal2-input" style="width: 100% !important;" placeholder="${textReason}" required />
+
+                <div>
+                <label for="emailInput">${textEmail}:</label>
+                </div>
+                <input id="emailInput" class="swal2-input" style="width: 100% !important;" placeholder="${textEmail}" />
+
+                `,
                         focusConfirm: false,
                         preConfirm: () => {
                             // const callTypeOpts = document.getElementById('callTypeSelect').value;
@@ -115,13 +123,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             const callSubCategoryOpts = document.getElementById('callSubCategorySelect').value;
                             const callSubSubCategoryOpts = document.getElementById('callSubSubCategorySelect').value;
                             const reason = document.getElementById('reasonInput').value;
+                            const email = document.getElementById('emailInput').value;
 
                             if (!callTypeOpts || !callCategoryOpts || !callSubCategoryOpts || !callSubSubCategoryOpts || !reason) {
                                 Swal.showValidationMessage((locale === 'en') ? "Please fill in all required fields." : "দয়া করে সবগুলো তথ্যই প্রদান করুন । ");
                             }
 
                             return {
-                                callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                                callTypeOpts,
+                                callCategoryOpts,
+                                callSubCategoryOpts,
+                                callSubSubCategoryOpts,
+                                reason,
+                                email
                             };
                         },
                         showCancelButton: true,
@@ -131,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         confirmButtonText: (locale === 'en') ? "Submit" : "জমা দিন",
                         cancelButtonText: (locale === 'en') ? "Cancel" : "বাতিল",
                         didOpen: () => {
-
 
                             const callTypeSelect = 2;
                             const callCategorySelect = document.getElementById('callCategorySelect');
@@ -181,10 +194,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (selectedValues && !dismiss) {
                         const {
-                            callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason
+                            callTypeOpts, callCategoryOpts, callSubCategoryOpts, callSubSubCategoryOpts, reason, email
                         } = selectedValues;
 
-                        /*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason);*/
+                        /*console.log('callTypeOpts', callTypeOpts, 'callCategoryOpts', callCategoryOpts, 'callSubCategoryOpts', callSubCategoryOpts, 'callSubSubCategoryOpts', callSubSubCategoryOpts, 'reason', reason, 'email', email);*/
 
                         const apiResponse = await callDynamicAPI({
                             'purpose': 'CREATEISSUE', 'page': 'home', 'button': 'btnCreateIssue', ...selectedValues
@@ -269,7 +282,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // if (currentPath === '/') { // home/root path
 
-    const btnCards = document.getElementById('btnCards');
+    addClickEventWithAsyncHandler('btnCards', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    addClickEventWithAsyncHandler('btnCardsMenu', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
+
+    /*const btnCards = document.getElementById('btnCards');
     if (btnCards) {
         btnCards.addEventListener('click', handleCardsButtonClick);
     }
@@ -281,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let text = (locale === "en") ? cardsDisableTextEn : cardsDisableTextBn;
             showActiveYourServiceMessage(title, text);
         });
-    }
+    }*/
 
     const accountOrLoan = document.getElementById('btnAccountAndLoan');
     if (accountOrLoan) {
@@ -391,10 +408,12 @@ document.addEventListener('DOMContentLoaded', function () {
         btnDPS.addEventListener('click', handleDPSClick);
     }
 
-    const btnFixedDeposit = document.getElementById('btnFixedDeposit');
+    /*const btnFixedDeposit = document.getElementById('btnFixedDeposit');
     if (btnFixedDeposit) {
         btnFixedDeposit.addEventListener('click', handleFixedDepositClick);
-    }
+    }*/
+
+    addClickEventWithAsyncHandler('btnFixedDeposit', (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
 
     const btnLoansAndAdvances = document.getElementById('btnLoansAndAdvances');
     if (btnLoansAndAdvances) {
@@ -645,14 +664,16 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>`).join('');
 
         Swal.fire({
-            title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`, // title: (locale === 'en') ? selectAnAccountEn : selectAnAccountBn,
+            title: `<h3 class="account-list-title"> ${(locale === 'en') ? selectAnAccountEn : selectAnAccountBn}</h3>`,
             html: `
+        <div class="overflow-y-auto no-scrollbar w-full" style="max-height: 250px;">
         ${accountOptions}
+        </div>
         <div class="button-container">
             <button class="ac-submit-button" >${(locale === 'en') ? "Submit" : "জমা দিন"}</button>
             <button class="ac-cancel-button">${(locale === 'en') ? "Cancel" : "বাতিল"}</button>
-        </div>
-    `, showConfirmButton: false, allowOutsideClick: false, willClose: () => {
+        </div>`,
+            showConfirmButton: false, allowOutsideClick: false, willClose: () => {
                 stopAllAudioPlayback();
             }
         });

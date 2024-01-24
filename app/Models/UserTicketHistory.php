@@ -12,6 +12,7 @@ class UserTicketHistory extends Model
     protected $fillable = [
         'mobile_no',
         'purpose',
+        'account_no',
         'status',
     ];
 }

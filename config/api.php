@@ -5,14 +5,16 @@ return [
         'username' => 'callcen',
         'password' => 'dbBadSbl$erz'
     ],
-    // 'base_url' => 'https://sblapi2022.sblesheba.com:8877/', // Sandbox base URL
-    'base_url' => 'http://10.32.83.29/', // Production base URL
+    // 'base_url' => 'https://sblapi2022.sblesheba.com:8877/', // Sandbox
+    // 'base_url' => 'http://10.32.83.29/', // Production
+    'base_url' => env('APP_ENV') === 'production' ? 'http://10.32.83.29/' : 'https://sblapi2022.sblesheba.com:8877/',
     'send_otp_url' => 'api/callcenter/SendOTP',
     'verify_otp_url' => 'api/callcenter/VerifyOTP',
     'get_account_list_url' => 'api/callcenter/GetAccountList',
     'active_wallet_url' => 'api/callcenter/activeWallet',
     'get_wallet_details_url' => 'api/callcenter/getWalletDetails',
     'approve_wallet_request_url' => 'api/callcenter/approveWalletRequest',
+    'get_call_center_data_url' => 'api/callcenter/GetCallCenterData',
     'get_pin_reset_url' => 'api/callcenter/pinReset',
     'device_bind_url' => 'api/callcenter/deviceBind',
     'close_wallet_url' => 'api/callcenter/closeWallet',

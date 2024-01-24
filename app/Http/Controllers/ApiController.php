@@ -23,42 +23,41 @@ class ApiController extends ResponseController
 
     public function getBalance(Request $request)
     {
-        // dd($phoneNumber, Session::all());
-        // will be deleted this code later
-        /*$responseOut = [
-            'code' => Response::HTTP_OK,
-            'status' => 'success',
-            'balance' => 120
-        ];
-        return $this->sendResponse($responseOut);*/
-        // will be deleted this code later
 
         $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
+        $getSelectedAcc = data_get(Session::get('logInfo'), 'selected_accEnc');
+        $getDecryptedAccount = openSSLEncryptDecrypt($getSelectedAcc, 'decrypt');
+        $type = 'ACCOUNT_BALANCE';
 
         $responseOut = [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'balance' => 0
+            'balance' => 0,
+            'prompt' => null,
+            // 'getAcc' => $getDecryptedAccount
         ];
 
-        /*if (!createUserTicketHistory('ACCOUNT_BALANCE', $phoneNumber)) { // Ticket Creation Failed
-
-            ['message' => $message] = getExecutionTime('ACCOUNT_BALANCE');
-            return [
-                'code' => Response::HTTP_FORBIDDEN,
-                'status' => 'error',
-                'message' => $message,
-                'prompt' => null,
-                'balance' => null,
-            ];
-        }*/
-
-        $response = self::fetchGetWalletDetails($phoneNumber);
+        // $response = self::fetchGetWalletDetails($phoneNumber);
+        $response = self::fetchAccountFullDetails($getDecryptedAccount);
 
         if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
+
+            if (!createUserTicketHistory($type, $phoneNumber, $type, $getDecryptedAccount)) { // Ticket Creation Failed
+
+                ['message' => $message] = getExecutionTime($type);
+                return [
+                    'code' => Response::HTTP_FORBIDDEN,
+                    'status' => 'error',
+                    'message' => $message,
+                    'prompt' => null,
+                    'balance' => null,
+                ];
+            }
+
             $responseOut['code'] = $response['code'];
             $responseOut['status'] = 'success';
-            $responseOut['balance'] = number_format($response['data']['balanceAmount'] ?? 0, 2);
+            $responseOut['balance'] = number_format($response['data']['balance'] ?? 0, 2);
+            // $responseOut['getAcc'] = $getDecryptedAccount;
         }
 
         return $this->sendResponse($responseOut, $responseOut['code']);
@@ -525,6 +524,7 @@ class ApiController extends ResponseController
                 'is_logged' => base64_encode(true),
                 'otp_info' => $otpInfo,
                 'account_info' => $accountAsData,
+                'selected_accEnc' => $getSelected['accEnc']
             ]);
 
             // Session::forget('otp');
@@ -731,6 +731,53 @@ class ApiController extends ResponseController
                 'accountList' => [],
             ]
         ];
+    }
+
+    public static function fetchAccountFullDetails($accountNumber)
+    {
+        if (!$accountNumber) return;
+
+        $url = config('api.base_url') . config('api.get_call_center_data_url');
+
+        try {
+            $apiHandler = new APIHandler();
+            $response = $apiHandler->postCall($url, [
+                'ChannelId' => "SPS", 'AccountNo' => $accountNumber
+            ]);
+
+            if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
+
+                $data = json_decode($response['data'], true);
+
+                if (!empty($data['detailsField'])) {
+
+                    $balanceField = !empty($data['detailsField'][0]['iNT_ACCRUAL_AMTField']) ? $data['detailsField'][0]['iNT_ACCRUAL_AMTField'] : 0;
+                    $statementField = $data['detailsField'][0]['tRANSATION_DETAILSField'] ?? [];
+                    return [
+                        'status' => 'success',
+                        'message' => 'Data Received.',
+                        'code' => Response::HTTP_OK,
+                        'data' => [
+                            'balance' => $balanceField,
+                            'statement' => $statementField
+                        ]
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+
+            return [
+                'status' => 'error',
+                'code' => Response::HTTP_EXPECTATION_FAILED,
+                'message' => 'Data not found.',
+                'data' => [
+                    'balance' => 0,
+                    'statement' => []
+                ]
+            ];
+
+        }
+
     }
 
     public static function processApiCallingCardActivation($data): array
@@ -1949,12 +1996,12 @@ class ApiController extends ResponseController
 
     public static function processApiCallingCreateIssue($data): array
     {
-
         $callTypeId = $data['callTypeOpts'];
         $callCategoryIdInfo = $data['callCategoryOpts'];
         $callSubCategoryInfo = $data['callSubCategoryOpts'];
         $callSubSubCategoryInfo = $data['callSubSubCategoryOpts'];
         $remarks = $data['reason'];
+        $email = $data['email'] ?? null;
 
         $logInfo = Session::get('logInfo');
         $userName = trim(data_get($logInfo, 'account_info.accountName', "Guest-User-From-VIVR"));
@@ -1970,8 +2017,11 @@ class ApiController extends ResponseController
             'call_sub_category' => $callSubCategoryInfo,
             'call_sub_subcategory' => $callSubSubCategoryInfo,
             'remarks' => $remarks,
+            'email' => $email,
             'account_no' => null, // or you can set a default value if needed
         ];
+
+        Log::info('CREATE-TICKET-CRM-REQUEST|' . json_encode($appParamsData));
 
         $apiResponse = self::processToCreateTicketInCRM($appParamsData);
         $ticketId = $apiResponse['data']['ticketId'] ?? "";

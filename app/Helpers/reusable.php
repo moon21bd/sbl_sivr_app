@@ -120,16 +120,19 @@ if (!function_exists('getUserInfoFromSession')) {
 
 
 if (!function_exists('createUserTicketHistory')) {
-    function createUserTicketHistory($purpose, $mobileNo, $ticketType = 'EWALLET')
+    function createUserTicketHistory($purpose, $mobileNo, $ticketType = 'EWALLET', $accountNo = null)
     {
         ['seconds' => $seconds] = getExecutionTime($ticketType);
 
         // $secondAllowForTicket = getExecutionTimeInSeconds($ticketType);
         $secondAllowForTicket = $seconds;
         $userTicketHistory = \App\Models\UserTicketHistory::latest()
-            ->where(function ($query) use ($mobileNo, $purpose) {
+            ->where(function ($query) use ($mobileNo, $purpose, $accountNo) {
                 $query->where('mobile_no', $mobileNo);
                 $query->where('purpose', $purpose);
+                if (!empty($accountNo)) {
+                    $query->where('account_no', $accountNo);
+                }
             })
             ->lockForUpdate()
             ->first();
@@ -137,22 +140,23 @@ if (!function_exists('createUserTicketHistory')) {
         $isUserEligible = $userTicketHistory && $userTicketHistory->created_at->diffInSeconds(now()) <= $secondAllowForTicket;
 
         if ($isUserEligible) { // User is not eligible for creating a ticket
-            \Illuminate\Support\Facades\Log::info("user is not eligible for creating a ticket for the next $secondAllowForTicket seconds");
+            \Illuminate\Support\Facades\Log::info("User is not eligible for creating a ticket for the next $secondAllowForTicket seconds");
             return false;
         }
 
-        saveUserTicketHistory($purpose, 'done', $mobileNo);
+        saveUserTicketHistory($purpose, 'done', $mobileNo, $accountNo);
         return true;
     }
 }
 
 if (!function_exists('saveUserTicketHistory')) {
-    function saveUserTicketHistory($purpose, $status = 0, $mobileNo)
+    function saveUserTicketHistory($purpose, $status, $mobileNo, $accountNo = null)
     {
         \App\Models\UserTicketHistory::create([
             'purpose' => $purpose,
-            'status' => $status,
             'mobile_no' => $mobileNo,
+            'account_no' => $accountNo,
+            'status' => $status,
         ]);
     }
 }
@@ -172,7 +176,7 @@ if (!function_exists('getExecutionTime')) {
 
         $seconds = $hours * 60 * 60; // Calculate seconds
 
-        // Get localized message based on the app locale
+        // Get a localized message based on the app locale
         $message = \Illuminate\Support\Facades\Lang::get('messages.service-not-available', ['hours' => $hours]);
 
         return [

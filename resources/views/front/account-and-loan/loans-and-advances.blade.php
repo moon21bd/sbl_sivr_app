@@ -3,12 +3,8 @@
 
     <div class="grid grid-cols-12 gap-4">
 
-        <div class="col-span-4 z-10">
+        {{--<div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnLADueDateInstallment"
-               {{--data-voice="{{ app()->getLocale() === 'en' ? config('voices.voiceForLADueDateInstallment.voice.en') : config('voices.voiceForLADueDateInstallment.voice.bn') }}"
-               data-text="{{ app()->getLocale() === 'en' ? config('voices.voiceForLADueDateInstallment.text.en') : config('voices.voiceForLADueDateInstallment.text.bn') }}"
-               data-title="{{ app()->getLocale() === 'en' ? config('voices.voiceForLADueDateInstallment.title.en') : config('voices.voiceForLADueDateInstallment.title.bn') }}"--}}
-
                data-voice="{{ app()->getLocale() === 'en' ? config('voices.defaultCallForHelp.voice.en') : config('voices.defaultCallForHelp.voice.bn') }}"
                data-text="{{ __('scripts.default-call-center-text') }}"
 
@@ -20,7 +16,7 @@
                 <h3 class="text-[color:var(--text-black)] [font-size:var(--font-size-box-sm)] lg:[font-size:var(--font-size-box)] font-bold">
                     {{ __('messages.la-due-date-installment-btn') }}</h3>
             </a>
-        </div>
+        </div>--}}
 
         <div class="col-span-4 z-10">
             <a href="javascript:void(0)" id="btnLALoanClosureProcess"

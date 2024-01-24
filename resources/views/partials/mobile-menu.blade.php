@@ -9,7 +9,8 @@
 <div class="fixed top-0 w-screen h-screen flex-row justify-start z-[2147483647]" id="mobileMenu" style="display: none;">
     <div class="flex-1 bg-[#cfcfcf6e]" onclick="closeNav()">
     </div>
-    <div class="select-none h-screen bg-gradient-to-r from-[#E9B308] to-[#1D629F] shadow-lg flex flex-col fixed top-0 right-0 w-72">
+    <div
+        class="select-none h-screen bg-gradient-to-r from-[#E9B308] to-[#1D629F] shadow-lg flex flex-col fixed top-0 right-0 w-72">
         <div class="pt-4 inline-block">
             <a href="javascript:void(0)" onclick="closeNav()">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -113,11 +114,18 @@
                        href="javascript:void(0)" id="btnEWalletDisableMenu">{{ __('messages.eWallet-btn') }}</a>
                 @endif
 
+
                 <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
                    href="javascript:void(0)" id="btnEShebaMenu">{{ __('messages.eSheba-btn') }}</a>
 
                 <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
                    href="https://sbl.com.bd:7070/" target="_blank">{{ __('messages.spg-btn') }}</a>
+
+                <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
+                   href="javascript:void(0)" id="btnCardsMenu"
+                   data-voice="{{ app()->getLocale() === 'en' ? config('voices.defaultCallForHelp.voice.en') : config('voices.defaultCallForHelp.voice.bn') }}"
+                   data-text="{{ __('scripts.default-call-center-text') }}"
+                >{{ __('messages.cards-btn') }}</a>
 
                 <a class="text-[color:var(--brand-color-blue)] text-lg font-bold py-1 my-1"
                    href="javascript:void(0)" id="btnAgentBankingMenu"
