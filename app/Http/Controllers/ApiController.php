@@ -748,29 +748,39 @@ class ApiController extends ResponseController
             if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
 
                 $data = json_decode($response['data'], true);
+                $detailsField = $data['detailsField'][0] ?? [];
 
-                if (!empty($data['detailsField'])) {
+                $balanceField = $detailsField['aCC_TOTAL_BALANCEField'] ?? 0;
+                $outstandingField = $detailsField['aCC_OUTSTANDING_BALANCEField'] ?? 0;
+                $totalOrOutstanding = empty($balanceField) ? $outstandingField : $balanceField;
 
-                    $balanceField = $data['detailsField'][0]['aCC_TOTAL_BALANCEField'] ?? 0;
-                    $outstandingField = $data['detailsField'][0]['aCC_OUTSTANDING_BALANCEField'] ?? 0;
-                    $totalOrOutstanding = strlen($balanceField) === 0
-                        ? $outstandingField
-                        : $balanceField;
+                $statementField = $detailsField['tRANSATION_DETAILSField'] ?? [];
 
-                    $statementField = $data['detailsField'][0]['tRANSATION_DETAILSField'] ?? [];
-
-                    Log::info("USER-BALANCE-FOR-ACCOUNT|" . $accountNumber . "|USER-aCC_TOTAL_BALANCEField|" . $balanceField . "|USER-aCC_OUTSTANDING_BALANCEField|" . $outstandingField . "|USER-tRANSATION_DETAILSField|" . json_encode($statementField));
-
+                if (!isset($detailsField['aCC_TOTAL_BALANCEField']) || !isset($detailsField['aCC_OUTSTANDING_BALANCEField'])) {
+                    Log::warning("Some required fields are missing in detailsField during balance api call: " . json_encode($detailsField));
                     return [
-                        'status' => 'success',
-                        'message' => 'Data Received.',
-                        'code' => Response::HTTP_OK,
+                        'status' => 'error',
+                        'code' => Response::HTTP_EXPECTATION_FAILED,
+                        'message' => 'Data not found.',
                         'data' => [
-                            'balance' => $totalOrOutstanding,
-                            'statement' => $statementField
+                            'balance' => 0,
+                            'statement' => []
                         ]
                     ];
                 }
+
+                Log::info("USER-BALANCE-FOR-ACCOUNT|$accountNumber|USER-aCC_TOTAL_BALANCEField|$balanceField|USER-aCC_OUTSTANDING_BALANCEField|$outstandingField|USER-tRANSATION_DETAILSField|" . json_encode($statementField));
+
+                return [
+                    'status' => 'success',
+                    'message' => 'Data Received.',
+                    'code' => Response::HTTP_OK,
+                    'data' => [
+                        'balance' => $totalOrOutstanding,
+                        'statement' => $statementField
+                    ]
+                ];
+
             }
         } catch (Exception $e) {
 
