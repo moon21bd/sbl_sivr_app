@@ -776,7 +776,7 @@ class ApiController extends ResponseController
                     'message' => 'Data Received.',
                     'code' => Response::HTTP_OK,
                     'data' => [
-                        'balance' => $totalOrOutstanding,
+                        'balance' => $totalOrOutstanding ?? 0,
                         'statement' => $statementField
                     ]
                 ];
