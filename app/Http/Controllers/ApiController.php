@@ -757,7 +757,8 @@ class ApiController extends ResponseController
                 $statementField = $detailsField['tRANSATION_DETAILSField'] ?? [];
 
                 if (!isset($detailsField['aCC_TOTAL_BALANCEField']) || !isset($detailsField['aCC_OUTSTANDING_BALANCEField'])) {
-                    Log::warning("Some required fields are missing in detailsField during balance api call: " . json_encode($detailsField));
+                    Log::warning("Some required fields are missing in detailsField during Balance API Call: " . json_encode($detailsField));
+
                     return [
                         'status' => 'error',
                         'code' => Response::HTTP_EXPECTATION_FAILED,
