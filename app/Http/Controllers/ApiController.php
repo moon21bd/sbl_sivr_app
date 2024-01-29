@@ -57,7 +57,7 @@ class ApiController extends ResponseController
             $balance = !empty($response['data']['balance']) ? $response['data']['balance'] : 0;
             $responseOut['code'] = $response['code'];
             $responseOut['status'] = 'success';
-            $responseOut['balance'] = number_format($balance);
+            $responseOut['balance'] = number_format($balance, 2);
             // $responseOut['getAcc'] = $getDecryptedAccount;
         }
 
