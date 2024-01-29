@@ -23,7 +23,6 @@ class ApiController extends ResponseController
 
     public function getBalance(Request $request)
     {
-
         $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
         $getSelectedAcc = data_get(Session::get('logInfo'), 'selected_accEnc');
         $getDecryptedAccount = openSSLEncryptDecrypt($getSelectedAcc, 'decrypt');
@@ -58,7 +57,6 @@ class ApiController extends ResponseController
             $responseOut['code'] = $response['code'];
             $responseOut['status'] = 'success';
             $responseOut['balance'] = number_format($balance, 2);
-            // $responseOut['getAcc'] = $getDecryptedAccount;
         }
 
         return $this->sendResponse($responseOut, $responseOut['code']);
@@ -752,6 +750,8 @@ class ApiController extends ResponseController
                 $detailsField = $data['detailsField'][0] ?? [];
 
                 $balanceField = $detailsField['aCC_TOTAL_BALANCEField'] ?? 0;
+                $installmentSizeField = $detailsField['iNSTALLMENT_SIZEField'] ?? 0;
+
                 $outstandingField = $detailsField['aCC_OUTSTANDING_BALANCEField'] ?? 0;
                 $totalOrOutstanding = empty($balanceField) ? $outstandingField : $balanceField;
 
@@ -766,7 +766,9 @@ class ApiController extends ResponseController
                         'message' => 'Data not found.',
                         'data' => [
                             'balance' => 0,
-                            'statement' => []
+                            'statement' => [],
+                            'additional_info' => []
+
                         ]
                     ];
                 }
@@ -779,7 +781,11 @@ class ApiController extends ResponseController
                     'code' => Response::HTTP_OK,
                     'data' => [
                         'balance' => $totalOrOutstanding ?? 0,
-                        'statement' => $statementField
+                        'statement' => $statementField,
+                        'additional_info' => [
+                            'installment_size_field' => $installmentSizeField
+                        ]
+
                     ]
                 ];
 
@@ -792,7 +798,8 @@ class ApiController extends ResponseController
                 'message' => 'Data not found.',
                 'data' => [
                     'balance' => 0,
-                    'statement' => []
+                    'statement' => [],
+                    'additional_info' => []
                 ]
             ];
 
@@ -1293,6 +1300,35 @@ class ApiController extends ResponseController
 
     }
 
+    public static function processApiCallingAccLoanDPSInstalmentDetails($data)
+    {
+        // $phoneNumber = data_get(Session::get('logInfo'), 'otp_info.otp_phone') ?? 'NA';
+        $getSelectedAcc = data_get(Session::get('logInfo'), 'selected_accEnc');
+        $getDecryptedAccount = openSSLEncryptDecrypt($getSelectedAcc, 'decrypt');
+
+        $response = self::fetchAccountFullDetails($getDecryptedAccount);
+
+        if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
+
+            $installmentSizeField = !empty($response['data']['additional_info']) ? $response['data']['additional_info']['installment_size_field'] : 0;
+            $balance = number_format(intval($installmentSizeField), 2);
+            $responseOut['code'] = $response['code'];
+            $responseOut['status'] = 'success';
+            $responseOut['message'] = __('messages.acc-loan-dps-inst-details-balance-message') . " " . $balance;
+            $responseOut['balance'] = $balance;
+
+            return $responseOut;
+        }
+
+        return [
+            'code' => Response::HTTP_EXPECTATION_FAILED,
+            'status' => 'error',
+            'message' => __('messages.apologies-something-went-wrong'),
+            'prompt' => null
+        ];
+
+    }
+
     public static function processApiCallingEWDeviceBind($data)
     {
         $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
@@ -1529,26 +1565,38 @@ class ApiController extends ResponseController
 
     public static function processApiCallingCASAMiniStatement($data)
     {
-        $localeSuffix = (app()->getLocale() === 'en') ? '-en' : '-bn';
-        $successPrompt = "common/request-successful{$localeSuffix}";
-        $successText = __('messages.common-request-successful-text');
-        $failedPrompt = "common/request-failed{$localeSuffix}";
-        $failedText = __('messages.common-request-failed-text');
-        // will be removed later
-        return [
-            'code' => Response::HTTP_OK,
-            'status' => 'success',
-            'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
-        ];
+        $getSelectedAcc = data_get(Session::get('logInfo'), 'selected_accEnc');
+        $getDecryptedAccount = openSSLEncryptDecrypt($getSelectedAcc, 'decrypt');
+
+        $response = self::fetchAccountFullDetails($getDecryptedAccount);
+        if ($response['code'] === Response::HTTP_OK && $response['status'] === 'success') {
+
+            $statementArr = [];
+            foreach ($response['data']['statement'] ?? [] as $key => $item) {
+                $statementArr[$key]['tran_serial'] = $item['tRAN_SERIALField'];
+                $statementArr[$key]['tran_origin_branch'] = $item['tRAN_ORIGIN_BRANCHField'];
+                $statementArr[$key]['tran_date'] = date('F j, Y', strtotime($item['tRAN_DATEField']));
+                $statementArr[$key]['tran_type'] = $item['tRAN_TYPEField'];
+                $statementArr[$key]['tran_amount'] = $item['tRAN_CURRENCYField'] . " " . number_format(intval($item['tRAN_AMOUNTField']), 2);
+                // $statementArr[$key]['tran_currency'] = $item['tRAN_CURRENCYField'];
+                $statementArr[$key]['tran_narration'] = $item['tRAN_NARRATIONField'];
+            }
+
+            $responseOut['code'] = $response['code'];
+            $responseOut['status'] = 'success';
+            $responseOut['message'] = "Data Found.";
+            $responseOut['data'] = ['statement' => $statementArr];
+
+            return $responseOut;
+        }
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
-            'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'message' => __('messages.apologies-something-went-wrong'),
+            'prompt' => null,
+            'statement' => []
         ];
-        // will be removed later
 
     }
 
@@ -2197,6 +2245,8 @@ class ApiController extends ResponseController
                 return self::processApiCallingUserInfoVerify($data);
             case 'RESEND-OTP':
                 return self::processApiCallingReSendOTP($data);
+            case 'ACC-LOAN-DPS-INST-DETAILS':
+                return self::processApiCallingAccLoanDPSInstalmentDetails($data);
             default:
                 // Code to be executed if $purpose is different from all cases;
                 return false;

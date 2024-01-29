@@ -65,7 +65,10 @@
             cardsDisableTitleEn = "{{ config('voices.cardsDisable.title.en') }}",
             cardsDisableTitleBn = "{{ config('voices.cardsDisable.title.bn') }}",
             cardsDisableTextEn = "{{ config('voices.cardsDisable.text.en') }}",
-            cardsDisableTextBn = "{{ config('voices.cardsDisable.text.bn') }}"
+            cardsDisableTextBn = "{{ config('voices.cardsDisable.text.bn') }}",
+            sonaliProductPDFLink = "{{ asset('uploads/pdf/sonali-product-details.pdf') }}",
+            islamiBankingPDFLink = "{{ asset('uploads/pdf/ib-overview.pdf') }}",
+            apologiesSomethingWentWrongMessage = "{{ __('messages.apologies-something-went-wrong') }}"
         ;
     </script>
 

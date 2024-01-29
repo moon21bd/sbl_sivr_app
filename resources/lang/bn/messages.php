@@ -159,6 +159,8 @@ return [
     'account-no-text' => 'অ্যাকাউন্ট নং:',
     'processing' => 'প্রক্রিয়াধীন...',
     'no-account-matched-with-phone' => 'আপনার ফোন নাম্বার দিয়ে কোন অ্যাকাউন্ট খুঁজে পাওয়া যায়নি । অনুগ্রহ করে সঠিক নাম্বার দিন ।',
-    'csrf_token_expired_re_login' => 'Session expired. Please re-verify your account for continued access. Thank you.',
-    'you_are_being_logged_out' => 'You are being logged out.',
+    'csrf_token_expired_re_login' => 'আপনার সেশনের মেয়াদ শেষ । অব্যাহত সেবা নিশ্চিত করতে পুনরায় অ্যাকাউন্টটি যাচাই করার প্রয়োজন ৷ ধন্যবাদ ।',
+    'you_are_being_logged_out' => 'আপনাকে লগ আউট করানো হয়েছে ।',
+    'acc-loan-dps-inst-details-balance-message' => 'আপনার ইনস্টলমেন্ট ডিটেইলস ব্যালেন্স হচ্ছে :',
+
 ];
