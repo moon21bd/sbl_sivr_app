@@ -692,7 +692,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 // console.log('statementData.statement', statementData.statement)
                 showCASAMiniStatementPopup(response.data.statement);
             } catch (error) {
-                console.error('Error fetching accounts:', error);
+                Swal.fire({
+                    title: (locale === 'en') ? "Mini Statement" : "মিনি স্টেটমেন্ট",
+                    icon: 'error',
+                    text: apologiesSomethingWentWrongMessage,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'active-your-service-swal-bg'
+                    },
+                });
             } finally {
                 hideLoader();
             }
