@@ -27,8 +27,8 @@
                 <div
                     class="flex mob-popup-logo-section flex-col gap-2 justify-center items-center text-center mb-10 z-10">
                     <img src="{{ asset('img/logo-white.png') }}" alt="">
-                    <h1 class="text-white [font-size:var(--font-size-title)] font-bold relative after:absolute after:w-full after:h-[2px] after:left-0 after:-bottom-1 after:bg-gray-300">
-                        সোনালী ব্যাংক পিএলসি</h1>
+                    <h1 id="ivrTitle"  class="text-white text-visual-ivr  [font-size:var(--font-size-title)] font-bold relative after:absolute after:w-full after:h-[2px] after:left-0 after:-bottom-1 after:bg-gray-300">
+                        ভিজ্যুয়াল আইভিআর </h1>
                     <h2 class="text-white [font-size:var(--font-size-title)] font-bold">Sonali Bank PLC</h2>
                 </div>
 
@@ -69,176 +69,7 @@
 </div>
 
 <!-- End of Popup Container -->
-
-{{--<script type="application/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        let isAudioPlaying = false;
-        let currentAudio = null;
-
-        const popupContainer = document.querySelector('.popup-container');
-        const bnButton = document.getElementById('bnButton');
-        const enButton = document.getElementById('enButton');
-        const skipButton = document.getElementById('skipButton');
-        let showGetStartedBtn = true;
-
-        const toggleAudioGS = document.getElementById('toggleAudioGS');
-
-        function playPauseAudio() {
-            if (currentAudio) {
-                isAudioPlaying = !isAudioPlaying;
-
-                if (isAudioPlaying) {
-                    currentAudio.play().catch(error => {
-                        console.error('Error playing audio:', error);
-                    });
-                } else {
-                    currentAudio.pause();
-                }
-
-                toggleAudioGS.classList.toggle('play', !isAudioPlaying);
-                toggleAudioGS.classList.toggle('pause', isAudioPlaying);
-            }
-        }
-
-        if (toggleAudioGS) {
-            toggleAudioGS.addEventListener('click', function (event) {
-                event.preventDefault();
-                playPauseAudio();
-            });
-        }
-
-
-        try {
-            showGetStartedBtn = sessionStorage.getItem('hideGetStartedBtn') !== 'show';
-        } catch (error) {
-            console.error('Error retrieving data from sessionStorage:', error);
-        }
-
-        popupContainer.style.display = showGetStartedBtn ? 'block' : 'none';
-
-        function playGSAudio(audio) {
-            audio.play().then(() => {
-                isAudioPlaying = true;
-                toggleAudioGS.classList.add('pause');
-                toggleAudioGS.classList.remove('play');
-            }).catch(error => {
-                console.error('Error playing audio:', error);
-            });
-
-            audio.addEventListener('pause', () => {
-                isAudioPlaying = false;
-                toggleAudioGS.classList.remove('pause');
-                toggleAudioGS.classList.add('play');
-            });
-        }
-
-
-        function handleLanguageButtonClick(locale) {
-            const selector = `[data-text-${locale}]`;
-            const textContent = document.querySelector(selector)?.getAttribute(`data-text-${locale}`);
-            const voiceContent = document.querySelector(selector)?.getAttribute(`data-voice-${locale}`);
-
-            if (textContent !== null) {
-                $('.get-started-text').text(textContent);
-                $('.language-button').removeClass('selected-language');
-                $(`#${locale}Button`).addClass('selected-language');
-                setSavedLocale(locale);
-
-                // Pause the currently playing audio if any
-                if (currentAudio) {
-                    currentAudio.pause();
-                }
-
-                const audio = new Audio(voiceContent);
-
-                playGSAudio(audio);
-
-                // Set the current audio to the new audio
-                currentAudio = audio;
-
-                audio.addEventListener('ended', async () => {
-                    hidePopupContainer();
-                    saveUserConsent(locale);
-                    await doSwitchLangRequest(locale);
-                });
-            } else {
-                // console.error(`Element with attribute data-text-${locale} not found.`);
-            }
-        }
-
-        async function doSwitchLangRequest(locale) {
-
-            await axios.post('/change-locale', {locale})
-                .then(response => {
-                    console.log(response.data);
-                    goTo(response.data.redirect);
-                })
-                .catch(error => {
-                    console.error(error);
-                })
-                .finally(() => {
-                    console.info('Language Switch AJAX request completed.');
-                });
-        }
-
-        function addLanguageButtonEventListener(button, locale) {
-            if (button) {
-                button.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    const locale = this.getAttribute('data-locale');
-                    handleLanguageButtonClick(locale);
-                });
-            }
-        }
-
-        addLanguageButtonEventListener(enButton, 'en');
-        addLanguageButtonEventListener(bnButton, 'bn');
-
-        if (skipButton) {
-            skipButton.addEventListener('click', async function (event) {
-                event.preventDefault();
-                const skip = this.getAttribute('data-skip');
-                console.log('value', skip);
-                if (skip === 'yes') {
-                    await processSkipOperation('bn');
-                }
-            });
-        }
-
-        async function processSkipOperation(localeToBeDecide) {
-            hidePopupContainer();
-            setShowHide('show');
-            setSavedLocale(localeToBeDecide);
-            if (bnButton) {
-                bnButton.style.display = 'none';
-            }
-            if (enButton) {
-                enButton.style.display = 'none';
-            }
-            await doSwitchLangRequest(localeToBeDecide);
-        }
-
-        function hidePopupContainer() {
-            popupContainer.style.display = 'none';
-        }
-
-        function saveUserConsent(button) {
-            try {
-                setShowHide('show');
-                tUj('get-started', {'purpose': 'getStarted', 'page': 'home', 'button': button});
-            } catch (error) {
-                // console.error('Error saving data in sessionStorage:', error);
-            }
-        }
-
-        function setShowHide(val) {
-            sessionStorage.setItem('hideGetStartedBtn', val);
-        }
-
-    });
-
-</script>--}}
-
+ 
 <script type="application/javascript">
     document.addEventListener('DOMContentLoaded', function () {
         let isAudioPlaying = false;
@@ -308,7 +139,12 @@
             if (textContent !== null) {
                 updateGetStartedText(textContent);
                 updateSelectedLanguageButton(locale);
-
+		
+		// Update the title text for Visual IVR based on the language
+       		 const ivrTitle = document.getElementById('ivrTitle');
+        	 if (ivrTitle) {
+            		ivrTitle.textContent = locale === 'en' ? 'Visual IVR' : 'ভিজ্যুয়াল আইভিআর';
+       		 }
                 if (currentAudio) {
                     currentAudio.pause();
                 }
