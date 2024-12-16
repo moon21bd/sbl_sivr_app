@@ -16,6 +16,7 @@ Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
 
 Route::middleware(['web'])->group(function () {
     Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
+    Route::post('/generate-gpin', [\App\Http\Controllers\ApiController::class, 'generateGPIN'])->name('generateGPIN');
     Route::post('/resend', [\App\Http\Controllers\ApiController::class, 'resendOtp'])->name('resendOtp');
     Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
     Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
@@ -36,20 +37,24 @@ Route::middleware(['web', 'verify.login', 'check.wallet.access'])->group(functio
     Route::get('/ewallet', [\App\Http\Controllers\MainController::class, 'eWallet'])->name('ewallet');
 
     /*
-     * Cards api now disabled by bank
-     * Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
-    Route::get('/credit-card', [\App\Http\Controllers\MainController::class, 'creditCard'])->name('credit-card');
+ * Cards api now disabled by bank
+ * Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
+Route::get('/credit-card', [\App\Http\Controllers\MainController::class, 'creditCard'])->name('credit-card');
 
-    Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
-    Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class,
-    'prePaidCard'])->name('prepaid-card');*/
+Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
+Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class,
+'prePaidCard'])->name('prepaid-card');*/
 });
+
+// will be replace this later in the middleware
+Route::get('/green-pin', [\App\Http\Controllers\MainController::class, 'greenPIN'])->name('greenPIN');
 
 Route::middleware(['web', 'verify.login'])->group(function () {
 
     Route::get('/get-balance', [\App\Http\Controllers\ApiController::class, 'getBalance']);
 
     Route::get('/account-and-loan', [\App\Http\Controllers\MainController::class, 'accountAndLoan'])->name('accountAndLoan');
+    // Route::get('/green-pin', [\App\Http\Controllers\MainController::class, 'greenPIN'])->name('greenPIN');
     Route::get('/casasnd', [\App\Http\Controllers\MainController::class, 'casasnd'])->name('casasnd');
     Route::get('/account-dps', [\App\Http\Controllers\MainController::class, 'accountDPS'])->name('account-dps');
     Route::get('/fixed-deposit', [\App\Http\Controllers\MainController::class, 'fixedDeposit'])->name('fixed-deposit');
@@ -68,15 +73,7 @@ Route::middleware(['web', 'verify.login'])->group(function () {
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
 
-
 });
-
 
 // web api routes
 Route::get('/example', [\App\Http\Controllers\MainController::class, 'encryptWeb']);
-
-
-
-
-
-

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Handlers\EncryptionHandler;
 use App\Models\SblUserImage;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class MainController extends Controller
 {
@@ -60,7 +60,7 @@ class MainController extends Controller
 
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
-            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')]
+            ['url' => url('/account-and-loan'), 'label' => __('messages.account-loans')],
         ];
 
         $data = [
@@ -72,6 +72,27 @@ class MainController extends Controller
         ];
 
         return view('front.account-and-loan.index', $data);
+    }
+
+    public function greenPIN()
+    {
+
+        $userInfo = getUserInfoFromSession();
+
+        $breadcrumbs = [
+            ['url' => url('/'), 'label' => __('messages.home')],
+            ['url' => url('/green-pin'), 'label' => __('messages.green-pin-btn')],
+        ];
+
+        $data = [
+            'breadcrumbs' => $breadcrumbs,
+            'title' => __('messages.green-pin-btn'),
+            'prompt' => null,
+            'name' => $userInfo['name'],
+            'photo' => $userInfo['userImage'],
+        ];
+
+        return view('front.green-pin.index', $data);
     }
 
     public function casasnd()
@@ -259,11 +280,10 @@ class MainController extends Controller
     {
         $breadcrumbs = [
             ['url' => url('/'), 'label' => __('messages.home')],
-            ['url' => url('/ewallet'), 'label' => __('messages.eWallet-btn')]
+            ['url' => url('/ewallet'), 'label' => __('messages.eWallet-btn')],
         ];
 
         $userInfo = getUserInfoFromSession();
-
 
         $data = [
             'breadcrumbs' => $breadcrumbs,
@@ -392,7 +412,6 @@ class MainController extends Controller
         return view('front.verify-otp')->with($data);
     }
 
-
     public function uploadUserPhoto(Request $request)
     {
         try {
@@ -436,7 +455,7 @@ class MainController extends Controller
 
         return [
             'filename' => $fileNameToStore,
-            'path' => $imagePathPrefix . $fileNameToStore
+            'path' => $imagePathPrefix . $fileNameToStore,
         ];
     }
 
@@ -457,7 +476,7 @@ class MainController extends Controller
             'keyFromPw' => bin2hex($keyFromPw),
             'iv' => bin2hex($iv),
             'encryptedVal' => $encryptedVal,
-            'decryptedVal' => $decryptedVal
+            'decryptedVal' => $decryptedVal,
         ]);
     }
 
@@ -467,6 +486,5 @@ class MainController extends Controller
         $keyFromPw = $Encryption->getKeyHashed($secretKey);
 
     }
-
 
 }

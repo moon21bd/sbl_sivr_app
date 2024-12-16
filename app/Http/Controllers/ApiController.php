@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Handlers\APIHandler;
 use App\Handlers\EncryptionHandler;
 use App\Models\OtpHistory;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Exception;
-
 
 class ApiController extends ResponseController
 {
@@ -65,7 +65,7 @@ class ApiController extends ResponseController
     public function sendOtpWrapper(Request $request)
     {
         $request->validate([
-            'mobile_no' => $this->phoneValidationRules()
+            'mobile_no' => $this->phoneValidationRules(),
         ], $this->phoneValidationErrorMessages());
 
         $mobileNo = $request->input('mobile_no');
@@ -77,7 +77,7 @@ class ApiController extends ResponseController
     public function resendOtp(Request $request)
     {
         /*$request->validate([
-            'mobile_no' => $this->phoneValidationRules()
+        'mobile_no' => $this->phoneValidationRules()
         ], $this->phoneValidationErrorMessages());
         $mobileNo = $request->input('mobile_no');*/
 
@@ -89,7 +89,9 @@ class ApiController extends ResponseController
 
     private function sendOtp($mobileNo, $isResend = false)
     {
-        if (!$mobileNo) return;
+        if (!$mobileNo) {
+            return;
+        }
 
         // if mobile number isn't matched with sonali phone, then send an error message.
         $getAccountList = $this->fetchSavingsDeposits($mobileNo);
@@ -99,7 +101,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => __('messages.no-account-matched-with-phone'),
-                'prompt' => null
+                'prompt' => null,
             ];
             Log::info('NO-ACCOUNT-MATCHED-WITH-PHONE-DURING-SEND-OTP|' . $mobileNo);
             return $this->sendResponse($responseOut, $responseOut['code']);
@@ -126,20 +128,20 @@ class ApiController extends ResponseController
 
                 $firstSendData = json_decode($response['data']);
                 $secondSendData = json_decode($firstSendData);
-                $sendStatusCode = (int)$secondSendData->StatusCode;
+                $sendStatusCode = (int) $secondSendData->StatusCode;
 
                 if ($sendStatusCode === Response::HTTP_OK) { // OTP SEND SUCCESS
                     Session::put('otp', [
                         'phone_masked' => $this->hidePhoneNumber($mobileNo),
                         'otp_phone' => $mobileNo,
-                        'strRefId' => $strRefId
+                        'strRefId' => $strRefId,
                     ]);
 
                     $responseOut = [
                         'code' => $sendStatusCode,
                         'status' => 'success',
                         'message' => __('messages.otp-send-success'),
-                        'url' => url('verify-otp')
+                        'url' => url('verify-otp'),
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
 
@@ -148,7 +150,7 @@ class ApiController extends ResponseController
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
                         'message' => __('messages.apologies-something-went-wrong'),
-                        'prompt' => getPromptPath('common/request-failed-en')
+                        'prompt' => getPromptPath('common/request-failed-en'),
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
@@ -160,7 +162,7 @@ class ApiController extends ResponseController
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
                     'message' => __('messages.apologies-something-went-wrong'),
-                    'prompt' => getPromptPath('common/request-failed-en')
+                    'prompt' => getPromptPath('common/request-failed-en'),
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
@@ -171,7 +173,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => __('messages.apologies-something-went-wrong'),
-                'prompt' => getPromptPath('common/request-failed-en')
+                'prompt' => getPromptPath('common/request-failed-en'),
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
@@ -181,7 +183,7 @@ class ApiController extends ResponseController
     public function sendOtpWrapperNew(Request $request)
     {
         $request->validate([
-            'mobile_no' => $this->phoneValidationRules()
+            'mobile_no' => $this->phoneValidationRules(),
         ], $this->phoneValidationErrorMessages());
 
         $mobileNo = $request->input('mobile_no');
@@ -214,7 +216,7 @@ class ApiController extends ResponseController
                             'code' => $statusCode,
                             'status' => 'error',
                             'message' => __('messages.entered-phone-number-invalid'),
-                            'prompt' => null
+                            'prompt' => null,
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
 
@@ -223,7 +225,7 @@ class ApiController extends ResponseController
                         Session::put('otp', [
                             'phone_masked' => $this->hidePhoneNumber($mobileNo),
                             'otp_phone' => $mobileNo,
-                            'strRefId' => $strRefId
+                            'strRefId' => $strRefId,
                         ]);
 
                         // Capture response information
@@ -263,7 +265,7 @@ class ApiController extends ResponseController
                             'code' => $statusCode,
                             'status' => 'success',
                             'message' => 'Success.',
-                            'url' => url('verify-otp')
+                            'url' => url('verify-otp'),
                         ];
 
                         return $this->sendResponse($responseOut, $responseOut['code']);
@@ -274,7 +276,7 @@ class ApiController extends ResponseController
                             'code' => Response::HTTP_EXPECTATION_FAILED,
                             'status' => 'error',
                             'message' => __('messages.apologies-something-went-wrong'),
-                            'prompt' => getPromptPath('common/request-failed-en')
+                            'prompt' => getPromptPath('common/request-failed-en'),
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
                     }
@@ -284,7 +286,7 @@ class ApiController extends ResponseController
                         'code' => Response::HTTP_EXPECTATION_FAILED,
                         'status' => 'error',
                         'message' => __('messages.apologies-something-went-wrong'), // Null response
-                        'prompt' => getPromptPath('common/request-failed-en')
+                        'prompt' => getPromptPath('common/request-failed-en'),
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
@@ -297,7 +299,7 @@ class ApiController extends ResponseController
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
                     'message' => __('messages.apologies-something-went-wrong'),
-                    'prompt' => getPromptPath('common/request-failed-en')
+                    'prompt' => getPromptPath('common/request-failed-en'),
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
@@ -309,21 +311,21 @@ class ApiController extends ResponseController
                     'code' => Response::HTTP_FORBIDDEN,
                     'status' => 'error',
                     'message' => 'Max daily OTP count exceeded.',
-                    'prompt' => null
+                    'prompt' => null,
                 ];
             } else if ($otpStatus['reason'] === 'overall_limit_exceeded') {
                 $response = [
                     'code' => Response::HTTP_FORBIDDEN,
                     'status' => 'error',
                     'message' => 'Max OTP SMS count exceeded.',
-                    'prompt' => null
+                    'prompt' => null,
                 ];
             } else {
                 $response = [
                     'code' => Response::HTTP_FORBIDDEN,
                     'status' => 'error',
                     'message' => 'Sending OTP not allowed.',
-                    'prompt' => null
+                    'prompt' => null,
                 ];
             }
 
@@ -342,7 +344,7 @@ class ApiController extends ResponseController
 
         $todaySentCount = OtpHistory::where('phone_number', $otpHistory->phone_number)
             ->whereDate('created_at', Carbon::today())
-            // ->count()
+        // ->count()
             ->sum('otp_sent_count');
 
         Log::info('TODAY_SENT_COUNT: ' . $todaySentCount);
@@ -403,7 +405,7 @@ class ApiController extends ResponseController
 
                 $firstData = json_decode($response['data']);
                 $secondData = json_decode($firstData);
-                $apiStatus = (bool)$secondData->Status;
+                $apiStatus = (bool) $secondData->Status;
                 $statusCode = $response['statusCode'];
 
                 if ($statusCode === Response::HTTP_OK) {
@@ -413,7 +415,7 @@ class ApiController extends ResponseController
                             'code' => Response::HTTP_EXPECTATION_FAILED,
                             'status' => 'error',
                             'message' => __('messages.apologies-something-went-wrong'),
-                            'prompt' => getPromptPath('common/request-failed-en')
+                            'prompt' => getPromptPath('common/request-failed-en'),
                         ];
                         return $this->sendResponse($responseOut, $responseOut['code']);
                     } else { // success
@@ -444,7 +446,7 @@ class ApiController extends ResponseController
                         'code' => $statusCode,
                         'status' => 'error',
                         'message' => __('messages.apologies-something-went-wrong'),
-                        'prompt' => getPromptPath('common/request-failed-en')
+                        'prompt' => getPromptPath('common/request-failed-en'),
                     ];
                     return $this->sendResponse($responseOut, $responseOut['code']);
                 }
@@ -457,7 +459,7 @@ class ApiController extends ResponseController
                     'code' => Response::HTTP_EXPECTATION_FAILED,
                     'status' => 'error',
                     'message' => __('messages.apologies-something-went-wrong'),
-                    'prompt' => getPromptPath('common/request-failed-en')
+                    'prompt' => getPromptPath('common/request-failed-en'),
                 ];
                 return $this->sendResponse($responseOut, $responseOut['code']);
             }
@@ -468,7 +470,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => __('messages.apologies-something-went-wrong'),
-                'prompt' => getPromptPath('common/request-failed-en')
+                'prompt' => getPromptPath('common/request-failed-en'),
             ];
             return $this->sendResponse($responseOut, $responseOut['code']);
         }
@@ -523,7 +525,7 @@ class ApiController extends ResponseController
                 'is_logged' => base64_encode(true),
                 'otp_info' => $otpInfo,
                 'account_info' => $accountAsData,
-                'selected_accEnc' => $getSelected['accEnc']
+                'selected_accEnc' => $getSelected['accEnc'],
             ]);
 
             // Session::forget('otp');
@@ -542,7 +544,7 @@ class ApiController extends ResponseController
                 'pn' => $mobileNo,
                 'an' => $accountAsData['accountName'] ?? null,
                 'acn' => $accountAsData['accountNo'] ?? null,
-                'url' => url('/')
+                'url' => url('/'),
             ];
 
             session()->flash('status', $responseOut['status']);
@@ -555,7 +557,7 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => __('messages.apologies-something-went-wrong'),
-            'prompt' => getPromptPath('common/request-failed-en')
+            'prompt' => getPromptPath('common/request-failed-en'),
         ];
 
         return $this->sendResponse($responseOut, $responseOut['code']);
@@ -671,21 +673,21 @@ class ApiController extends ResponseController
 
         // will be removed this later
         /*return [
-            'status' => 'success',
-            'message' => 'Data Received',
-            'code' => Response::HTTP_OK,
-            'data' => [
-                'name' => 'Md. Raqibul Hasan',
-                'accountName' => 'Md. Raqibul Hasan',
-                'accountNo' => '5158242353328',
-                'balanceAmount' => 1000000,
-                'walletStatus' => null,
-                'accountList' => [
-                    'name' => 'Md. Raqibul Hasan',
-                    'accountName' => 'Md. Raqibul Hasan',
-                    'accountNo' => '5158242353328',
-                ],
-            ]
+        'status' => 'success',
+        'message' => 'Data Received',
+        'code' => Response::HTTP_OK,
+        'data' => [
+        'name' => 'Md. Raqibul Hasan',
+        'accountName' => 'Md. Raqibul Hasan',
+        'accountNo' => '5158242353328',
+        'balanceAmount' => 1000000,
+        'walletStatus' => null,
+        'accountList' => [
+        'name' => 'Md. Raqibul Hasan',
+        'accountName' => 'Md. Raqibul Hasan',
+        'accountNo' => '5158242353328',
+        ],
+        ]
         ];*/
 
         $url = config('api.base_url') . config('api.get_wallet_details_url');
@@ -712,7 +714,7 @@ class ApiController extends ResponseController
                         'dateOfBirth' => $data['dateOfBirth'] ?? null,
                         'email' => $data['email'] ?? null,
                         'accountList' => $accountList,
-                    ]
+                    ],
                 ];
             }
         }
@@ -728,20 +730,22 @@ class ApiController extends ResponseController
                 'balanceAmount' => 0,
                 'walletStatus' => null,
                 'accountList' => [],
-            ]
+            ],
         ];
     }
 
     public static function fetchAccountFullDetails($accountNumber)
     {
-        if (!$accountNumber) return;
+        if (!$accountNumber) {
+            return;
+        }
 
         $url = config('api.base_url') . config('api.get_call_center_data_url');
 
         try {
             $apiHandler = new APIHandler();
             $response = $apiHandler->postCall($url, [
-                'ChannelId' => "SPS", 'AccountNo' => $accountNumber
+                'ChannelId' => "SPS", 'AccountNo' => $accountNumber,
             ]);
 
             if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
@@ -767,9 +771,9 @@ class ApiController extends ResponseController
                         'data' => [
                             'balance' => 0,
                             'statement' => [],
-                            'additional_info' => []
+                            'additional_info' => [],
 
-                        ]
+                        ],
                     ];
                 }
 
@@ -783,10 +787,10 @@ class ApiController extends ResponseController
                         'balance' => $totalOrOutstanding ?? 0,
                         'statement' => $statementField,
                         'additional_info' => [
-                            'installment_size_field' => $installmentSizeField
-                        ]
+                            'installment_size_field' => $installmentSizeField,
+                        ],
 
-                    ]
+                    ],
                 ];
 
             }
@@ -799,8 +803,8 @@ class ApiController extends ResponseController
                 'data' => [
                     'balance' => 0,
                     'statement' => [],
-                    'additional_info' => []
-                ]
+                    'additional_info' => [],
+                ],
             ];
 
         }
@@ -816,7 +820,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => "for lost and reback customer",
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -828,7 +832,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => 'Your account activation request was successful.',
-                    'prompt' => null
+                    'prompt' => null,
                 ];
             }
         }
@@ -837,7 +841,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => 'Your account activation request has failed.',
-            'prompt' => null
+            'prompt' => null,
         ];
     }
 
@@ -848,14 +852,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your debit card activation request was successful.',
-            'prompt' => getPromptPath('debit-card-activation-successful')
+            'prompt' => getPromptPath('debit-card-activation-successful'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'Debit card activation failed.',
-            'prompt' => getPromptPath('debit-card-activation-failed')
+            'prompt' => getPromptPath('debit-card-activation-failed'),
         ];
 
         // will be removed later
@@ -868,14 +872,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your credit card activation request was successful.',
-            'prompt' => getPromptPath('credit-card-activation-successful')
+            'prompt' => getPromptPath('credit-card-activation-successful'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'Your credit card activation failed.',
-            'prompt' => getPromptPath('credit-card-activation-failed')
+            'prompt' => getPromptPath('credit-card-activation-failed'),
         ];
         // will be removed later
 
@@ -888,14 +892,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your prepaid card activation request was successful.',
-            'prompt' => getPromptPath('prepaid-card-activation-successful')
+            'prompt' => getPromptPath('prepaid-card-activation-successful'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'Prepaid card activation failed.',
-            'prompt' => getPromptPath('prepaid-card-activation-failed')
+            'prompt' => getPromptPath('prepaid-card-activation-failed'),
         ];
         // will be removed later
 
@@ -908,14 +912,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your cheque book leaf request was successful.',
-            'prompt' => getPromptPath('cheque-book-leaf-request-successful')
+            'prompt' => getPromptPath('cheque-book-leaf-request-successful'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'Cheque book leaf request failed.',
-            'prompt' => getPromptPath('cheque-book-leaf-request-failed')
+            'prompt' => getPromptPath('cheque-book-leaf-request-failed'),
         ];
         // will be removed later
 
@@ -928,14 +932,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your SMS banking activation request was successful.',
-            'prompt' => getPromptPath('sms-banking-activate-request-successful')
+            'prompt' => getPromptPath('sms-banking-activate-request-successful'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'SMS banking activation request failed.',
-            'prompt' => getPromptPath('sms-banking-activate-request-failed')
+            'prompt' => getPromptPath('sms-banking-activate-request-failed'),
         ];
         // will be removed later
 
@@ -954,14 +958,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -980,14 +984,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1006,14 +1010,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1031,14 +1035,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1056,14 +1060,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1087,7 +1091,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
 
@@ -1097,7 +1101,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => $reason,
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -1109,7 +1113,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => $successText,
-                    'prompt' => getPromptPath($successPrompt)
+                    'prompt' => getPromptPath($successPrompt),
                 ];
             }
         }
@@ -1118,7 +1122,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
     }
 
@@ -1131,7 +1135,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
         return true;
@@ -1156,7 +1160,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
 
@@ -1166,7 +1170,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => $reason,
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -1177,7 +1181,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => $successText,
-                    'prompt' => getPromptPath($successPrompt)
+                    'prompt' => getPromptPath($successPrompt),
                 ];
             }
         }
@@ -1186,7 +1190,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
     }
 
@@ -1241,7 +1245,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $failedText,
-                'prompt' => getPromptPath($failedPrompt)
+                'prompt' => getPromptPath($failedPrompt),
             ];
         }
 
@@ -1295,7 +1299,7 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
 
     }
@@ -1324,7 +1328,7 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => __('messages.apologies-something-went-wrong'),
-            'prompt' => null
+            'prompt' => null,
         ];
 
     }
@@ -1347,7 +1351,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
 
@@ -1357,7 +1361,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => $reason,
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -1369,7 +1373,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => $successText,
-                    'prompt' => getPromptPath($successPrompt)
+                    'prompt' => getPromptPath($successPrompt),
                 ];
             }
         }
@@ -1378,7 +1382,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
     }
 
@@ -1400,7 +1404,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
 
@@ -1411,7 +1415,7 @@ class ApiController extends ResponseController
             "userId" => "Agx01254",
             "requestDetails" => $reason,
             "OtpCode" => "",
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -1423,7 +1427,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => $successText,
-                    'prompt' => getPromptPath($successPrompt)
+                    'prompt' => getPromptPath($successPrompt),
                 ];
             }
         }
@@ -1432,7 +1436,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
     }
 
@@ -1444,7 +1448,6 @@ class ApiController extends ResponseController
         $failedPrompt = "common/request-failed{$localeSuffix}";
         $failedText = __('messages.common-request-failed-text');
 
-
         $reason = $data['reason'];
         $mobileNo = $data['mobile_no'];
 
@@ -1455,7 +1458,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
 
@@ -1466,7 +1469,7 @@ class ApiController extends ResponseController
             "userId" => "Agx01254",
             "reason" => $reason,
             "OtpCode" => "",
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -1478,7 +1481,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => $successText,
-                    'prompt' => getPromptPath($successPrompt)
+                    'prompt' => getPromptPath($successPrompt),
                 ];
             }
         }
@@ -1487,7 +1490,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
     }
 
@@ -1509,7 +1512,7 @@ class ApiController extends ResponseController
                 'code' => Response::HTTP_EXPECTATION_FAILED,
                 'status' => 'error',
                 'message' => $message,
-                'prompt' => null
+                'prompt' => null,
             ];
         }
 
@@ -1519,7 +1522,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => $reason,
-            "refId" => $mobileNo . randomDigits()
+            "refId" => $mobileNo . randomDigits(),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -1531,7 +1534,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => $successText,
-                    'prompt' => getPromptPath($successPrompt)
+                    'prompt' => getPromptPath($successPrompt),
                 ];
             }
         }
@@ -1540,7 +1543,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
     }
 
@@ -1551,14 +1554,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your request was successful.',
-            'prompt' => getPromptPath('voice-for-casa-available-balance-request-successful-en')
+            'prompt' => getPromptPath('voice-for-casa-available-balance-request-successful-en'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'eWallet Unlock/Active request failed.',
-            'prompt' => getPromptPath('voice-for-casa-available-balance-request-failed-en')
+            'prompt' => getPromptPath('voice-for-casa-available-balance-request-failed-en'),
         ];
         // will be removed later
     }
@@ -1595,7 +1598,7 @@ class ApiController extends ResponseController
             'status' => 'error',
             'message' => __('messages.apologies-something-went-wrong'),
             'prompt' => null,
-            'statement' => []
+            'statement' => [],
         ];
 
     }
@@ -1612,14 +1615,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1638,14 +1641,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1663,14 +1666,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => $successText,
-            'prompt' => getPromptPath($successPrompt)
+            'prompt' => getPromptPath($successPrompt),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => $failedText,
-            'prompt' => getPromptPath($failedPrompt)
+            'prompt' => getPromptPath($failedPrompt),
         ];
         // will be removed later
 
@@ -1683,14 +1686,14 @@ class ApiController extends ResponseController
             'code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Your cheque book leaf stop payment request was successful.',
-            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-successful')
+            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-successful'),
         ];
 
         return [
             'code' => Response::HTTP_EXPECTATION_FAILED,
             'status' => 'error',
             'message' => 'eWallet Unlock/Active request failed.',
-            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-failed')
+            'prompt' => getPromptPath('ew-cheque-book-stop-payment-request-failed'),
         ];
         // will be removed later
 
@@ -1704,7 +1707,7 @@ class ApiController extends ResponseController
             'status' => 'success',
             'message' => 'Data Found.',
             'prompt' => null,
-            'data' => $callType
+            'data' => $callType,
         ];
 
     }
@@ -1718,7 +1721,7 @@ class ApiController extends ResponseController
             'status' => 'success',
             'message' => 'Data Found.',
             'prompt' => null,
-            'data' => $callCategory
+            'data' => $callCategory,
         ];
 
     }
@@ -1744,7 +1747,7 @@ class ApiController extends ResponseController
                     'data' => [
                         'ticketId' => null,
                         'ticketMessage' => null,
-                    ]
+                    ],
                 ];
             }
         }
@@ -1769,7 +1772,7 @@ class ApiController extends ResponseController
                 'data' => [
                     'ticketId' => $ticketId,
                     'ticketMessage' => $message,
-                ]
+                ],
             ];
         }
 
@@ -1792,7 +1795,7 @@ class ApiController extends ResponseController
                     'data' => [
                         'ticketId' => $ticketId,
                         'ticketMessage' => $message,
-                    ]
+                    ],
                 ];
             }
         }
@@ -1805,7 +1808,7 @@ class ApiController extends ResponseController
             'data' => [
                 'ticketId' => null,
                 'ticketMessage' => null,
-            ]
+            ],
         ];
     }
 
@@ -1832,7 +1835,7 @@ class ApiController extends ResponseController
             'data' => [
                 'ticketId' => $ticketId,
                 'ticketMessage' => $message,
-            ]
+            ],
         ];
     }
 
@@ -1847,11 +1850,11 @@ class ApiController extends ResponseController
         // $selectedValues = $data['selectedValues']['callType'];
         $selectedValues = 2; // hardcoded call-type value for Service Request
         $url = config('api.crm_ticket_base_url') .
-            config('api.crm_ticket_call_category_url');
+        config('api.crm_ticket_call_category_url');
 
         $apiHandler = new APIHandler();
         $responseData = $apiHandler->doGetCall($url, [
-            "call_type_id" => $selectedValues
+            "call_type_id" => $selectedValues,
         ], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
         ]);
@@ -1906,7 +1909,7 @@ class ApiController extends ResponseController
             'status' => 'success',
             'message' => 'Data Found.',
             'prompt' => null,
-            'data' => $callSubCategory
+            'data' => $callSubCategory,
         ];
 
     }
@@ -1918,12 +1921,12 @@ class ApiController extends ResponseController
         $callCategoryValue = $data['selectedValues']['callCategory'];
 
         $url = config('api.crm_ticket_base_url') .
-            config('api.crm_ticket_call_sub_category_url');
+        config('api.crm_ticket_call_sub_category_url');
 
         $apiHandler = new APIHandler();
         $responseData = $apiHandler->doGetCall($url, [
             "call_type_id" => $callTypeValue,
-            "call_category_id" => $callCategoryValue
+            "call_category_id" => $callCategoryValue,
         ], [
             'Authorization' => 'Bearer ' . config('api.crm_ticket_authorization_token'),
         ]);
@@ -1987,7 +1990,7 @@ class ApiController extends ResponseController
             'status' => 'success',
             'message' => 'Data Found.',
             'prompt' => null,
-            'data' => $callSubSubCategory
+            'data' => $callSubSubCategory,
         ];
 
     }
@@ -2002,7 +2005,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => $data['reason'] ?? "Get new phone",
-            "refId" => randomDigits(5)
+            "refId" => randomDigits(5),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -2014,7 +2017,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => 'PIN reset request successful.',
-                    'prompt' => getPromptPath('pin-reset-success')
+                    'prompt' => getPromptPath('pin-reset-success'),
                 ];
             }
         }
@@ -2023,7 +2026,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => 'PIN reset request failed.',
-            'prompt' => getPromptPath('pin-reset-failed')
+            'prompt' => getPromptPath('pin-reset-failed'),
         ];
     }
 
@@ -2037,7 +2040,7 @@ class ApiController extends ResponseController
             "mobileNo" => $mobileNo,
             "userId" => "Agx01254",
             "requestDetails" => $data['reason'] ?? "Get new phone",
-            "refId" => randomDigits(5)
+            "refId" => randomDigits(5),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === 200) {
@@ -2049,7 +2052,7 @@ class ApiController extends ResponseController
                     'code' => $response['statusCode'],
                     'status' => 'success',
                     'message' => 'Your device binding request was successful.',
-                    'prompt' => getPromptPath('device-bind-success')
+                    'prompt' => getPromptPath('device-bind-success'),
                 ];
             }
         }
@@ -2058,7 +2061,7 @@ class ApiController extends ResponseController
             'code' => $response['statusCode'],
             'status' => 'error',
             'message' => 'Your device binding request failed.',
-            'prompt' => getPromptPath('device-bind-failed')
+            'prompt' => getPromptPath('device-bind-failed'),
         ];
     }
 
@@ -2102,7 +2105,7 @@ class ApiController extends ResponseController
             'prompt' => $apiResponse['prompt'],
             'data' => [
                 'issueId' => $ticketId,
-            ]
+            ],
         ];
     }
 
@@ -2117,7 +2120,7 @@ class ApiController extends ResponseController
             "userId" => "Agx01254",
             "reason" => $data['reason'] ?? "Having a problem with my phone.",
             // "OtpCode" => "",
-            "refId" => randomDigits(5)
+            "refId" => randomDigits(5),
         ]);
 
         if ($response['status'] === 'success' && $response['statusCode'] === Response::HTTP_OK) {
@@ -2166,7 +2169,7 @@ class ApiController extends ResponseController
             'code' => $apiResponse['code'],
             'status' => $apiResponse['status'],
             'message' => $apiResponse['message'],
-            'prompt' => $apiResponse['prompt'] ?? null
+            'prompt' => $apiResponse['prompt'] ?? null,
         ];
 
         if (!empty($apiResponse['data'])) {
@@ -2339,5 +2342,90 @@ class ApiController extends ResponseController
             return false;
         }
 
+    }
+
+    public function generateGPIN(Request $request)
+    {
+        try {
+
+            // $getSelectedAcc = data_get(Session::get('logInfo'), 'selected_accEnc');
+            // $getDecryptedAccount = openSSLEncryptDecrypt($getSelectedAcc, 'decrypt');
+
+            $cardNumber = "4689800031879243"; // $getDecryptedAccount;
+            $baseUrl = config('api.base_url');
+            $baseUrl = "https://sblapi2022.sblesheba.com:8877/";
+
+            $response = Http::withHeaders([
+                'x-api-key' => 'Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=',
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])
+                ->asForm()
+                ->post($baseUrl . 'api/callcenter/oauth/token',
+                    [
+                        'grant_type' => 'password',
+                        'scope' => 'read',
+                        'client_id' => 'restapp',
+                        'client_secret' => 'restapp',
+                        'username' => 'gateAdmin',
+                        'password' => 'PayWay123@',
+                    ]);
+
+            if ($response->failed()) {
+                Log::error("Failed to obtain access token" . json_encode($response));
+                return response()->json(['status' => 'failed', 'error' => 'Failed to obtain access token'], 400);
+            }
+
+            $accessToken = $response->json()['access_token'];
+
+            $refId = Str::random(16);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'x-api-key' => 'Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=',
+                'Content-Type' => 'application/json',
+            ])
+                ->post($baseUrl . 'api/callcenter/v1/ws/callWS', [
+                    'header' => [
+                        'serviceDetail' => [
+                            'corrID' => Str::uuid()->toString(),
+                            'domainName' => 'Domain_Paygate',
+                            'serviceName' => 'PAYCA.PINCLIENTDELIVERY',
+                        ],
+                        'signonDetail' => [
+                            'clientID' => 'SONALI',
+                            'orgID' => '000200',
+                            'userID' => 'gateAdmin',
+                            'externalUser' => 'user1',
+                        ],
+                        'messageContext' => [
+                            'clientDate' => now()->format('YmdHis'),
+                            'bodyType' => 'Clear',
+                        ],
+                    ],
+                    'body' => [
+                        'refId' => $refId,
+                        'cardNumber' => $cardNumber,
+                        'operationReasonCode' => 'Forgot PIN',
+                    ],
+                ]);
+
+            if ($response->failed()) {
+                Log::error("Failed to retrieve PIN" . json_encode($response));
+                return response()->json(['status' => 'failed', 'error' => 'Failed to retrieve PIN'], 400);
+            }
+
+            $pin = $response->json()['responseBody']['PIN'] ?? "N/A";
+
+            return response()->json([
+                'refId' => $refId,
+                'pin' => $pin,
+                'status' => 'success',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Failed to retrieve PIN. Exception: " . $e->getMessage() . " | Trace: " . json_encode($e->getTrace()));
+
+            return response()->json(['status' => 'failed', 'error' => 'Something went wrong: ' . $e->getMessage()], 500);
+        }
     }
 }

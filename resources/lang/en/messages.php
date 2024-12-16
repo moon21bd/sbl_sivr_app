@@ -35,6 +35,11 @@ return [
     'agent-assist-btn' => 'Agent Assist',
 
     'cards-btn' => 'Cards',
+    'green-pin-btn' => 'Green PIN',
+    'green-pin-card-active-btn' => 'Card Active',
+    'green-pin-pin-set-btn' => 'PIN Set',
+    'green-pin-pin-change-btn' => 'PIN Change',
+    'green-pin-pin-lock-unlock-btn' => 'PIN Lock/Unlock',
     'debit-card-btn' => 'Debit',
     'credit-card-btn' => 'Credit',
     'prepaid-card-btn' => 'Prepaid',

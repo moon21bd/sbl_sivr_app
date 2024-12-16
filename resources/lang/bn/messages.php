@@ -35,6 +35,11 @@ return [
     'agent-assist-btn' => 'এজেন্ট সহায়তা',
 
     'cards-btn' => 'কার্ডস',
+    'green-pin-btn' => 'গ্রিন পিন',
+    'green-pin-pin-set-btn' => 'পিন সেট',
+    'green-pin-pin-change-btn' => 'পিন চেঞ্জ',
+    'green-pin-pin-lock-unlock-btn' => 'পিন লক/আনলক',
+    'green-pin-card-active-btn' => 'কার্ড অ্যাক্টিভ',
     'debit-card-btn' => 'ডেবিট',
     'credit-card-btn' => 'ক্রেডিট',
     'prepaid-card-btn' => 'প্রি-পেইড',
