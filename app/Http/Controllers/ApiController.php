@@ -2377,7 +2377,7 @@ class ApiController extends ResponseController
 
             $accessToken = $response->json()['access_token'];
 
-            $refId = Str::random(16);
+            $refId = str_pad(mt_rand(1000000000000000, 9999999999999999), 16, '0', STR_PAD_LEFT);
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
@@ -2405,7 +2405,7 @@ class ApiController extends ResponseController
                     'body' => [
                         'refId' => $refId,
                         'cardNumber' => $cardNumber,
-                        'operationReasonCode' => 'Forgot PIN',
+                        'operationReasonCode' => '',
                     ],
                 ]);
 
@@ -2413,6 +2413,8 @@ class ApiController extends ResponseController
                 Log::error("Failed to retrieve PIN" . json_encode($response));
                 return response()->json(['status' => 'failed', 'error' => 'Failed to retrieve PIN'], 400);
             }
+
+            Log::info('Response::' . json_encode($response->json()));
 
             $pin = $response->json()['responseBody']['PIN'] ?? "N/A";
 
