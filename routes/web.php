@@ -16,7 +16,9 @@ Route::middleware(['web', 'verify.login', 'check.logInfo'])->group(function () {
 
 Route::middleware(['web'])->group(function () {
     Route::post('/calldapi', [\App\Http\Controllers\ApiController::class, 'callDynamicApi'])->name('callDynamicApi');
+    
     Route::post('/generate-gpin', [\App\Http\Controllers\ApiController::class, 'generateGPIN'])->name('generateGPIN');
+    
     Route::post('/resend', [\App\Http\Controllers\ApiController::class, 'resendOtp'])->name('resendOtp');
     Route::post('/change-locale', 'App\Http\Controllers\LocaleController@changeLocale')->name('changeLocale');
     Route::post('/save', [\App\Http\Controllers\ApiController::class, 'saveAccountInfo']);
@@ -37,16 +39,16 @@ Route::middleware(['web', 'verify.login', 'check.wallet.access'])->group(functio
     Route::get('/ewallet', [\App\Http\Controllers\MainController::class, 'eWallet'])->name('ewallet');
 
     /*
- * Cards api now disabled by bank
- * Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
-Route::get('/credit-card', [\App\Http\Controllers\MainController::class, 'creditCard'])->name('credit-card');
+    * Cards api now disabled by bank
+    * Route::get('/cards', [\App\Http\Controllers\MainController::class, 'cards'])->name('cards');
+    Route::get('/credit-card', [\App\Http\Controllers\MainController::class, 'creditCard'])->name('credit-card');
 
-Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
-Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class,
-'prePaidCard'])->name('prepaid-card');*/
-});
+    Route::get('/debit-card', [\App\Http\Controllers\MainController::class, 'debitCard'])->name('debit-card');
+    Route::get('/prepaid-card', [\App\Http\Controllers\MainController::class,
+    'prePaidCard'])->name('prepaid-card');*/
+    });
 
-// will be replace this later in the middleware
+// will be replace this later in the ['verify.login'] middleware
 Route::get('/green-pin', [\App\Http\Controllers\MainController::class, 'greenPIN'])->name('greenPIN');
 
 Route::middleware(['web', 'verify.login'])->group(function () {
