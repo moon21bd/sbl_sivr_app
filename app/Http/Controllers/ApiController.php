@@ -2344,7 +2344,7 @@ class ApiController extends ResponseController
 
     }
 
-    public function generateGPIN(Request $request)
+    /* public function generateGPIN(Request $request)
     {
         try {
 
@@ -2427,6 +2427,96 @@ class ApiController extends ResponseController
         } catch (\Exception $e) {
             Log::error("Failed to retrieve PIN. Exception: " . $e->getMessage() . " | Trace: " . json_encode($e->getTrace()));
 
+            return response()->json(['status' => 'failed', 'error' => 'Something went wrong: ' . $e->getMessage()], 500);
+        }
+    } */
+
+    public function generateGPIN(Request $request, APIHandler $apiHandler)
+    {
+        try {
+            /* return response()->json([
+                'pin' => rand(11111,99999),
+                'status' => 'success',
+            ]); */
+
+            $cardNumber = "4689800031879243"; // Placeholder, replace with actual value.
+            $baseUrl = config('api.base_url', 'https://sblapi2022.sblesheba.com:8877/');
+
+            // Obtain Access Token
+            $tokenResponse = $apiHandler->doPostCall($baseUrl . 'api/callcenter/oauth/token', [
+                'grant_type' => 'password',
+                'scope' => 'read',
+                'client_id' => 'restapp',
+                'client_secret' => 'restapp',
+                'username' => 'gateAdmin',
+                'password' => 'PayWay123@',
+            ], [
+                'x-api-key' => 'Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=',
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ]);
+
+
+            if ($tokenResponse['status'] !== 'success' || empty($tokenResponse['data'])) {
+                Log::error("Failed to obtain access token", $tokenResponse);
+                return response()->json(['status' => 'failed', 'error' => 'Failed to obtain access token'], 400);
+            }
+
+            $accessToken = json_decode($tokenResponse['data'], true)['access_token'] ?? null;
+
+            if (!$accessToken) {
+                Log::error("Access token missing in the response", $tokenResponse);
+                return response()->json(['status' => 'failed', 'error' => 'Access token missing'], 400);
+            }
+
+            // Generate Reference ID
+            $refId = str_pad(mt_rand(1000000000000000, 9999999999999999), 16, '0', STR_PAD_LEFT);
+
+            // Call GPIN Service
+            $gpinResponse = $apiHandler->doPostCall($baseUrl . 'api/callcenter/v1/ws/callWS', [
+                'header' => [
+                    'serviceDetail' => [
+                        'corrID' => Str::uuid()->toString(),
+                        'domainName' => 'Domain_Paygate',
+                        'serviceName' => 'PAYCA.PINCLIENTDELIVERY',
+                    ],
+                    'signonDetail' => [
+                        'clientID' => 'SONALI',
+                        'orgID' => '000200',
+                        'userID' => 'gateAdmin',
+                        'externalUser' => 'user1',
+                    ],
+                    'messageContext' => [
+                        'clientDate' => now()->format('YmdHis'),
+                        'bodyType' => 'Clear',
+                    ],
+                ],
+                'body' => [
+                    'refId' => $refId,
+                    'cardNumber' => $cardNumber,
+                    'operationReasonCode' => '',
+                ],
+            ], [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'x-api-key' => 'Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=',
+                'Content-Type' => 'application/json',
+            ]);
+
+            if ($gpinResponse['status'] !== 'success' || empty($gpinResponse['data'])) {
+                Log::error("Failed to retrieve PIN", $gpinResponse);
+                return response()->json(['status' => 'failed', 'error' => 'Failed to retrieve PIN'], 400);
+            }
+
+            $gpinData = json_decode($gpinResponse['data'], true);
+            $pin = $gpinData['responseBody']['PIN'] ?? "N/A";
+
+            return response()->json([
+                // 'refId' => $refId,
+                'pin' => $pin,
+                'status' => 'success',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Failed to retrieve PIN. Exception: " . $e->getMessage(), ['trace' => $e->getTrace()]);
             return response()->json(['status' => 'failed', 'error' => 'Something went wrong: ' . $e->getMessage()], 500);
         }
     }

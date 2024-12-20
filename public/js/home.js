@@ -399,20 +399,6 @@ document.addEventListener("DOMContentLoaded", function () {
         showMessageForHelp(dataset.voice, dataset.text)
     );
 
-    /*const btnCards = document.getElementById('btnCards');
-        if (btnCards) {
-            btnCards.addEventListener('click', handleCardsButtonClick);
-        }
-
-        const btnCardsDisable = document.getElementById('btnCardsDisable');
-        if (btnCardsDisable) {
-            btnCardsDisable.addEventListener('click', function () {
-                let title = (locale === "en") ? cardsDisableTitleEn : cardsDisableTitleBn;
-                let text = (locale === "en") ? cardsDisableTextEn : cardsDisableTextBn;
-                showActiveYourServiceMessage(title, text);
-            });
-        }*/
-
     const accountOrLoan = document.getElementById("btnAccountAndLoan");
     if (accountOrLoan) {
         accountOrLoan.addEventListener("click", handleAccountOrLoanButtonClick);
@@ -532,11 +518,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function openPdf(pdfPath) {
         window.open(pdfPath, "_blank");
     }
-
-    /*addClickEventWithAsyncHandler('btnSonaliBankProduct',
-        (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));
-        addClickEventWithAsyncHandler('btnSonaliBankProductMenu',
-        (event, dataset) => showMessageForHelp(dataset.voice, dataset.text));*/
 
     const btnCreateIssue = document.getElementById("btnCreateIssue");
     if (btnCreateIssue) {
@@ -1583,208 +1564,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /*
-        // LAST TIME OK CODE
-        async function handleAPIRequestWithAccountVerification(apiPurpose, apiReason, btnName, pageName = "") {
-            let locale = getSavedLocale();
-            let isSwalOpen = false;
-            let accountAndDob;
-
-            try {
-                const isLoggedIn = await checkLoginStatus();
-                if (isLoggedIn) {
-
-                    const dobText = (locale === 'en') ? "YYYY-MM-DD" : "YYYY-MM-DD";
-
-                    const swalResult = await Swal.fire({
-                        title: `<h3 class="verify-account-title"> ${(locale === 'en') ? 'Enter Account & Date of Birth.' : 'অ্যাকাউন্ট এবং জন্ম তারিখ লিখুন ।'}</h3>`,
-                        html: `<input id="swal-input1" class="swal2-input" placeholder="${(locale === 'en') ? 'Account Number' : 'অ্যাকাউন্ট নাম্বার'}">
-                        <input id="swal-input2" readonly class="swal2-input" placeholder="${dobText}" min="1945-01-01" max="2099-12-31">
-                        <div class="verify-button-container">
-                            <button class="verify-submit-button">${(locale === 'en') ? 'Submit' : 'জমা দিন'}</button>
-                            <button class="verify-cancel-button">${(locale === 'en') ? 'Cancel' : 'বাতিল'}</button>
-                        </div>`,
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        focusConfirm: false,
-                        allowOutsideClick: false,
-                        customClass: {
-                            container: 'user-info-verify-swal-bg swal2-overflow'
-                        },
-                        didOpen: function () {
-                            $('#swal-input2').datepicker({
-                                dateFormat: 'yy-mm-dd',
-                                changeMonth: true,
-                                changeYear: true,
-                                yearRange: '1945:2099',
-                                theme: 'smoothness'
-                            });
-
-                            const submitButton = document.querySelector('.verify-submit-button');
-                            submitButton.addEventListener('click', async () => {
-                                isSwalOpen = false; // Reset the flag
-
-                                const account = Swal.getPopup().querySelector('#swal-input1').value;
-                                const dob = Swal.getPopup().querySelector('#swal-input2').value;
-
-                                if (!account || !/^\d{10,20}$/.test(account)) {
-                                    Swal.showValidationMessage((locale === 'en') ? 'Account is required and must be a number with 10 to 20 digits.' : 'অ্যাকাউন্ট নাম্বার আবশ্যক এবং ১০ থেকে ২০ সংখ্যা বিশিষ্ট হতে হবে।');
-                                    return;
-                                }
-
-                                if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-                                    Swal.showValidationMessage((locale === 'en') ? 'Invalid date format.' : 'তারিখ ভুল হয়েছে ।');
-                                    return;
-                                }
-
-                                accountAndDob = {account, dob}; // Set the accountAndDob value
-
-                                // Handle the submission logic
-                                showLoader();
-                                console.log('Before callDynamicAPI');
-                                try {
-                                    const verifyResp = await callDynamicAPI({
-                                        'purpose': 'USER-INFO-VERIFY',
-                                        'page': pageName,
-                                        'button': btnName,
-                                        'account': account,
-                                        'dob': dob
-                                    });
-                                    console.log('After callDynamicAPI', verifyResp);
-
-                                    hideLoader();
-
-                                    console.log('verifyResp-MOOON', verifyResp.status);
-
-                                    if (verifyResp.status === 'success') {
-                                        // Verification succeeded, proceed with the API call
-                                        console.log('Before callDynamicAPI ', apiPurpose);
-                                        try {
-                                            const apiResponse = await callDynamicAPI({
-                                                'purpose': apiPurpose,
-                                                'page': 'ewallet',
-                                                'button': btnName,
-                                                'reason': apiReason
-                                            });
-                                            console.log('After callDynamicAPI ', apiResponse);
-                                            hideLoader();
-
-                                            console.log('apiResponse', apiResponse);
-
-                                            let iconAsImg = 'lock-card.svg';
-                                            if (apiResponse.status === 'success') {
-                                                iconAsImg = 'checkmark.svg';
-                                            }
-
-                                            Swal.fire({
-                                                html: `<img class="" src="./img/icon/${iconAsImg}" />
-                                        <h2 class="swal2-title"> ${apiResponse.message} </h2>
-                                    `,
-                                                allowOutsideClick: false,
-                                                confirmButtonText: (locale === 'en') ? 'OK' : 'ঠিক আছে',
-                                                customClass: {
-                                                    container: 'user-info-verify-swal-bg'
-                                                },
-                                            });
-                                            playErrorAudio(apiResponse.prompt);
-
-                                        } catch (error) {
-                                            console.error('Error from callDynamicAPI:', error);
-                                            Swal.fire({
-                                                html: `<img class="" src="./img/icon/lock-card.svg" />
-                                            <h2 class="swal2-title"> ${error.message || 'An error occurred'} </h2>
-                                            `,
-                                                allowOutsideClick: false,
-                                                customClass: {
-                                                    container: 'user-info-verify-swal-bg'
-                                                },
-                                            });
-                                        } finally {
-                                            hideLoader();
-                                        }
-
-                                    } else {
-                                        console.log('verifyResp', verifyResp);
-                                        // Handle unsuccessful verification
-                                        Swal.fire({
-                                            html: `<img class="" src="./img/icon/lock-card.svg" />
-                                        <h2 class="swal2-title"> ${verifyResp.message} </h2>
-                                    `,
-                                            allowOutsideClick: false,
-                                            confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে',
-                                            customClass: {
-                                                container: 'user-info-verify-swal-bg'
-                                            },
-                                        });
-                                        // playErrorAudio(verifyResp.prompt);
-
-                                    }
-                                } catch (error) {
-                                    console.error(`Error from callDynamicAPI USER-INFO-VERIFY:`, error);
-                                    // Handle unsuccessful verification
-                                    Swal.fire({
-                                        html: `<img class="" src="./img/icon/lock-card.svg" />
-                                        <h2 class="swal2-title"> ${error.message} </h2>
-                                    `,
-                                        allowOutsideClick: false,
-                                        confirmButtonText: (locale === 'en') ? 'OK' : 'ওকে',
-                                        customClass: {
-                                            container: 'user-info-verify-swal-bg'
-                                        },
-                                    });
-                                    // playErrorAudio(verifyResp.prompt);
-
-                                } finally {
-                                    hideLoader();
-                                }
-
-                            });
-
-                            const cancelButton = document.querySelector('.verify-cancel-button');
-                            cancelButton.addEventListener('click', () => {
-                                console.log('close called');
-                                Swal.close();
-                            });
-                        },
-                        preConfirm: () => {
-                            const account = Swal.getPopup().querySelector('#swal-input1').value;
-                            const dob = Swal.getPopup().querySelector('#swal-input2').value;
-                            if (!account || !/^\d{10,20}$/.test(account)) {
-                                Swal.showValidationMessage((locale === 'en') ? 'Account is required and must be a number with 10 to 20 digits.' : 'অ্যাকাউন্ট নাম্বার আবশ্যক এবং ১০ থেকে ২০ সংখ্যা বিশিষ্ট হতে হবে।');
-                            }
-                            if (!dob || !/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-                                Swal.showValidationMessage((locale === 'en') ? 'Invalid date format.' : 'তারিখ ভুল হয়েছে ।');
-                            }
-                            return {account, dob};
-                        },
-                    });
-
-                } else {
-                    showVerificationAlert();
-                }
-            } catch (error) {
-                hideLoader();
-                console.log('error.status', error);
-                if (error.status === 'error') {
-                    Swal.fire({
-                        html: `<img class="" src="./img/icon/lock-card.svg" />
-                        <h2 class="swal2-title"> ${error.message} </h2>
-                    `,
-                        allowOutsideClick: false,
-                        customClass: {
-                            container: 'user-info-verify-swal-bg'
-                        },
-                    });
-                    // playErrorAudio(error.prompt);
-                }
-            } finally {
-                // If the modal is still open, close it
-                if (isSwalOpen) {
-                    Swal.close();
-                }
-            }
-        }*/
-
     async function handleIBAccountRelatedClick() {
         try {
             const isLoggedIn = await checkLoginStatus();
@@ -2199,7 +1978,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    async function callGreenPINAPI() {
+    /* async function callGreenPINAPI() {
         try {
             const response = await axios.post("/generate-gpin");
 
@@ -2208,9 +1987,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 response.data.status === "success" &&
                 response.data.pin
             ) {
+                const PIN = response.data.pin;
+               const title =
+                   locale === "en"
+                       ? "Green PIN"
+                       : "গ্রিন পিন";
+                const text =
+                    locale === "en"
+                        ? `Your new PIN is: ${PIN}`
+                        : `আপনার পিন হচ্ছে: ${PIN}`;
+
                 Swal.fire({
-                    title: "Your PIN",
-                    text: `Your new PIN is: ${response.data.pin}`,
+                    title: title,
+                    text: text,
                     icon: "success",
                     confirmButtonText: "OK",
                 });
@@ -2246,8 +2035,85 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
         }
-    }
+    } */
 
+    async function callGreenPINAPI() {
+        const messages = {
+            en: {
+                successTitle: "Green PIN",
+                successText: (pin) => `Your new PIN is: ${pin}`,
+                errorTitle: "Error",
+                errorText: "Unable to generate PIN, please try again later.",
+                apiErrorText: "An error occurred while generating the PIN.",
+                confirmButton: "OK",
+            },
+            bn: {
+                successTitle: "গ্রিন পিন",
+                successText: (pin) => `আপনার পিন হচ্ছে: ${pin}`,
+                errorTitle: "ত্রুটি",
+                errorText:
+                    "পিন তৈরি করা সম্ভব হয়নি, অনুগ্রহ করে পরে চেষ্টা করুন।",
+                apiErrorText: "পিন তৈরি করার সময় একটি সমস্যা ঘটেছে।",
+                confirmButton: "ঠিক আছে",
+            },
+        };
+
+        const locale = getSavedLocale();
+
+        try {
+            showLoader();
+           
+            // const locale = document.documentElement.lang === "bn" ? "bn" : "en";
+            const texts = messages[locale];
+
+            const response = await axios.post("/generate-gpin");
+            const { data } = response;
+            
+            hideLoader();
+            
+            if (data && data.status === "success" && data.pin) {
+                Swal.fire({
+                    title: texts.successTitle,
+                    text: texts.successText(data.pin),
+                    icon: "success",
+                    confirmButtonText: texts.confirmButton,
+                    customClass: {
+                        container: "active-your-service-swal-bg",
+                    },
+                });
+            } else {
+                Swal.fire({
+                    title: messages[locale]?.errorTitle || "Error",
+                    text: data?.message || texts.errorText,
+                    icon: "error",
+                    confirmButtonText: texts.confirmButton,
+                    customClass: {
+                        container: "active-your-service-swal-bg",
+                    },
+                });
+            }
+        } catch (error) {
+            console.error("Error calling the API:", error);
+            hideLoader();
+            // const locale = document.documentElement.lang === "bn" ? "bn" : "en";
+            const errorMessage =
+                error.response?.data?.message ||
+                (locale === "en"
+                    ? "An unexpected error occurred."
+                    : "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।");
+
+            Swal.fire({
+                title: messages[locale]?.errorTitle || "Error",
+                text: errorMessage,
+                icon: "error",
+                confirmButtonText: locale === "en" ? "OK" : "ঠিক আছে",
+                customClass: {
+                    container: "active-your-service-swal-bg",
+                },
+            });
+        }
+    }
+        
     async function handleGreenPINClick() {
         try {
             // will be remove this later
