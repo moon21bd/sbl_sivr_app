@@ -2434,14 +2434,11 @@ class ApiController extends ResponseController
     public function generateGPIN(Request $request, APIHandler $apiHandler)
     {
         try {
-            /* return response()->json([
-                'pin' => rand(11111,99999),
-                'status' => 'success',
-            ]); */
-
-            $cardNumber = "4689800031879243"; // Placeholder, replace with actual value.
-            $baseUrl = config('api.base_url', 'https://sblapi2022.sblesheba.com:8877/');
-
+            $cardNumber = "4689800031879243"; // Placeholder, will replace this with actual value.
+            // Will open this later
+            // $baseUrl = config('api.base_url', 'https://sblapi2022.sblesheba.com:8877/');
+            $baseUrl = "https://sblapi2022.sblesheba.com:8877/";
+            
             // Obtain Access Token
             $tokenResponse = $apiHandler->doPostCall($baseUrl . 'api/callcenter/oauth/token', [
                 'grant_type' => 'password',
@@ -2453,9 +2450,9 @@ class ApiController extends ResponseController
             ], [
                 'x-api-key' => 'Basic Y2FsbGNlbjpkYkJhZFNibCRlcno=',
                 'Content-Type' => 'application/x-www-form-urlencoded',
-            ]);
+            ], true);
 
-
+            
             if ($tokenResponse['status'] !== 'success' || empty($tokenResponse['data'])) {
                 Log::error("Failed to obtain access token", $tokenResponse);
                 return response()->json(['status' => 'failed', 'error' => 'Failed to obtain access token'], 400);

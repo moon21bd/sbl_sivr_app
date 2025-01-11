@@ -62,37 +62,30 @@ class APIHandler
 
     public function doPostCall($url, $params = [], $headers = [], $isSSLVerify = false): array
     {
+        // Default Content-Type is application/json
+        $contentType = $headers['Content-Type'] ?? 'application/json';
+        $dataKey = $contentType === 'application/x-www-form-urlencoded' ? 'form_params' : 'json';
+
         $options = [
             'verify' => $isSSLVerify,
             'headers' => array_merge([
                 'Accept' => '*/*',
-                'Content-Type' => 'application/json',
+                'Content-Type' => $contentType,
             ], $headers),
-            'json' => $params,
+            $dataKey => $params,
         ];
 
         $client = new Client();
-        $responseData = []; // Initialize an empty array
+        $responseData = [];
 
         try {
             $startTime = microtime(true);
             $response = $client->post($url, $options);
-            $endTime = microtime(true);
-
             $responseData = [
                 'status' => 'success',
                 'statusCode' => $response->getStatusCode(),
                 'data' => $response->getBody()->getContents(),
-                'exceptionType' => 'NONE',
             ];
-
-            // Validate the status code received in the API response
-            if (!is_numeric($responseData['statusCode']) || $responseData['statusCode'] === 0) {
-                $responseData['statusCode'] = Response::HTTP_EXPECTATION_FAILED;
-            }
-
-            Log::info('API-RESPONSE : ' . json_encode($responseData));
-
         } catch (Exception|GuzzleException $e) {
             $responseData = $this->handleException($url, $e);
         }
@@ -103,7 +96,7 @@ class APIHandler
 
         return $responseData;
     }
-
+    
     public function doGetCall($url, $params = [], $headers = [], $isSSLVerify = false): array
     {
         $options = [
